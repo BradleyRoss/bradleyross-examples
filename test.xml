@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<wsdl:definitions name="WadoService-2012" 
+  xmlns="urn:dicom:wado:ws:wsdl:yyyymmdd"
+  targetNamespace="urn:dicom:wado:ws:wsdl:yyyymmdd"
+  xmlns:ihe="urn:ihe:iti:xds-b:2007"
+  xmlns:iherad="urn:ihe:rad:xdsi-b:2009"
+  xmlns:wado="urn:dicom:wado:ws:yyyymmdd"
+  xmlns:tns="urn:dicom:wado:ws:wsdl:yyyymmdd"
+  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+  xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"
+  xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/"
+  xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata"
+  xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing"
+  xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy"
+  xmlns:wsap="http://schemas.xmlsoap.org/ws/2004/08/addressing/policy"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  xmlns:msc="http://schemas.microsoft.com/ws/2005/12/wsdl/contract"
+  xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl"
+  xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/"
+  xmlns:wsa10="http://www.w3.org/2005/08/addressing"
+  xmlns:wsx="http://schemas.xmlsoap.org/ws/2004/09/mex"
+  xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+<wsdl:types>
+   <xsd:schema>
+      <xsd:import namespace="urn:ihe:rad:xdsi-b:2009"
+        schemaLocation="IHE/XDSI.b_ImagingDocumentSource.xsd" />   
+      <xsd:import namespace="urn:ihe:iti:xds-b:2007"
+        schemaLocation="IHE/XDS.b_DocumentRepository.xsd" />
+      <xsd:import namespace="urn:dicom:wado:ws:yyyymmdd"
+        schemaLocation="dicom.wado.ws.yyyymmdd.xsd" />
+      <xsd:import namespace="urn:oasis:names:tc:ebxml-regrep:xsd:rim:3.0"
+        schemaLocation="ebRS/rim.xsd"/>
+      <xsd:import namespace="urn:oasis:names:tc:ebxml-regrep:xsd:rs:3.0"
+      schemaLocation="ebRS/rs.xsd" />
+   </xsd:schema>
+</wsdl:types>
+   <wsdl:message name="RetrieveImagingDocumentSet_InputMessage">
+      <wsdl:part name="parameters"
+            element="iherad:RetrieveImagingDocumentSetRequest" />
+   </wsdl:message>
+   <wsdl:message name="RetrieveImagingDocumentSet_OutputMessage">
+      <wsdl:part name="parameters" element="ihe:RetrieveDocumentSetResponse" />
+   </wsdl:message>
+   <wsdl:message name="RetrieveRenderedImagingDocumentSet_InputMessage">
+      <wsdl:part name="parameters"
+           element="wado:RetrieveRenderedImagingDocumentSetRequest" />
+   </wsdl:message>
+   <wsdl:message name="RetrieveRenderedImagingDocumentSet_OutputMessage" >
+      <wsdl:part name="parameters"
+          element="wado:RetrieveRenderedImagingDocumentSetResponse" />
+   </wsdl:message>
+   <wsdl:message name="RetrieveRenderedImagingDocumentSetInformation_InputMessage">
+      <wsdl:part name="parameters"
+          element="wado:RetrieveImagingDocumentSetInformationRequest" />
+   </wsdl:message>
+   <wsdl:message name="RetrieveImagingDocumentSetInformation_OutputMessage">
+      <wsdl:part name="parameters"
+          element="wado:RetrieveImagingDocumentSetInformationResponse" />
+   </wsdl:message>
+<!--
+ **  The wsawAction attribute is matched against the /Envelope/Header/Action 
+ **     part of the
+ **     SOAP message to indicate how the message is to be processed.
+ **  
+ **  
+ -->
+<wsdl:portType name="WadoService-2012">
+   <operation name="urn:ihe:rad:2009:RetrieveImagingDocumentSet">
+      <input wsaw:Action="urn:ihe:rad:2009:RetrieveImagingDocumentSet" 
+                message="RetrieveImagingDocumentSet_InputMessage" />
+      <output wsaw:Action="urn:ihe:iti:2007:RetrieveDocumentSetResponse" 
+                message="RetrieveImagingDocumentSet_OutputMessage" />
+   </operation>
+   <operation name="urn:dicom:ws:wado:2011:RetrieveRenderedImagingDocumentSet" >
+      <input wsaw:Action="urn:dicom:ws:wado:2011:RetrieveRenderedImagingDocumentSet" 
+                message="RetrieveRenderedImagingDocumentSet_InputMessage" />
+      <output wsaw:Action="urn:dicom:ws:wado:2011:RetrieveRenderedImagingDocumentSetResponse" 
+                message="RetrieveRenderedImagingDocumentSet_OutputMessage" />
+   </operation>
+   <operation name="urn:dicom:wado:ws:2011:RetrieveImagingDocumentSetInformation">
+      <input wsaw:Action="urn:dicom:ws:wado:2011:RetrieveImagingDocumentSetInformation" 
+                message="RetrieveImagingDocumentSetInformation_InputMessage" />
+      <output wsaw:Action="urn:dicom:ws:wado:2011:RetrieveImagingDocumentSetInformationResponse"
+                message="RetrieveImagingDocumentSetInformation_OutputMessage" />
+   </operation>
+</wsdl:portType>
+<!--
+ **   The binding section indicates what types of operations will be carried
+ **   out using this definition document.  The soapAction attribute is the designation
+ **   for the operation.
+ -->
+<binding>
+   <soap12>
+      <operation soapAction="urn:ihe:rad:2009:RetrieveImagingDocumentSet" />
+      <operation soapAction="urn:dicom:ws:wado:2011:RetrieveRenderedImagingDocumentSet" />
+      <operation soapAction="urn:dicom:ws:wado:2011:RetrieveImagingDocumentSetInformation" />
+   </soap12>
+</binding>
+</wsdl:definitions>

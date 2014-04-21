@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="librarylist">
+<path id="jar.classpath">
+	<fileset dir="/Users/bradleyross/Resources/libraries/exports">
+		<include name="sample.jar" />
+ 		<include name="tracing.jar" />
+	</fileset>
+	<fileset dir="/Users/bradleyross/Resources/libraries/dcm4che-3.0.1/lib">
+		<include name="*.jar" />
+	</fileset>
+
+	  <pathelement location="/Users/bradleyross/Resources/externaljars/servlet.jar" />
+    <pathelement location="/Users/bradleyross/Resources/externaljars/xercesImpl.jar" />
+    <pathelement location="/Users/bradleyross/Resources/externaljars/xml-apis.jar" />
+    <pathelement location="/Users/bradleyross/Resources/externaljars/jcommon-1.0.13.jar" />
+    <pathelement location="/Users/bradleyross/Resources/externaljars/jfreechart-1.0.10.jar" />
+    <pathelement location="/Users/bradleyross/Resources/externaljars/jfreechart-1.0.10-swt.jar" />
+    <pathelement location="/Users/bradleyross/Resources/externaljars/swt_macosx.jar" />
+    <pathelement location="/Users/bradleyross/Resources/externaljars/jackcess.jar" />
+	</path>
+	</project>

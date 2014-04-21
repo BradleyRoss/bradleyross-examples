@@ -1,0 +1,77 @@
+package bradleyross.demonstrations;
+import java.io.InputStreamReader;
+import java.io.BufferedReader;
+import java.io.PrintWriter;
+import java.io.OutputStreamWriter;
+import java.io.BufferedWriter;
+import java.net.URL;
+import java.net.URLConnection;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+/**
+* Demonstration of sending mail using Java.
+*&lt;p>gt;&lt;ul>gt;
+*&lt;li>gt;&lt;p>gt;First parameter - domain name for SMTP (RFC 822) server.&lt;/p>gt;&lt;/li>gt;
+*&lt;li>gt;&lt;p>gt;Second parameter - Email address to use for destination&lt;/p>gt;&lt;/li>gt;
+*&lt;li>gt;&lt;p>gt;Third parameter - Text to go with Email address&lt;/p>gt;&lt;/li>gt;
+*&lt;/ul>gt;&lt;/p>gt;
+*&lt;p>gt;Example:&lt;br>gt;
+*&lt;code>gt;bradleyross.demonstrations.testMail "smtp.foo.com"
+*  "john.smith@foo.com" "John Smith"&lt;/code>gt;&lt;/p>gt;
+*&lt;p>gt;Whether or not you will be able to use the SMTP port in this manner will
+*   depend on how it is configured.&lt;/p>gt;
+*/
+public class testMail {
+public static void main (String args[])
+{
+if (args.length &lt; 3)
+   {
+   System.out.println("Parameters for testMail program are");
+   System.out.println("1 - Name of SMTP server (e.g. smtp.foo.com)");
+   System.out.println("2 - EMail address (e.g. john.smith@foo.com)");
+   System.out.println("3 - Text representation of EMail recipient (John Smith)");
+   }
+try
+   {
+   System.getProperties().put("mail.host", args[0]);
+   BufferedReader in = new BufferedReader (new InputStreamReader(System.in));
+   URL u = new URL("mailto:" + args[1]);
+   URLConnection c = u.openConnection();
+   System.out.println("Connection opened");
+   c.setDoInput(false);
+   c.setDoOutput(true);
+   System.out.flush();
+   c.connect();
+   System.out.println("Connected");
+   System.out.flush();
+   PrintWriter out = 
+      new PrintWriter(new OutputStreamWriter(c.getOutputStream()));
+   System.out.println("New PrintWriter created");
+   System.out.flush();
+   out.println("From: \"" + args[2] + "\" &lt;" + args[1] + ">gt;");
+   out.println("Reply-To: \"" + args[2] + "\" &lt;" + args[1] + ">gt;");
+   long currentTime = System.currentTimeMillis();
+   Date currentDate = new Date(System.currentTimeMillis());
+   SimpleDateFormat df = 
+       new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss Z (zzz)");
+   out.println("Date: " + df.format(currentDate));
+   out.println("To: " + args[1]);
+   out.println("Subject: Demonstration");
+   out.println("Content-type: text/html; charset=iso-8859-1");
+   out.print("\n");
+   out.println("&lt;html>gt;&lt;head>gt;&lt;/head>gt;&lt;body>gt;");
+   out.println("&lt;title>gt;Test&lt;/title>gt;");
+   out.println("&lt;p>gt;&lt;font color=\"red\">gt;");
+   out.println("This is a demonstration of how easy it is to send mail");
+   out.println("to an SMTP (RFC 822) server using Java");
+   out.println("&lt;/font>gt;&lt;/p>gt;&lt;/body>gt;&lt;/html>gt;");
+   out.close();
+   System.out.println("Closed");
+   System.out.flush();
+   }
+catch (Exception e)
+   {
+   System.err.println(e);
+   }
+}
+}
