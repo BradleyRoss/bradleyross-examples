@@ -2,6 +2,9 @@
 <!DOCTYPE project [<!ENTITY external SYSTEM "links.xml">]>
 <project default="javadoc">
 	<include file="libraries.xml" />
+<!-- ENTITY clause in the DOCTYPE statement above allows a file
+	to be included in the Ant script. This would allow you to use the
+	same set of entries in multiple javadoc steps. -->
 <target name="javadoc">
 <delete dir="doc" />
 <mkdir dir="doc" />
@@ -13,12 +16,6 @@
   overview="src/overview.html"  verbose="false"
   splitindex="false" use="true" version="true">
   <classpath refid="jar.classpath" />
-
-  <!--
-  Not including package elements apparently means that all packages
-  in the source directories will be processed.
-
--->
 &external;      
 </javadoc>
 <echo level="info" message="Javadoc files created for sample project" />

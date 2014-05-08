@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="librarylist">
+<!-- The purpose of this file is to place the locations of the class files
+     for multiple Ant scripts in a single file to be reused as needed.  For
+     example, the description of the classpath is needed for both javac 
+     and javadoc -->
 <path id="jar.classpath">
 	<fileset dir="/Users/bradleyross/Resources/libraries/exports">
 		<include name="sample.jar" />
@@ -8,8 +12,7 @@
 	<fileset dir="/Users/bradleyross/Resources/libraries/dcm4che-3.0.1/lib">
 		<include name="*.jar" />
 	</fileset>
-
-	  <pathelement location="/Users/bradleyross/Resources/externaljars/servlet.jar" />
+	<pathelement location="/Users/bradleyross/Resources/externaljars/servlet.jar" />
     <pathelement location="/Users/bradleyross/Resources/externaljars/xercesImpl.jar" />
     <pathelement location="/Users/bradleyross/Resources/externaljars/xml-apis.jar" />
     <pathelement location="/Users/bradleyross/Resources/externaljars/jcommon-1.0.13.jar" />
