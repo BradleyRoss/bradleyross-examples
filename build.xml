@@ -13,6 +13,6 @@
 			</javac>
 		</target>
 	<target name="jar" depends="compile">
-		<jar destfile="jar/bross_readme.jar" basedir="bin" />
+		<jar destfile="jar/bradleyross_examples.jar" basedir="bin" />
 		</target>
 	</project>

@@ -14,7 +14,8 @@
   nodeprecated="false" nodeprecatedlist="false" 
   noindex="false" nonavbar="false" notree="false" 
   overview="src/overview.html"  verbose="false"
-  splitindex="false" use="true" version="true">
+  splitindex="false" use="true" version="true"
+  windowtitle="Bradley Ross Examples">
   <classpath refid="jar.classpath" />
 &external;      
 </javadoc>
