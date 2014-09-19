@@ -1,0 +1,349 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head>
+<title>Source code</title>
+<link rel="stylesheet" type="text/css" href="../../../../stylesheet.css" title="Style">
+</head>
+<body>
+<div class="sourceContainer">
+<pre><span class="sourceLineNo">001</span>package bradleyross.j2ee.servlets;<a name="line.1"></a>
+<span class="sourceLineNo">002</span>import java.io.IOException;<a name="line.2"></a>
+<span class="sourceLineNo">003</span>import java.io.PrintWriter;<a name="line.3"></a>
+<span class="sourceLineNo">004</span>import java.io.StringWriter;<a name="line.4"></a>
+<span class="sourceLineNo">005</span>import java.net.URL;<a name="line.5"></a>
+<span class="sourceLineNo">006</span>import java.util.Iterator;<a name="line.6"></a>
+<span class="sourceLineNo">007</span>import javax.servlet.http.HttpServlet;<a name="line.7"></a>
+<span class="sourceLineNo">008</span>import javax.servlet.http.HttpServletRequest;<a name="line.8"></a>
+<span class="sourceLineNo">009</span>import javax.servlet.http.HttpServletResponse;<a name="line.9"></a>
+<span class="sourceLineNo">010</span>import javax.servlet.ServletException;<a name="line.10"></a>
+<span class="sourceLineNo">011</span>import javax.imageio.ImageIO;<a name="line.11"></a>
+<span class="sourceLineNo">012</span>import javax.imageio.ImageReader;<a name="line.12"></a>
+<span class="sourceLineNo">013</span>import javax.imageio.ImageReadParam;<a name="line.13"></a>
+<span class="sourceLineNo">014</span>import javax.imageio.ImageWriter;<a name="line.14"></a>
+<span class="sourceLineNo">015</span>import javax.imageio.plugins.jpeg.JPEGImageWriteParam;<a name="line.15"></a>
+<span class="sourceLineNo">016</span>import javax.imageio.ImageWriteParam;<a name="line.16"></a>
+<span class="sourceLineNo">017</span>import javax.imageio.spi.ImageWriterSpi;<a name="line.17"></a>
+<span class="sourceLineNo">018</span>@SuppressWarnings("serial")<a name="line.18"></a>
+<span class="sourceLineNo">019</span>/**<a name="line.19"></a>
+<span class="sourceLineNo">020</span> * Get information on codecs.<a name="line.20"></a>
+<span class="sourceLineNo">021</span> * <a name="line.21"></a>
+<span class="sourceLineNo">022</span> * &lt;p&gt;It looks like com.sun.media.imageioimpl.plugins.jpeg2000.ImageWriter and<a name="line.22"></a>
+<span class="sourceLineNo">023</span> *    com.sun.media.imageioimpl.plugins.jpeg2000.ImageReader are pure java<a name="line.23"></a>
+<span class="sourceLineNo">024</span> *    while com.sun.media.imageioimpl.plugins.jpeg.CLibJPEGImageReader,<a name="line.24"></a>
+<span class="sourceLineNo">025</span> *    com.sun.media.imageioimpl.plugins.jpeg.CLibJPEGImageWriter,<a name="line.25"></a>
+<span class="sourceLineNo">026</span> *    com.sun.media.imageioimpl.plugins.jpeg2000.J2KImageWriterCodecLib and<a name="line.26"></a>
+<span class="sourceLineNo">027</span> *    com.sun.media.imageioimpl.plugins.jpeg2000.J2KImageReaderCodecLib use<a name="line.27"></a>
+<span class="sourceLineNo">028</span> *    compiled C code.&lt;/p&gt;<a name="line.28"></a>
+<span class="sourceLineNo">029</span> * @author Bradley Ross<a name="line.29"></a>
+<span class="sourceLineNo">030</span> *<a name="line.30"></a>
+<span class="sourceLineNo">031</span> */<a name="line.31"></a>
+<span class="sourceLineNo">032</span>public class CodecInfo extends HttpServlet {<a name="line.32"></a>
+<span class="sourceLineNo">033</span>    /*<a name="line.33"></a>
+<span class="sourceLineNo">034</span>     * This approach was recommended by <a name="line.34"></a>
+<span class="sourceLineNo">035</span>     * http://tomcat.10.n6.nabble.com/Problems-with-ImageIO-td2073212.html<a name="line.35"></a>
+<span class="sourceLineNo">036</span>     * See also<a name="line.36"></a>
+<span class="sourceLineNo">037</span>     * http://www.java.net/node/702588<a name="line.37"></a>
+<span class="sourceLineNo">038</span>     * <a name="line.38"></a>
+<span class="sourceLineNo">039</span>     * Without this line, the ImageIO was unable to find the codecs unless they<a name="line.39"></a>
+<span class="sourceLineNo">040</span>     * were placed in the Java system library or the Java system extensions library.<a name="line.40"></a>
+<span class="sourceLineNo">041</span>     * Apparently, when ImageIO first initialized itself, it was only able to see<a name="line.41"></a>
+<span class="sourceLineNo">042</span>     * the Java system libraries.  It is not clear if it would have been able to see<a name="line.42"></a>
+<span class="sourceLineNo">043</span>     * the CLASSPATH at the time that Tomcat was started.<a name="line.43"></a>
+<span class="sourceLineNo">044</span>     * <a name="line.44"></a>
+<span class="sourceLineNo">045</span>     * The problem with codecs not being visible occurred with Windows but not<a name="line.45"></a>
+<span class="sourceLineNo">046</span>     * with Mac OS X.<a name="line.46"></a>
+<span class="sourceLineNo">047</span>     */<a name="line.47"></a>
+<span class="sourceLineNo">048</span>    static {<a name="line.48"></a>
+<span class="sourceLineNo">049</span>        ImageIO.scanForPlugins();<a name="line.49"></a>
+<span class="sourceLineNo">050</span>    }<a name="line.50"></a>
+<span class="sourceLineNo">051</span>        /**<a name="line.51"></a>
+<span class="sourceLineNo">052</span>         * List of ImageWriter objects.<a name="line.52"></a>
+<span class="sourceLineNo">053</span>         * &lt;p&gt;ImagWriterFactory.properties says jpeg2000.J2KImageWriterCodecLib.&lt;/p&gt;<a name="line.53"></a>
+<span class="sourceLineNo">054</span>         */<a name="line.54"></a>
+<span class="sourceLineNo">055</span>        protected String[] writerCodecs = {<a name="line.55"></a>
+<span class="sourceLineNo">056</span>                        "com.sun.media.imageioimpl.plugins.jpeg.CLibJPEGImageWriter",<a name="line.56"></a>
+<span class="sourceLineNo">057</span>                        "com.sun.media.imageioimpl.plugins.jpeg2000.J2KImageWriter",<a name="line.57"></a>
+<span class="sourceLineNo">058</span>                        "com.sun.media.imageioimpl.plugins.jpeg2000.J2KImageWriterCodecLib"<a name="line.58"></a>
+<span class="sourceLineNo">059</span>        };<a name="line.59"></a>
+<span class="sourceLineNo">060</span>        /**<a name="line.60"></a>
+<span class="sourceLineNo">061</span>         * List of ImageReader objects.<a name="line.61"></a>
+<span class="sourceLineNo">062</span>         * &lt;p&gt;ImageReaderFactory.properties says jpeg2000.J2KImageReaderCodecLib.&lt;/p&gt;<a name="line.62"></a>
+<span class="sourceLineNo">063</span>         * &lt;p&gt;jai_imageio has J2KImageReader and J2KImageReaderCodecLib.&lt;/p&gt;<a name="line.63"></a>
+<span class="sourceLineNo">064</span>         */<a name="line.64"></a>
+<span class="sourceLineNo">065</span>        protected String[] readerCodecs = {<a name="line.65"></a>
+<span class="sourceLineNo">066</span>                        "com.sun.media.imageioimpl.plugins.jpeg.CLibJPEGImageReader",<a name="line.66"></a>
+<span class="sourceLineNo">067</span>                        "com.sun.media.imageioimpl.plugins.jpeg2000.J2KImageReader",<a name="line.67"></a>
+<span class="sourceLineNo">068</span>                        "com.sun.media.imageioimpl.plugins.jpeg2000.J2KImageReaderCodecLib"<a name="line.68"></a>
+<span class="sourceLineNo">069</span>        };<a name="line.69"></a>
+<span class="sourceLineNo">070</span>        /**<a name="line.70"></a>
+<span class="sourceLineNo">071</span>         * Show information on an ImageReader codec.<a name="line.71"></a>
+<span class="sourceLineNo">072</span>         * @param reader ImageReader object<a name="line.72"></a>
+<span class="sourceLineNo">073</span>         * @param out destination for printing<a name="line.73"></a>
+<span class="sourceLineNo">074</span>         */<a name="line.74"></a>
+<span class="sourceLineNo">075</span>        protected  void printReader(ImageReader reader, PrintWriter out) {<a name="line.75"></a>
+<span class="sourceLineNo">076</span>                out.println(reader.getClass().getName());<a name="line.76"></a>
+<span class="sourceLineNo">077</span>                ImageReadParam param = reader.getDefaultReadParam();<a name="line.77"></a>
+<span class="sourceLineNo">078</span>                out.println("&lt;ol&gt;");<a name="line.78"></a>
+<span class="sourceLineNo">079</span>                out.println("&lt;p&gt;" + param.getClass().getName() + "&lt;/p&gt;");<a name="line.79"></a>
+<span class="sourceLineNo">080</span>                out.println("&lt;/ol&gt;");<a name="line.80"></a>
+<span class="sourceLineNo">081</span>        }<a name="line.81"></a>
+<span class="sourceLineNo">082</span>        /**<a name="line.82"></a>
+<span class="sourceLineNo">083</span>         * Show information on an ImageWriter codec.<a name="line.83"></a>
+<span class="sourceLineNo">084</span>         * @param writer ImageWriter object<a name="line.84"></a>
+<span class="sourceLineNo">085</span>         * @param out destination for printing<a name="line.85"></a>
+<span class="sourceLineNo">086</span>         */<a name="line.86"></a>
+<span class="sourceLineNo">087</span>        protected void printWriter(ImageWriter writer, PrintWriter out) {<a name="line.87"></a>
+<span class="sourceLineNo">088</span>                String className = writer.getClass().getName();<a name="line.88"></a>
+<span class="sourceLineNo">089</span>                String resourceName = "/" + className.replaceAll("\\.", "/") + ".class";<a name="line.89"></a>
+<span class="sourceLineNo">090</span>                out.println("&lt;p&gt;" + writer.getClass().getName() + "&lt;/p&gt;");<a name="line.90"></a>
+<span class="sourceLineNo">091</span>                out.println("&lt;p&gt;" + resourceName + "&lt;/p&gt;");<a name="line.91"></a>
+<span class="sourceLineNo">092</span>                out.println("&lt;ul&gt;");<a name="line.92"></a>
+<span class="sourceLineNo">093</span>                out.println("&lt;li&gt;");<a name="line.93"></a>
+<span class="sourceLineNo">094</span>                URL url = writer.getClass().getResource(resourceName);<a name="line.94"></a>
+<span class="sourceLineNo">095</span>                if (url==null) {<a name="line.95"></a>
+<span class="sourceLineNo">096</span>                        out.println("&lt;p&gt;null URL&lt;/p&gt;");<a name="line.96"></a>
+<span class="sourceLineNo">097</span>                } else {<a name="line.97"></a>
+<span class="sourceLineNo">098</span>                        out.println("&lt;p&gt;" + url.toString() + "&lt;/p&gt;");<a name="line.98"></a>
+<span class="sourceLineNo">099</span>                }<a name="line.99"></a>
+<span class="sourceLineNo">100</span>                ClassLoader loader = writer.getClass().getClassLoader();<a name="line.100"></a>
+<span class="sourceLineNo">101</span>                if (loader == null) {<a name="line.101"></a>
+<span class="sourceLineNo">102</span>                        out.println("&lt;p&gt;System Class Loader&lt;p&gt;");<a name="line.102"></a>
+<span class="sourceLineNo">103</span>                        try {<a name="line.103"></a>
+<span class="sourceLineNo">104</span>                                out.println("&lt;p&gt;" + writer.getClass().getResource(resourceName).toString() + "&lt;/p&gt;");<a name="line.104"></a>
+<span class="sourceLineNo">105</span>                        } catch (Exception e) {<a name="line.105"></a>
+<span class="sourceLineNo">106</span>                                out.println("&lt;p&gt;" + e.getMessage() + "&lt;/p&gt;");<a name="line.106"></a>
+<span class="sourceLineNo">107</span>                        }<a name="line.107"></a>
+<span class="sourceLineNo">108</span>                } else {<a name="line.108"></a>
+<span class="sourceLineNo">109</span>                        out.println("&lt;p&gt;" + loader.getClass().getName() + "&lt;/p&gt;");<a name="line.109"></a>
+<span class="sourceLineNo">110</span>                        try {<a name="line.110"></a>
+<span class="sourceLineNo">111</span>                                URL url2 = loader.getResource(resourceName);<a name="line.111"></a>
+<span class="sourceLineNo">112</span>                                if (url2 == null) {<a name="line.112"></a>
+<span class="sourceLineNo">113</span>                                        out.println("&lt;p&gt;Can't obtain resource URL&lt;/p&gt;");<a name="line.113"></a>
+<span class="sourceLineNo">114</span>                                } else {<a name="line.114"></a>
+<span class="sourceLineNo">115</span>                                out.println("&lt;p&gt;" + url2.toString() + "&lt;/p&gt;");<a name="line.115"></a>
+<span class="sourceLineNo">116</span>                                }<a name="line.116"></a>
+<span class="sourceLineNo">117</span>                        } catch (Exception e) {<a name="line.117"></a>
+<span class="sourceLineNo">118</span>                                out.println("&lt;p&gt;" + e.getMessage() + "&lt;/p&gt;");<a name="line.118"></a>
+<span class="sourceLineNo">119</span>                        }<a name="line.119"></a>
+<span class="sourceLineNo">120</span>                }<a name="line.120"></a>
+<span class="sourceLineNo">121</span>                out.println("&lt;/li&gt;");<a name="line.121"></a>
+<span class="sourceLineNo">122</span>                ImageWriteParam param = writer.getDefaultWriteParam();<a name="line.122"></a>
+<span class="sourceLineNo">123</span>                out.println("&lt;li&gt;");<a name="line.123"></a>
+<span class="sourceLineNo">124</span>                boolean compressed = param.canWriteCompressed();<a name="line.124"></a>
+<span class="sourceLineNo">125</span>                out.println("&lt;p&gt;" + param.getClass().getName() + "&lt;/p&gt;");<a name="line.125"></a>
+<span class="sourceLineNo">126</span>                out.println("&lt;p&gt;Codec can write compressed: " + Boolean.toString(compressed) +"&lt;/p&gt;");<a name="line.126"></a>
+<span class="sourceLineNo">127</span>                if (compressed) {<a name="line.127"></a>
+<span class="sourceLineNo">128</span>                        out.println("&lt;p&gt;The types of compression are listed below:&lt;/p&gt;");<a name="line.128"></a>
+<span class="sourceLineNo">129</span>                        String[] types = param.getCompressionTypes();<a name="line.129"></a>
+<span class="sourceLineNo">130</span>                        out.println("&lt;ol&gt;");<a name="line.130"></a>
+<span class="sourceLineNo">131</span>                        for (int i2 = 0; i2 &lt; types.length; i2++) {<a name="line.131"></a>
+<span class="sourceLineNo">132</span>                                out.println("&lt;li&gt;&lt;p&gt;" + types[i2] + "&lt;/p&gt;");<a name="line.132"></a>
+<span class="sourceLineNo">133</span>                                out.println("&lt;/li&gt;");<a name="line.133"></a>
+<span class="sourceLineNo">134</span>                        }<a name="line.134"></a>
+<span class="sourceLineNo">135</span>                        out.println("&lt;/ol&gt;");<a name="line.135"></a>
+<span class="sourceLineNo">136</span>                }<a name="line.136"></a>
+<span class="sourceLineNo">137</span>                out.println("&lt;/li&gt;");<a name="line.137"></a>
+<span class="sourceLineNo">138</span>                if (JPEGImageWriteParam.class.isAssignableFrom(param.getClass())) {<a name="line.138"></a>
+<span class="sourceLineNo">139</span>                        /*<a name="line.139"></a>
+<span class="sourceLineNo">140</span>                         * The default for compression quality value for JPEG appears to be 0.75.<a name="line.140"></a>
+<span class="sourceLineNo">141</span>                         * The standard codec can not handle lossless.<a name="line.141"></a>
+<span class="sourceLineNo">142</span>                         */<a name="line.142"></a>
+<span class="sourceLineNo">143</span>                        out.println("&lt;li&gt;");<a name="line.143"></a>
+<span class="sourceLineNo">144</span>                        int mode = param.getCompressionMode();<a name="line.144"></a>
+<span class="sourceLineNo">145</span>                        param.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);<a name="line.145"></a>
+<span class="sourceLineNo">146</span>                        out.println("&lt;p&gt;Current quality is " + Float.toString(param.getCompressionQuality()) + "&lt;/p&gt;");<a name="line.146"></a>
+<span class="sourceLineNo">147</span>                        out.print("&lt;p&gt;Estimated compressed bit rate is ");<a name="line.147"></a>
+<span class="sourceLineNo">148</span>                        float estimate = param.getBitRate(param.getCompressionQuality());<a name="line.148"></a>
+<span class="sourceLineNo">149</span>                        if (estimate &lt; 0.0f) {<a name="line.149"></a>
+<span class="sourceLineNo">150</span>                                out.print("&lt;i&gt;estimate not available&lt;/i&gt;");<a name="line.150"></a>
+<span class="sourceLineNo">151</span>                        } else {<a name="line.151"></a>
+<span class="sourceLineNo">152</span>                                out.print(Float.toString(estimate));<a name="line.152"></a>
+<span class="sourceLineNo">153</span>                        }<a name="line.153"></a>
+<span class="sourceLineNo">154</span>                        out.println("&lt;/p&gt;");<a name="line.154"></a>
+<span class="sourceLineNo">155</span>                        String[] descriptions = param.getCompressionQualityDescriptions();<a name="line.155"></a>
+<span class="sourceLineNo">156</span>                        float[] values = param.getCompressionQualityValues();<a name="line.156"></a>
+<span class="sourceLineNo">157</span>                        for (int i = 0; i &lt; descriptions.length; i++) {<a name="line.157"></a>
+<span class="sourceLineNo">158</span>                                out.println("&lt;p&gt;" + descriptions[i] + "  " + Float.toString(values[i]) + <a name="line.158"></a>
+<span class="sourceLineNo">159</span>                                                "   " + Float.toString(values[i+1]) + "&lt;/p&gt;");<a name="line.159"></a>
+<span class="sourceLineNo">160</span>                        }<a name="line.160"></a>
+<span class="sourceLineNo">161</span>                        param.setCompressionMode(mode);<a name="line.161"></a>
+<span class="sourceLineNo">162</span>                        out.println("&lt;/li&gt;");<a name="line.162"></a>
+<span class="sourceLineNo">163</span>                }<a name="line.163"></a>
+<span class="sourceLineNo">164</span>                out.println("&lt;li&gt;");<a name="line.164"></a>
+<span class="sourceLineNo">165</span>                ImageWriterSpi spi = writer.getOriginatingProvider();<a name="line.165"></a>
+<span class="sourceLineNo">166</span>                if (spi != null) {<a name="line.166"></a>
+<span class="sourceLineNo">167</span>                        out.println("&lt;p&gt;Spi class is " + spi.getClass().getName() + "&lt;/p&gt;");<a name="line.167"></a>
+<span class="sourceLineNo">168</span>                        out.println("&lt;ol&gt;");<a name="line.168"></a>
+<span class="sourceLineNo">169</span>                        String[] list = spi.getFileSuffixes();<a name="line.169"></a>
+<span class="sourceLineNo">170</span>                        if (list != null) {<a name="line.170"></a>
+<span class="sourceLineNo">171</span>                                out.print("&lt;li&gt;File suffixes are ");<a name="line.171"></a>
+<span class="sourceLineNo">172</span>                                for (int i = 0; i &lt; list.length; i++) {<a name="line.172"></a>
+<span class="sourceLineNo">173</span>                                        if (i &gt; 0) { out.print(", "); }<a name="line.173"></a>
+<span class="sourceLineNo">174</span>                                        out.print(list[i]);<a name="line.174"></a>
+<span class="sourceLineNo">175</span>                                }<a name="line.175"></a>
+<span class="sourceLineNo">176</span>                                out.println("&lt;/li&gt;");<a name="line.176"></a>
+<span class="sourceLineNo">177</span>                        }<a name="line.177"></a>
+<span class="sourceLineNo">178</span>                        list = spi.getFormatNames();<a name="line.178"></a>
+<span class="sourceLineNo">179</span>                        if (list != null) {<a name="line.179"></a>
+<span class="sourceLineNo">180</span>                                out.print("&lt;li&gt;Format names are ");<a name="line.180"></a>
+<span class="sourceLineNo">181</span>                                for (int i = 0; i &lt; list.length; i++) {<a name="line.181"></a>
+<span class="sourceLineNo">182</span>                                        if (i &gt; 0) { out.print(", "); }<a name="line.182"></a>
+<span class="sourceLineNo">183</span>                                        out.print(list[i]);<a name="line.183"></a>
+<span class="sourceLineNo">184</span>                                }<a name="line.184"></a>
+<span class="sourceLineNo">185</span>                                out.println("&lt;/li&gt;");<a name="line.185"></a>
+<span class="sourceLineNo">186</span>                        }<a name="line.186"></a>
+<span class="sourceLineNo">187</span>                        list = spi.getMIMETypes();<a name="line.187"></a>
+<span class="sourceLineNo">188</span>                        if (list != null) {<a name="line.188"></a>
+<span class="sourceLineNo">189</span>                                out.print("&lt;li&gt;MIME types are ");<a name="line.189"></a>
+<span class="sourceLineNo">190</span>                                for (int i = 0; i &lt; list.length; i++) {<a name="line.190"></a>
+<span class="sourceLineNo">191</span>                                        if (i &gt; 0) { out.print(", "); }<a name="line.191"></a>
+<span class="sourceLineNo">192</span>                                        out.print(list[i]);<a name="line.192"></a>
+<span class="sourceLineNo">193</span>                                }<a name="line.193"></a>
+<span class="sourceLineNo">194</span>                        out.println("&lt;/li&gt;");<a name="line.194"></a>
+<span class="sourceLineNo">195</span>                        }<a name="line.195"></a>
+<span class="sourceLineNo">196</span>                        out.println("&lt;/ol&gt;");<a name="line.196"></a>
+<span class="sourceLineNo">197</span>                        out.println("&lt;/li&gt;");<a name="line.197"></a>
+<span class="sourceLineNo">198</span>                }<a name="line.198"></a>
+<span class="sourceLineNo">199</span>                out.println("&lt;/ul&gt;");<a name="line.199"></a>
+<span class="sourceLineNo">200</span>        }<a name="line.200"></a>
+<span class="sourceLineNo">201</span>        /**<a name="line.201"></a>
+<span class="sourceLineNo">202</span>         * Display information on image reader and writer codecs.<a name="line.202"></a>
+<span class="sourceLineNo">203</span>         * @param out destination for listing<a name="line.203"></a>
+<span class="sourceLineNo">204</span>         */<a name="line.204"></a>
+<span class="sourceLineNo">205</span>        protected  void printInfo(PrintWriter out) {<a name="line.205"></a>
+<span class="sourceLineNo">206</span>                out.println("&lt;html&gt;&lt;head&gt;");<a name="line.206"></a>
+<span class="sourceLineNo">207</span>                out.println("&lt;title&gt;Codec Information&lt;/title&gt;");<a name="line.207"></a>
+<span class="sourceLineNo">208</span>                out.println("&lt;/head&gt;&lt;body&gt;");<a name="line.208"></a>
+<span class="sourceLineNo">209</span>                Iterator&lt;ImageReader&gt; readerList = null;<a name="line.209"></a>
+<span class="sourceLineNo">210</span>                out.println("&lt;h1&gt;ImageIO Reader Codecs&lt;/h1&gt;");<a name="line.210"></a>
+<span class="sourceLineNo">211</span>                String[] mimeList = ImageIO.getReaderMIMETypes();<a name="line.211"></a>
+<span class="sourceLineNo">212</span>                for (int i = 0; i &lt; mimeList.length; i++) {<a name="line.212"></a>
+<span class="sourceLineNo">213</span>                        if (mimeList[i] == null) {<a name="line.213"></a>
+<span class="sourceLineNo">214</span>                                out.println("&lt;h2&gt;blank name&lt;/h2&gt;");<a name="line.214"></a>
+<span class="sourceLineNo">215</span>                        } else if (mimeList[i].trim().length() == 0) {<a name="line.215"></a>
+<span class="sourceLineNo">216</span>                                out.println("&lt;h2&gt;blank name&lt;/h2&gt;");<a name="line.216"></a>
+<span class="sourceLineNo">217</span>                        } else {<a name="line.217"></a>
+<span class="sourceLineNo">218</span>                                out.println("&lt;h2&gt;" + mimeList[i] + "&lt;/h2&gt;");<a name="line.218"></a>
+<span class="sourceLineNo">219</span>                        }<a name="line.219"></a>
+<span class="sourceLineNo">220</span>                        readerList = ImageIO.getImageReadersByMIMEType(mimeList[i]);<a name="line.220"></a>
+<span class="sourceLineNo">221</span>                        out.println("&lt;ul&gt;");<a name="line.221"></a>
+<span class="sourceLineNo">222</span>                        while (readerList.hasNext()) {<a name="line.222"></a>
+<span class="sourceLineNo">223</span>                                out.println("&lt;li&gt;");<a name="line.223"></a>
+<span class="sourceLineNo">224</span>                                ImageReader reader = readerList.next();<a name="line.224"></a>
+<span class="sourceLineNo">225</span>                                printReader(reader, out);<a name="line.225"></a>
+<span class="sourceLineNo">226</span>                                out.println("&lt;/li&gt;");<a name="line.226"></a>
+<span class="sourceLineNo">227</span>                        }<a name="line.227"></a>
+<span class="sourceLineNo">228</span>                        out.println("&lt;/ul&gt;");<a name="line.228"></a>
+<span class="sourceLineNo">229</span>                }<a name="line.229"></a>
+<span class="sourceLineNo">230</span>                out.println("&lt;h1&gt;ImageIO Writer Codecs&lt;/h1&gt;");<a name="line.230"></a>
+<span class="sourceLineNo">231</span>                Iterator&lt;ImageWriter&gt; writerList = null;<a name="line.231"></a>
+<span class="sourceLineNo">232</span>                for (int i = 0; i &lt; mimeList.length; i++) {<a name="line.232"></a>
+<span class="sourceLineNo">233</span>                        if (mimeList[i] == null) {<a name="line.233"></a>
+<span class="sourceLineNo">234</span>                                out.println("&lt;h2&gt;blank name&lt;/h2&gt;");<a name="line.234"></a>
+<span class="sourceLineNo">235</span>                        } else if (mimeList[i].trim().length() == 0) {<a name="line.235"></a>
+<span class="sourceLineNo">236</span>                                out.println("&lt;h2&gt;blank name&lt;/h2&gt;");<a name="line.236"></a>
+<span class="sourceLineNo">237</span>                        } else {<a name="line.237"></a>
+<span class="sourceLineNo">238</span>                                out.println("&lt;h2&gt;" + mimeList[i] + "&lt;/h2&gt;");<a name="line.238"></a>
+<span class="sourceLineNo">239</span>                        }<a name="line.239"></a>
+<span class="sourceLineNo">240</span>                        writerList = ImageIO.getImageWritersByMIMEType(mimeList[i]);<a name="line.240"></a>
+<span class="sourceLineNo">241</span>                        out.println("&lt;ul&gt;");<a name="line.241"></a>
+<span class="sourceLineNo">242</span>                        while (writerList.hasNext()) {<a name="line.242"></a>
+<span class="sourceLineNo">243</span>                                out.println("&lt;li&gt;");<a name="line.243"></a>
+<span class="sourceLineNo">244</span>                                ImageWriter writer = writerList.next();<a name="line.244"></a>
+<span class="sourceLineNo">245</span>                                printWriter(writer, out);<a name="line.245"></a>
+<span class="sourceLineNo">246</span>                                out.println("&lt;/li&gt;");<a name="line.246"></a>
+<span class="sourceLineNo">247</span>                        }<a name="line.247"></a>
+<span class="sourceLineNo">248</span>                        out.println("&lt;/ul&gt;");<a name="line.248"></a>
+<span class="sourceLineNo">249</span>                }<a name="line.249"></a>
+<span class="sourceLineNo">250</span>                out.println("&lt;h1&gt;ImageIO&lt;/h1&gt;");<a name="line.250"></a>
+<span class="sourceLineNo">251</span>                ClassLoader imageLoader = javax.imageio.ImageIO.class.getClassLoader();<a name="line.251"></a>
+<span class="sourceLineNo">252</span>                if (imageLoader == null) {<a name="line.252"></a>
+<span class="sourceLineNo">253</span>                        out.println("&lt;p&gt;System class loader&lt;/p&gt;");<a name="line.253"></a>
+<span class="sourceLineNo">254</span>                } else {<a name="line.254"></a>
+<span class="sourceLineNo">255</span>                        out.println("&lt;p&gt;Loader is " + imageLoader.getClass().getName() + "&lt;/p&gt;");<a name="line.255"></a>
+<span class="sourceLineNo">256</span>                }<a name="line.256"></a>
+<span class="sourceLineNo">257</span>                out.println("&lt;/body&gt;&lt;/html&gt;");<a name="line.257"></a>
+<span class="sourceLineNo">258</span>        }<a name="line.258"></a>
+<span class="sourceLineNo">259</span>        @Override<a name="line.259"></a>
+<span class="sourceLineNo">260</span>        public void service(HttpServletRequest req, HttpServletResponse res) <a name="line.260"></a>
+<span class="sourceLineNo">261</span>                        throws IOException, ServletException {<a name="line.261"></a>
+<span class="sourceLineNo">262</span>                PrintWriter out = res.getWriter();<a name="line.262"></a>
+<span class="sourceLineNo">263</span>                printInfo(out);<a name="line.263"></a>
+<span class="sourceLineNo">264</span>        }<a name="line.264"></a>
+<span class="sourceLineNo">265</span>        /**<a name="line.265"></a>
+<span class="sourceLineNo">266</span>         * Test driver.<a name="line.266"></a>
+<span class="sourceLineNo">267</span>         * @param args<a name="line.267"></a>
+<span class="sourceLineNo">268</span>         */<a name="line.268"></a>
+<span class="sourceLineNo">269</span>        public static void main(String[] args) {<a name="line.269"></a>
+<span class="sourceLineNo">270</span>                CodecInfo instance = new CodecInfo();<a name="line.270"></a>
+<span class="sourceLineNo">271</span>                StringWriter string = new StringWriter();<a name="line.271"></a>
+<span class="sourceLineNo">272</span>                PrintWriter out = new PrintWriter(string);<a name="line.272"></a>
+<span class="sourceLineNo">273</span>                instance.printInfo(out);<a name="line.273"></a>
+<span class="sourceLineNo">274</span>                System.out.println(string.toString());<a name="line.274"></a>
+<span class="sourceLineNo">275</span>        }<a name="line.275"></a>
+<span class="sourceLineNo">276</span><a name="line.276"></a>
+<span class="sourceLineNo">277</span>}<a name="line.277"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</pre>
+</div>
+</body>
+</html>

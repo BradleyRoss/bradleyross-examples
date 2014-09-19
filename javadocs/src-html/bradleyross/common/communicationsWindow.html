@@ -1,0 +1,697 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head>
+<title>Source code</title>
+<link rel="stylesheet" type="text/css" href="../../../stylesheet.css" title="Style">
+</head>
+<body>
+<div class="sourceContainer">
+<pre><span class="sourceLineNo">001</span>package bradleyross.common;<a name="line.1"></a>
+<span class="sourceLineNo">002</span>import java.io.*; <a name="line.2"></a>
+<span class="sourceLineNo">003</span>import java.net.*; <a name="line.3"></a>
+<span class="sourceLineNo">004</span>import java.awt.*;<a name="line.4"></a>
+<span class="sourceLineNo">005</span>import java.awt.Button;<a name="line.5"></a>
+<span class="sourceLineNo">006</span>import java.awt.event.*;<a name="line.6"></a>
+<span class="sourceLineNo">007</span>/**<a name="line.7"></a>
+<span class="sourceLineNo">008</span>* This class opens a window for communications<a name="line.8"></a>
+<span class="sourceLineNo">009</span>* with a port on another system.<a name="line.9"></a>
+<span class="sourceLineNo">010</span>*<a name="line.10"></a>
+<span class="sourceLineNo">011</span>* @author Bradley Ross<a name="line.11"></a>
+<span class="sourceLineNo">012</span>*/<a name="line.12"></a>
+<span class="sourceLineNo">013</span>public class communicationsWindow { <a name="line.13"></a>
+<span class="sourceLineNo">014</span>/**<a name="line.14"></a>
+<span class="sourceLineNo">015</span>* Determines amount of diagnostic material to be<a name="line.15"></a>
+<span class="sourceLineNo">016</span>* printed.<a name="line.16"></a>
+<span class="sourceLineNo">017</span>*/<a name="line.17"></a>
+<span class="sourceLineNo">018</span>private int debugLevel = 0;<a name="line.18"></a>
+<span class="sourceLineNo">019</span>private  static int windowNumber = 0;<a name="line.19"></a>
+<span class="sourceLineNo">020</span>// private  int thisWindow;<a name="line.20"></a>
+<span class="sourceLineNo">021</span>private  FlowLayout layout;<a name="line.21"></a>
+<span class="sourceLineNo">022</span>private  Socket sock = null; <a name="line.22"></a>
+<span class="sourceLineNo">023</span>private  PrintWriter pw = null; <a name="line.23"></a>
+<span class="sourceLineNo">024</span>private  BufferedReader in = null;<a name="line.24"></a>
+<span class="sourceLineNo">025</span>private  InputStreamReader streamReader = null; <a name="line.25"></a>
+<span class="sourceLineNo">026</span>private  String logFileName="communicationsWindowLog.txt";<a name="line.26"></a>
+<span class="sourceLineNo">027</span>/**<a name="line.27"></a>
+<span class="sourceLineNo">028</span>* Determines whether messages are written to the log file.<a name="line.28"></a>
+<span class="sourceLineNo">029</span>*/<a name="line.29"></a>
+<span class="sourceLineNo">030</span>private  boolean logFileActive = false;<a name="line.30"></a>
+<span class="sourceLineNo">031</span>private  java.io.FileWriter logFile;<a name="line.31"></a>
+<span class="sourceLineNo">032</span>private  java.io.BufferedWriter logBuffer;<a name="line.32"></a>
+<span class="sourceLineNo">033</span>/**<a name="line.33"></a>
+<span class="sourceLineNo">034</span>* Used for writing the communicated text to a log file.<a name="line.34"></a>
+<span class="sourceLineNo">035</span>*/<a name="line.35"></a>
+<span class="sourceLineNo">036</span>private  java.io.PrintWriter logWriter;<a name="line.36"></a>
+<span class="sourceLineNo">037</span>/*<a name="line.37"></a>
+<span class="sourceLineNo">038</span>** The following items are used to determine when the<a name="line.38"></a>
+<span class="sourceLineNo">039</span>** items in the window should be resized.<a name="line.39"></a>
+<span class="sourceLineNo">040</span>*/<a name="line.40"></a>
+<span class="sourceLineNo">041</span>/** <a name="line.41"></a>
+<span class="sourceLineNo">042</span>* The number of columns in the TextArea objects if<a name="line.42"></a>
+<span class="sourceLineNo">043</span>* the window is made narrower.<a name="line.43"></a>
+<span class="sourceLineNo">044</span>*/<a name="line.44"></a>
+<span class="sourceLineNo">045</span>protected int colsSmaller;<a name="line.45"></a>
+<span class="sourceLineNo">046</span>/**<a name="line.46"></a>
+<span class="sourceLineNo">047</span>* The number of columns in the TextArea objects<a name="line.47"></a>
+<span class="sourceLineNo">048</span>* currently.<a name="line.48"></a>
+<span class="sourceLineNo">049</span>*/<a name="line.49"></a>
+<span class="sourceLineNo">050</span>protected int colsCurrent;<a name="line.50"></a>
+<span class="sourceLineNo">051</span>/**<a name="line.51"></a>
+<span class="sourceLineNo">052</span>* The number of columns in the TextArea objects if<a name="line.52"></a>
+<span class="sourceLineNo">053</span>* the window is made wider.<a name="line.53"></a>
+<span class="sourceLineNo">054</span>*/<a name="line.54"></a>
+<span class="sourceLineNo">055</span>protected int colsLarger;<a name="line.55"></a>
+<span class="sourceLineNo">056</span>/**<a name="line.56"></a>
+<span class="sourceLineNo">057</span>* The width of the TextArea objects in pixels when<a name="line.57"></a>
+<span class="sourceLineNo">058</span>* they are colsSmaller columns wide.<a name="line.58"></a>
+<span class="sourceLineNo">059</span>*/<a name="line.59"></a>
+<span class="sourceLineNo">060</span>protected int widthSmaller;<a name="line.60"></a>
+<span class="sourceLineNo">061</span>/**<a name="line.61"></a>
+<span class="sourceLineNo">062</span>* The width of the TextArea objects in pixels when<a name="line.62"></a>
+<span class="sourceLineNo">063</span>* they are colsCurrent columns wide.<a name="line.63"></a>
+<span class="sourceLineNo">064</span>*/<a name="line.64"></a>
+<span class="sourceLineNo">065</span>protected int widthCurrent;<a name="line.65"></a>
+<span class="sourceLineNo">066</span>/**<a name="line.66"></a>
+<span class="sourceLineNo">067</span>* The width of the TextArea objects in pixels when<a name="line.67"></a>
+<span class="sourceLineNo">068</span>* they are colsLarger columns wide.<a name="line.68"></a>
+<span class="sourceLineNo">069</span>*/<a name="line.69"></a>
+<span class="sourceLineNo">070</span>protected int widthLarger;<a name="line.70"></a>
+<span class="sourceLineNo">071</span>/**<a name="line.71"></a>
+<span class="sourceLineNo">072</span>* Used to determine the number of rows that should<a name="line.72"></a>
+<span class="sourceLineNo">073</span>* be in the TextArea objects when the height of<a name="line.73"></a>
+<span class="sourceLineNo">074</span>* TextArea objects is made slightly smaller.<a name="line.74"></a>
+<span class="sourceLineNo">075</span>*<a name="line.75"></a>
+<span class="sourceLineNo">076</span>* &lt;p&gt;The TextArea.getMinimumSize method is<a name="line.76"></a>
+<span class="sourceLineNo">077</span>*    applied to an object eight rows taller than<a name="line.77"></a>
+<span class="sourceLineNo">078</span>*    the topWindow object.  This allows room for<a name="line.78"></a>
+<span class="sourceLineNo">079</span>*    bottomWindow and the buttons.&lt;/p&gt;<a name="line.79"></a>
+<span class="sourceLineNo">080</span>*/<a name="line.80"></a>
+<span class="sourceLineNo">081</span>protected int rowsSmaller;<a name="line.81"></a>
+<span class="sourceLineNo">082</span>protected int rowsCurrent;<a name="line.82"></a>
+<span class="sourceLineNo">083</span>protected int rowsLarger;<a name="line.83"></a>
+<span class="sourceLineNo">084</span>/**<a name="line.84"></a>
+<span class="sourceLineNo">085</span>* This is the height in pixels returned by the<a name="line.85"></a>
+<span class="sourceLineNo">086</span>* TextArea.getMinimumSize method for a <a name="line.86"></a>
+<span class="sourceLineNo">087</span>* TextArea block rowsSmaller rows in height.<a name="line.87"></a>
+<span class="sourceLineNo">088</span>*/<a name="line.88"></a>
+<span class="sourceLineNo">089</span>protected int heightSmaller;<a name="line.89"></a>
+<span class="sourceLineNo">090</span>/**<a name="line.90"></a>
+<span class="sourceLineNo">091</span>* This is the height in pixels returned by the<a name="line.91"></a>
+<span class="sourceLineNo">092</span>* TextArea.getMinimumSize method for a <a name="line.92"></a>
+<span class="sourceLineNo">093</span>* TextArea block rowsCurrent rows in height.<a name="line.93"></a>
+<span class="sourceLineNo">094</span>*/<a name="line.94"></a>
+<span class="sourceLineNo">095</span>protected int heightCurrent;<a name="line.95"></a>
+<span class="sourceLineNo">096</span>/**<a name="line.96"></a>
+<span class="sourceLineNo">097</span>* This is the height in pixels returned by the<a name="line.97"></a>
+<span class="sourceLineNo">098</span>* TextArea.getMinimumSize method for a <a name="line.98"></a>
+<span class="sourceLineNo">099</span>* TextArea block rowsLarger rows in height.<a name="line.99"></a>
+<span class="sourceLineNo">100</span>*/<a name="line.100"></a>
+<span class="sourceLineNo">101</span>protected int heightLarger;<a name="line.101"></a>
+<span class="sourceLineNo">102</span>/**<a name="line.102"></a>
+<span class="sourceLineNo">103</span>* Set to true when the objects in the window<a name="line.103"></a>
+<span class="sourceLineNo">104</span>* have been initialized.<a name="line.104"></a>
+<span class="sourceLineNo">105</span>*<a name="line.105"></a>
+<span class="sourceLineNo">106</span>* &lt;p&gt;Some events related to window movement and<a name="line.106"></a>
+<span class="sourceLineNo">107</span>*    resizing may be generated before the objects<a name="line.107"></a>
+<span class="sourceLineNo">108</span>*    fully initialized.  These should not be<a name="line.108"></a>
+<span class="sourceLineNo">109</span>*    responded to as the sizes and locations have<a name="line.109"></a>
+<span class="sourceLineNo">110</span>*    not yet been set.&lt;/p&gt;<a name="line.110"></a>
+<span class="sourceLineNo">111</span>*/<a name="line.111"></a>
+<span class="sourceLineNo">112</span>protected boolean initialized = false;<a name="line.112"></a>
+<span class="sourceLineNo">113</span>/**<a name="line.113"></a>
+<span class="sourceLineNo">114</span>* The bottomWindow TextArea is used to hold information<a name="line.114"></a>
+<span class="sourceLineNo">115</span>* being prepared for transmission.<a name="line.115"></a>
+<span class="sourceLineNo">116</span>*/<a name="line.116"></a>
+<span class="sourceLineNo">117</span>private  java.awt.TextArea bottomWindow;<a name="line.117"></a>
+<span class="sourceLineNo">118</span>/** <a name="line.118"></a>
+<span class="sourceLineNo">119</span>* The topWindow TextArea holds the information sent from<a name="line.119"></a>
+<span class="sourceLineNo">120</span>* the other end of the connection.<a name="line.120"></a>
+<span class="sourceLineNo">121</span>*/<a name="line.121"></a>
+<span class="sourceLineNo">122</span>private  java.awt.TextArea topWindow;<a name="line.122"></a>
+<span class="sourceLineNo">123</span>/**<a name="line.123"></a>
+<span class="sourceLineNo">124</span>* The sendButton Button object causes the material in the<a name="line.124"></a>
+<span class="sourceLineNo">125</span>* lower window to be sent over the communication line.<a name="line.125"></a>
+<span class="sourceLineNo">126</span>* &lt;p&gt;The data is also sent when the user depresses the Return<a name="line.126"></a>
+<span class="sourceLineNo">127</span>*    key on the keyboard.  This button on the form may be<a name="line.127"></a>
+<span class="sourceLineNo">128</span>*    removed at a later date.&lt;/p&gt;<a name="line.128"></a>
+<span class="sourceLineNo">129</span>*/<a name="line.129"></a>
+<span class="sourceLineNo">130</span>private  java.awt.Button sendButton;<a name="line.130"></a>
+<span class="sourceLineNo">131</span>/**<a name="line.131"></a>
+<span class="sourceLineNo">132</span>*  The closeButton Button can be used to<a name="line.132"></a>
+<span class="sourceLineNo">133</span>*  close the connection when it fails<a name="line.133"></a>
+<span class="sourceLineNo">134</span>*  to close normally.<a name="line.134"></a>
+<span class="sourceLineNo">135</span>*/<a name="line.135"></a>
+<span class="sourceLineNo">136</span>private  java.awt.Button closeButton;<a name="line.136"></a>
+<span class="sourceLineNo">137</span>/**<a name="line.137"></a>
+<span class="sourceLineNo">138</span>* Object for the frame in which the application<a name="line.138"></a>
+<span class="sourceLineNo">139</span>* is displayed.<a name="line.139"></a>
+<span class="sourceLineNo">140</span>*<a name="line.140"></a>
+<span class="sourceLineNo">141</span>* &lt;p&gt;The menu bar is attached to the frame.&lt;/p&gt;<a name="line.141"></a>
+<span class="sourceLineNo">142</span>*/<a name="line.142"></a>
+<span class="sourceLineNo">143</span>private  Frame myFrame;<a name="line.143"></a>
+<span class="sourceLineNo">144</span>/**<a name="line.144"></a>
+<span class="sourceLineNo">145</span>* The myPanel panel provides a place to attach<a name="line.145"></a>
+<span class="sourceLineNo">146</span>* key listeners.<a name="line.146"></a>
+<span class="sourceLineNo">147</span>* &lt;p&gt;It appears that a Panel is a container, but<a name="line.147"></a>
+<span class="sourceLineNo">148</span>*    a Frame isn't.  Since listeners must be <a name="line.148"></a>
+<span class="sourceLineNo">149</span>*    attached to containers, it was necessary to<a name="line.149"></a>
+<span class="sourceLineNo">150</span>*    create a panel within the frame.&lt;/p&gt;<a name="line.150"></a>
+<span class="sourceLineNo">151</span>* &lt;p&gt;After the object is created, a listener is<a name="line.151"></a>
+<span class="sourceLineNo">152</span>*    created with an anonymous inner class to<a name="line.152"></a>
+<span class="sourceLineNo">153</span>*    react to changes in the size of the panel.&lt;/p&gt;<a name="line.153"></a>
+<span class="sourceLineNo">154</span>*/<a name="line.154"></a>
+<span class="sourceLineNo">155</span>private  Panel myPanel;<a name="line.155"></a>
+<span class="sourceLineNo">156</span>private  String windowName;<a name="line.156"></a>
+<span class="sourceLineNo">157</span>/**<a name="line.157"></a>
+<span class="sourceLineNo">158</span>* This method is called when the window is resized.<a name="line.158"></a>
+<span class="sourceLineNo">159</span>*<a name="line.159"></a>
+<span class="sourceLineNo">160</span>* &lt;p&gt;It examines the width and height of the windows<a name="line.160"></a>
+<span class="sourceLineNo">161</span>*    to determine whether the TextArea objects should<a name="line.161"></a>
+<span class="sourceLineNo">162</span>*    have their height and width changed.&lt;/p&gt;<a name="line.162"></a>
+<span class="sourceLineNo">163</span>*/<a name="line.163"></a>
+<span class="sourceLineNo">164</span>protected void windowResizer()<a name="line.164"></a>
+<span class="sourceLineNo">165</span>   {<a name="line.165"></a>
+<span class="sourceLineNo">166</span>   if (!initialized) { return; }<a name="line.166"></a>
+<span class="sourceLineNo">167</span>   if (debugLevel &gt; 2)<a name="line.167"></a>
+<span class="sourceLineNo">168</span>      { addMessage("Entering windowResizer"); }<a name="line.168"></a>
+<span class="sourceLineNo">169</span>   int windowHeight = myPanel.getHeight();<a name="line.169"></a>
+<span class="sourceLineNo">170</span>   int windowWidth = myPanel.getWidth();<a name="line.170"></a>
+<span class="sourceLineNo">171</span>   if (debugLevel &gt; 2)<a name="line.171"></a>
+<span class="sourceLineNo">172</span>      { addMessage("Current panel width is "<a name="line.172"></a>
+<span class="sourceLineNo">173</span>         .concat(Integer.toString(myPanel.getWidth()))<a name="line.173"></a>
+<span class="sourceLineNo">174</span>         .concat("  Range: ")<a name="line.174"></a>
+<span class="sourceLineNo">175</span>         .concat(Integer.toString(widthSmaller))<a name="line.175"></a>
+<span class="sourceLineNo">176</span>         .concat("-")<a name="line.176"></a>
+<span class="sourceLineNo">177</span>         .concat(Integer.toString(widthLarger))); }<a name="line.177"></a>
+<span class="sourceLineNo">178</span>   if (windowWidth  &gt; widthLarger + 15)<a name="line.178"></a>
+<span class="sourceLineNo">179</span>      {<a name="line.179"></a>
+<span class="sourceLineNo">180</span>      if (debugLevel &gt; 0)<a name="line.180"></a>
+<span class="sourceLineNo">181</span>         { addMessage("Expanding TextArea objects "<a name="line.181"></a>
+<span class="sourceLineNo">182</span>           .concat(Integer.toString(colsLarger))<a name="line.182"></a>
+<span class="sourceLineNo">183</span>           .concat(" columns")); }<a name="line.183"></a>
+<span class="sourceLineNo">184</span>      topWindow.setColumns(colsLarger);<a name="line.184"></a>
+<span class="sourceLineNo">185</span>      bottomWindow.setColumns(colsLarger);<a name="line.185"></a>
+<span class="sourceLineNo">186</span>      colsCurrent = colsLarger;<a name="line.186"></a>
+<span class="sourceLineNo">187</span>      widthCurrent = widthLarger;<a name="line.187"></a>
+<span class="sourceLineNo">188</span>      colsSmaller = colsCurrent - 5;<a name="line.188"></a>
+<span class="sourceLineNo">189</span>      colsLarger = colsCurrent + 5;<a name="line.189"></a>
+<span class="sourceLineNo">190</span>      widthSmaller = (topWindow.getMinimumSize(25, colsSmaller)).width;<a name="line.190"></a>
+<span class="sourceLineNo">191</span>      widthLarger = (topWindow.getMinimumSize(25, colsLarger)).width;<a name="line.191"></a>
+<span class="sourceLineNo">192</span>      myPanel.repaint();<a name="line.192"></a>
+<span class="sourceLineNo">193</span>      }<a name="line.193"></a>
+<span class="sourceLineNo">194</span>   else if (widthCurrent + 15  &gt; windowWidth)<a name="line.194"></a>
+<span class="sourceLineNo">195</span>      {<a name="line.195"></a>
+<span class="sourceLineNo">196</span>      if (debugLevel &gt; 0)<a name="line.196"></a>
+<span class="sourceLineNo">197</span>         { addMessage("Shrinking TextArea items "<a name="line.197"></a>
+<span class="sourceLineNo">198</span>           .concat(Integer.toString(colsSmaller))<a name="line.198"></a>
+<span class="sourceLineNo">199</span>           .concat(" columns")); }<a name="line.199"></a>
+<span class="sourceLineNo">200</span>      topWindow.setColumns(colsSmaller);<a name="line.200"></a>
+<span class="sourceLineNo">201</span>      bottomWindow.setColumns(colsSmaller);<a name="line.201"></a>
+<span class="sourceLineNo">202</span>      colsCurrent = colsSmaller;<a name="line.202"></a>
+<span class="sourceLineNo">203</span>      widthCurrent = widthSmaller;<a name="line.203"></a>
+<span class="sourceLineNo">204</span>      colsSmaller = colsCurrent - 5;<a name="line.204"></a>
+<span class="sourceLineNo">205</span>      colsLarger = colsCurrent + 5;<a name="line.205"></a>
+<span class="sourceLineNo">206</span>      widthSmaller = (topWindow.getMinimumSize(25, colsSmaller)).width;<a name="line.206"></a>
+<span class="sourceLineNo">207</span>      widthLarger = (topWindow.getMinimumSize(25, colsLarger)).width;<a name="line.207"></a>
+<span class="sourceLineNo">208</span>      myPanel.repaint();<a name="line.208"></a>
+<span class="sourceLineNo">209</span>      }<a name="line.209"></a>
+<span class="sourceLineNo">210</span>   if (windowHeight &gt; heightLarger + 15)<a name="line.210"></a>
+<span class="sourceLineNo">211</span>      {<a name="line.211"></a>
+<span class="sourceLineNo">212</span>      rowsCurrent = rowsLarger;<a name="line.212"></a>
+<span class="sourceLineNo">213</span>      heightCurrent = heightLarger;<a name="line.213"></a>
+<span class="sourceLineNo">214</span>      if (debugLevel &gt; 0)<a name="line.214"></a>
+<span class="sourceLineNo">215</span>         { addMessage("Increasing height of topWindow to "<a name="line.215"></a>
+<span class="sourceLineNo">216</span>              .concat(Integer.toString(rowsCurrent - 8))); }<a name="line.216"></a>
+<span class="sourceLineNo">217</span>      if (rowsCurrent &gt; 10)<a name="line.217"></a>
+<span class="sourceLineNo">218</span>         {<a name="line.218"></a>
+<span class="sourceLineNo">219</span>         topWindow.setRows(rowsCurrent - 8);<a name="line.219"></a>
+<span class="sourceLineNo">220</span>         rowsLarger = rowsCurrent + 2;<a name="line.220"></a>
+<span class="sourceLineNo">221</span>         rowsSmaller = rowsCurrent - 2;<a name="line.221"></a>
+<span class="sourceLineNo">222</span>         heightSmaller = topWindow.getMinimumSize(rowsSmaller, 75).height;<a name="line.222"></a>
+<span class="sourceLineNo">223</span>         heightLarger = topWindow.getMinimumSize(rowsLarger, 75).height;<a name="line.223"></a>
+<span class="sourceLineNo">224</span>         }<a name="line.224"></a>
+<span class="sourceLineNo">225</span>      else<a name="line.225"></a>
+<span class="sourceLineNo">226</span>         {<a name="line.226"></a>
+<span class="sourceLineNo">227</span>         addMessage("Trying to reduce height below 0"<a name="line.227"></a>
+<span class="sourceLineNo">228</span>            .concat(" while increasing height"));<a name="line.228"></a>
+<span class="sourceLineNo">229</span>         }<a name="line.229"></a>
+<span class="sourceLineNo">230</span>      myPanel.repaint();<a name="line.230"></a>
+<span class="sourceLineNo">231</span>      }<a name="line.231"></a>
+<span class="sourceLineNo">232</span>   else if (heightCurrent   &gt; windowHeight)<a name="line.232"></a>
+<span class="sourceLineNo">233</span>      {<a name="line.233"></a>
+<span class="sourceLineNo">234</span>      rowsCurrent = rowsSmaller;<a name="line.234"></a>
+<span class="sourceLineNo">235</span>      heightCurrent = heightSmaller;<a name="line.235"></a>
+<span class="sourceLineNo">236</span>      if (debugLevel &gt; 0)<a name="line.236"></a>
+<span class="sourceLineNo">237</span>         { addMessage("Decreasing height of topWindow to "<a name="line.237"></a>
+<span class="sourceLineNo">238</span>              .concat(Integer.toString(rowsCurrent - 8))); }<a name="line.238"></a>
+<span class="sourceLineNo">239</span>      rowsLarger = rowsCurrent + 2;<a name="line.239"></a>
+<span class="sourceLineNo">240</span>      rowsSmaller = rowsCurrent - 2;<a name="line.240"></a>
+<span class="sourceLineNo">241</span>      if (rowsCurrent &gt; 10)<a name="line.241"></a>
+<span class="sourceLineNo">242</span>         {<a name="line.242"></a>
+<span class="sourceLineNo">243</span>         topWindow.setRows(rowsCurrent - 8);<a name="line.243"></a>
+<span class="sourceLineNo">244</span>         heightSmaller = topWindow.getMinimumSize(rowsSmaller, 75).height;<a name="line.244"></a>
+<span class="sourceLineNo">245</span>         heightLarger = topWindow.getMinimumSize(rowsLarger, 75).height;<a name="line.245"></a>
+<span class="sourceLineNo">246</span>         }<a name="line.246"></a>
+<span class="sourceLineNo">247</span>      else<a name="line.247"></a>
+<span class="sourceLineNo">248</span>         {<a name="line.248"></a>
+<span class="sourceLineNo">249</span>         addMessage("Trying to reduce height below 0"<a name="line.249"></a>
+<span class="sourceLineNo">250</span>            .concat(" while decreasing height"));<a name="line.250"></a>
+<span class="sourceLineNo">251</span>         }<a name="line.251"></a>
+<span class="sourceLineNo">252</span>      myPanel.repaint();<a name="line.252"></a>
+<span class="sourceLineNo">253</span>      }<a name="line.253"></a>
+<span class="sourceLineNo">254</span>   }<a name="line.254"></a>
+<span class="sourceLineNo">255</span>/**<a name="line.255"></a>
+<span class="sourceLineNo">256</span>* This method generates a message and adds it to the<a name="line.256"></a>
+<span class="sourceLineNo">257</span>* log and the Sys.output character stream.<a name="line.257"></a>
+<span class="sourceLineNo">258</span>*/<a name="line.258"></a>
+<span class="sourceLineNo">259</span>protected void addMessage (String display)<a name="line.259"></a>
+<span class="sourceLineNo">260</span>   {<a name="line.260"></a>
+<span class="sourceLineNo">261</span>   if (debugLevel &gt; 0)<a name="line.261"></a>
+<span class="sourceLineNo">262</span>      {<a name="line.262"></a>
+<span class="sourceLineNo">263</span>      System.out.println(display);<a name="line.263"></a>
+<span class="sourceLineNo">264</span>      }<a name="line.264"></a>
+<span class="sourceLineNo">265</span>   }<a name="line.265"></a>
+<span class="sourceLineNo">266</span>/**<a name="line.266"></a>
+<span class="sourceLineNo">267</span>* This function is called whenever a key is pressed.<a name="line.267"></a>
+<span class="sourceLineNo">268</span>* &lt;p&gt;If the Delete or Backspace key is depressed, the<a name="line.268"></a>
+<span class="sourceLineNo">269</span>*    last character in the bottomWindow textArea is<a name="line.269"></a>
+<span class="sourceLineNo">270</span>*    removed.&lt;/p&gt;<a name="line.270"></a>
+<span class="sourceLineNo">271</span>* &lt;p&gt;If the Return key is depressed, the contents of<a name="line.271"></a>
+<span class="sourceLineNo">272</span>*    bottomWindow are sent to the remote system and<a name="line.272"></a>
+<span class="sourceLineNo">273</span>*    contents of bottomWindow are erased.&lt;/p&gt;<a name="line.273"></a>
+<span class="sourceLineNo">274</span>*/<a name="line.274"></a>
+<span class="sourceLineNo">275</span>protected void processKey (KeyEvent e)<a name="line.275"></a>
+<span class="sourceLineNo">276</span>   {<a name="line.276"></a>
+<span class="sourceLineNo">277</span>   char[] processed = { e.getKeyChar() };<a name="line.277"></a>
+<span class="sourceLineNo">278</span>   if (debugLevel &gt; 2)<a name="line.278"></a>
+<span class="sourceLineNo">279</span>      { System.out.print(processed[0]); }<a name="line.279"></a>
+<span class="sourceLineNo">280</span>   if (processed[0] == '\n')<a name="line.280"></a>
+<span class="sourceLineNo">281</span>      { sendMessage(); }<a name="line.281"></a>
+<span class="sourceLineNo">282</span>   if ((processed[0] == java.awt.event.KeyEvent.VK_BACK_SPACE) ||<a name="line.282"></a>
+<span class="sourceLineNo">283</span>       (processed[0] == java.awt.event.KeyEvent.VK_DELETE))<a name="line.283"></a>
+<span class="sourceLineNo">284</span>      {<a name="line.284"></a>
+<span class="sourceLineNo">285</span>      String workingText = bottomWindow.getText();<a name="line.285"></a>
+<span class="sourceLineNo">286</span>      bottomWindow.setText(workingText.substring(0, <a name="line.286"></a>
+<span class="sourceLineNo">287</span>             workingText.length() - 1));<a name="line.287"></a>
+<span class="sourceLineNo">288</span>      }<a name="line.288"></a>
+<span class="sourceLineNo">289</span>   else<a name="line.289"></a>
+<span class="sourceLineNo">290</span>      { bottomWindow.append(new String(processed)); }<a name="line.290"></a>
+<span class="sourceLineNo">291</span>   }<a name="line.291"></a>
+<span class="sourceLineNo">292</span>/**<a name="line.292"></a>
+<span class="sourceLineNo">293</span>* This method is called when the Send button is depressed<a name="line.293"></a>
+<span class="sourceLineNo">294</span>* on the form<a name="line.294"></a>
+<span class="sourceLineNo">295</span>* or the user depresses the Return key on the keyboard.<a name="line.295"></a>
+<span class="sourceLineNo">296</span>*/<a name="line.296"></a>
+<span class="sourceLineNo">297</span>protected void sendMessage()<a name="line.297"></a>
+<span class="sourceLineNo">298</span>   {<a name="line.298"></a>
+<span class="sourceLineNo">299</span>   pw.print(bottomWindow.getText().concat("\n")); <a name="line.299"></a>
+<span class="sourceLineNo">300</span>   pw.flush();<a name="line.300"></a>
+<span class="sourceLineNo">301</span>   topWindow.append("Text sent: "<a name="line.301"></a>
+<span class="sourceLineNo">302</span>         .concat(bottomWindow.getText())<a name="line.302"></a>
+<span class="sourceLineNo">303</span>         .concat("\n")) ; <a name="line.303"></a>
+<span class="sourceLineNo">304</span>   bottomWindow.setText(null);<a name="line.304"></a>
+<span class="sourceLineNo">305</span>   // bottomWindow.requestFocus();<a name="line.305"></a>
+<span class="sourceLineNo">306</span>   }<a name="line.306"></a>
+<span class="sourceLineNo">307</span>public communicationsWindow(String name)<a name="line.307"></a>
+<span class="sourceLineNo">308</span>   {<a name="line.308"></a>
+<span class="sourceLineNo">309</span>   windowName = name;<a name="line.309"></a>
+<span class="sourceLineNo">310</span>   }<a name="line.310"></a>
+<span class="sourceLineNo">311</span>/**<a name="line.311"></a>
+<span class="sourceLineNo">312</span>* This method is used to control the amount of diagnostic<a name="line.312"></a>
+<span class="sourceLineNo">313</span>* messages generated.<a name="line.313"></a>
+<span class="sourceLineNo">314</span>* &lt;p&gt;A value of 0 means no messages are to be printed. Higher<a name="line.314"></a>
+<span class="sourceLineNo">315</span>*    values generate larger amounts of messages.<a name="line.315"></a>
+<span class="sourceLineNo">316</span>*    &lt;/p&gt;<a name="line.316"></a>
+<span class="sourceLineNo">317</span>*/<a name="line.317"></a>
+<span class="sourceLineNo">318</span>public void setDebugLevel (int level)<a name="line.318"></a>
+<span class="sourceLineNo">319</span>   {<a name="line.319"></a>
+<span class="sourceLineNo">320</span>   debugLevel = level;<a name="line.320"></a>
+<span class="sourceLineNo">321</span>   }<a name="line.321"></a>
+<span class="sourceLineNo">322</span>public int getDebugLevel ()<a name="line.322"></a>
+<span class="sourceLineNo">323</span>   { return debugLevel; }<a name="line.323"></a>
+<span class="sourceLineNo">324</span>/**<a name="line.324"></a>
+<span class="sourceLineNo">325</span>* This is the main method for creating the communications<a name="line.325"></a>
+<span class="sourceLineNo">326</span>* window and setting up the communications stream.<a name="line.326"></a>
+<span class="sourceLineNo">327</span>*/<a name="line.327"></a>
+<span class="sourceLineNo">328</span>public void start (Socket inputSock)<a name="line.328"></a>
+<span class="sourceLineNo">329</span>   {<a name="line.329"></a>
+<span class="sourceLineNo">330</span>   if (debugLevel &gt; 1)<a name="line.330"></a>
+<span class="sourceLineNo">331</span>      { <a name="line.331"></a>
+<span class="sourceLineNo">332</span>      System.out.println<a name="line.332"></a>
+<span class="sourceLineNo">333</span>         ("Running method start of communicationsWindow");<a name="line.333"></a>
+<span class="sourceLineNo">334</span>      }<a name="line.334"></a>
+<span class="sourceLineNo">335</span>   windowNumber = windowNumber + 1;<a name="line.335"></a>
+<span class="sourceLineNo">336</span>   // thisWindow = windowNumber;<a name="line.336"></a>
+<span class="sourceLineNo">337</span>   sock = inputSock;<a name="line.337"></a>
+<span class="sourceLineNo">338</span>   if (debugLevel &gt; 1)<a name="line.338"></a>
+<span class="sourceLineNo">339</span>      { System.out.println("Point A"); }<a name="line.339"></a>
+<span class="sourceLineNo">340</span>   myFrame = new Frame(windowName);<a name="line.340"></a>
+<span class="sourceLineNo">341</span>   java.awt.MenuBar menubar = new java.awt.MenuBar();<a name="line.341"></a>
+<span class="sourceLineNo">342</span>   java.awt.Menu logMenu = new java.awt.Menu("Log");<a name="line.342"></a>
+<span class="sourceLineNo">343</span>   java.awt.MenuItem startLogging = new java.awt.MenuItem("Start logging");<a name="line.343"></a>
+<span class="sourceLineNo">344</span>   java.awt.MenuItem stopLogging = new java.awt.MenuItem("Stop logging");<a name="line.344"></a>
+<span class="sourceLineNo">345</span>   logMenu.add(startLogging);<a name="line.345"></a>
+<span class="sourceLineNo">346</span>   logMenu.add(stopLogging);<a name="line.346"></a>
+<span class="sourceLineNo">347</span>   menubar.add(logMenu);<a name="line.347"></a>
+<span class="sourceLineNo">348</span>   myFrame.setMenuBar(menubar);<a name="line.348"></a>
+<span class="sourceLineNo">349</span>   myPanel = new Panel();<a name="line.349"></a>
+<span class="sourceLineNo">350</span>   startLogging.addActionListener(new ActionListener()<a name="line.350"></a>
+<span class="sourceLineNo">351</span>      { public final void actionPerformed(ActionEvent e)<a name="line.351"></a>
+<span class="sourceLineNo">352</span>          { <a name="line.352"></a>
+<span class="sourceLineNo">353</span>          System.out.println("*** Start logging ");<a name="line.353"></a>
+<span class="sourceLineNo">354</span>          if (!logFileActive)<a name="line.354"></a>
+<span class="sourceLineNo">355</span>             {<a name="line.355"></a>
+<span class="sourceLineNo">356</span>             try<a name="line.356"></a>
+<span class="sourceLineNo">357</span>                {<a name="line.357"></a>
+<span class="sourceLineNo">358</span>                logFile = new java.io.FileWriter(logFileName, true);<a name="line.358"></a>
+<span class="sourceLineNo">359</span>                logBuffer = new java.io.BufferedWriter(logFile);<a name="line.359"></a>
+<span class="sourceLineNo">360</span>                logWriter = new java.io.PrintWriter(logBuffer);<a name="line.360"></a>
+<span class="sourceLineNo">361</span>                logWriter.println( (new java.util.Date()).toString());<a name="line.361"></a>
+<span class="sourceLineNo">362</span>                logFileActive = true;<a name="line.362"></a>
+<span class="sourceLineNo">363</span>                }<a name="line.363"></a>
+<span class="sourceLineNo">364</span>             catch (Exception e2)<a name="line.364"></a>
+<span class="sourceLineNo">365</span>                {<a name="line.365"></a>
+<span class="sourceLineNo">366</span>                System.out.println("Error when starting logging");<a name="line.366"></a>
+<span class="sourceLineNo">367</span>                }<a name="line.367"></a>
+<span class="sourceLineNo">368</span>             } <a name="line.368"></a>
+<span class="sourceLineNo">369</span>          } });<a name="line.369"></a>
+<span class="sourceLineNo">370</span>   stopLogging.addActionListener(new ActionListener()<a name="line.370"></a>
+<span class="sourceLineNo">371</span>      { public final void actionPerformed(ActionEvent e)<a name="line.371"></a>
+<span class="sourceLineNo">372</span>          { <a name="line.372"></a>
+<span class="sourceLineNo">373</span>          System.out.println("*** Stop logging "); <a name="line.373"></a>
+<span class="sourceLineNo">374</span>          if (logFileActive)<a name="line.374"></a>
+<span class="sourceLineNo">375</span>             {<a name="line.375"></a>
+<span class="sourceLineNo">376</span>             try<a name="line.376"></a>
+<span class="sourceLineNo">377</span>                {<a name="line.377"></a>
+<span class="sourceLineNo">378</span>                logWriter.flush();<a name="line.378"></a>
+<span class="sourceLineNo">379</span>                logWriter.close();<a name="line.379"></a>
+<span class="sourceLineNo">380</span>                logFileActive = false;<a name="line.380"></a>
+<span class="sourceLineNo">381</span>                }<a name="line.381"></a>
+<span class="sourceLineNo">382</span>             catch (Exception e2)<a name="line.382"></a>
+<span class="sourceLineNo">383</span>                {<a name="line.383"></a>
+<span class="sourceLineNo">384</span>                System.out.println("Error when stopping logging");<a name="line.384"></a>
+<span class="sourceLineNo">385</span>                }<a name="line.385"></a>
+<span class="sourceLineNo">386</span>             }<a name="line.386"></a>
+<span class="sourceLineNo">387</span>          } } );<a name="line.387"></a>
+<span class="sourceLineNo">388</span>   /*<a name="line.388"></a>
+<span class="sourceLineNo">389</span>   ** setSize is (width, height)<a name="line.389"></a>
+<span class="sourceLineNo">390</span>   */<a name="line.390"></a>
+<span class="sourceLineNo">391</span>   if (debugLevel &gt; 1)<a name="line.391"></a>
+<span class="sourceLineNo">392</span>      { System.out.println("Point B"); }<a name="line.392"></a>
+<span class="sourceLineNo">393</span>   myFrame.setSize(800, 600);<a name="line.393"></a>
+<span class="sourceLineNo">394</span>   layout = new FlowLayout();<a name="line.394"></a>
+<span class="sourceLineNo">395</span>   /*<a name="line.395"></a>
+<span class="sourceLineNo">396</span>   * Sets up the listener for keystrokes.<a name="line.396"></a>
+<span class="sourceLineNo">397</span>   */<a name="line.397"></a>
+<span class="sourceLineNo">398</span>   myPanel.addKeyListener(new KeyAdapter()<a name="line.398"></a>
+<span class="sourceLineNo">399</span>      { public final void keyTyped (KeyEvent e)<a name="line.399"></a>
+<span class="sourceLineNo">400</span>         {<a name="line.400"></a>
+<span class="sourceLineNo">401</span>         processKey(e);<a name="line.401"></a>
+<span class="sourceLineNo">402</span>         }  }  );<a name="line.402"></a>
+<span class="sourceLineNo">403</span>   /*<a name="line.403"></a>
+<span class="sourceLineNo">404</span>   ** Listen for changes to window<a name="line.404"></a>
+<span class="sourceLineNo">405</span>   */<a name="line.405"></a>
+<span class="sourceLineNo">406</span>   myPanel.addComponentListener(new ComponentListener()<a name="line.406"></a>
+<span class="sourceLineNo">407</span>      {<a name="line.407"></a>
+<span class="sourceLineNo">408</span>      public void componentHidden(ComponentEvent e)<a name="line.408"></a>
+<span class="sourceLineNo">409</span>         {<a name="line.409"></a>
+<span class="sourceLineNo">410</span>         if (debugLevel &gt; 0)<a name="line.410"></a>
+<span class="sourceLineNo">411</span>            { addMessage("Window hidden"); }<a name="line.411"></a>
+<span class="sourceLineNo">412</span>         }<a name="line.412"></a>
+<span class="sourceLineNo">413</span>      public void componentMoved (ComponentEvent e)<a name="line.413"></a>
+<span class="sourceLineNo">414</span>         {<a name="line.414"></a>
+<span class="sourceLineNo">415</span>         if (debugLevel &gt; 0)<a name="line.415"></a>
+<span class="sourceLineNo">416</span>            { addMessage("Window moved"); }<a name="line.416"></a>
+<span class="sourceLineNo">417</span>         myFrame.repaint();<a name="line.417"></a>
+<span class="sourceLineNo">418</span>         }<a name="line.418"></a>
+<span class="sourceLineNo">419</span>      public void componentResized(ComponentEvent e)<a name="line.419"></a>
+<span class="sourceLineNo">420</span>         {<a name="line.420"></a>
+<span class="sourceLineNo">421</span>         if (debugLevel &gt; 2)<a name="line.421"></a>
+<span class="sourceLineNo">422</span>            { <a name="line.422"></a>
+<span class="sourceLineNo">423</span>            addMessage("Window resized "<a name="line.423"></a>
+<span class="sourceLineNo">424</span>                 .concat(Integer.toString(myFrame.getWidth()))<a name="line.424"></a>
+<span class="sourceLineNo">425</span>                 .concat(":")<a name="line.425"></a>
+<span class="sourceLineNo">426</span>                 .concat(Integer.toString(myFrame.getHeight()))); <a name="line.426"></a>
+<span class="sourceLineNo">427</span>            }<a name="line.427"></a>
+<span class="sourceLineNo">428</span>         windowResizer();<a name="line.428"></a>
+<span class="sourceLineNo">429</span>         }<a name="line.429"></a>
+<span class="sourceLineNo">430</span>      public void componentShown (ComponentEvent e)<a name="line.430"></a>
+<span class="sourceLineNo">431</span>         {<a name="line.431"></a>
+<span class="sourceLineNo">432</span>         if (debugLevel &gt; 0)<a name="line.432"></a>
+<span class="sourceLineNo">433</span>            { addMessage("Window becomes visible"); }<a name="line.433"></a>
+<span class="sourceLineNo">434</span>         }<a name="line.434"></a>
+<span class="sourceLineNo">435</span>      }  );<a name="line.435"></a>
+<span class="sourceLineNo">436</span>   /* <a name="line.436"></a>
+<span class="sourceLineNo">437</span>   ** Specification for TextArea constructor is<a name="line.437"></a>
+<span class="sourceLineNo">438</span>   **  (text, rows, columnns, scrollbars)<a name="line.438"></a>
+<span class="sourceLineNo">439</span>   **<a name="line.439"></a>
+<span class="sourceLineNo">440</span>   ** topWindow<a name="line.440"></a>
+<span class="sourceLineNo">441</span>   */<a name="line.441"></a>
+<span class="sourceLineNo">442</span>   topWindow = <a name="line.442"></a>
+<span class="sourceLineNo">443</span>      new java.awt.TextArea("", 25, 80,<a name="line.443"></a>
+<span class="sourceLineNo">444</span>         java.awt.TextArea.SCROLLBARS_VERTICAL_ONLY);<a name="line.444"></a>
+<span class="sourceLineNo">445</span>   topWindow.setEditable(false);<a name="line.445"></a>
+<span class="sourceLineNo">446</span>   topWindow.addFocusListener(new FocusAdapter()<a name="line.446"></a>
+<span class="sourceLineNo">447</span>      { public void focusGained(FocusEvent e) <a name="line.447"></a>
+<span class="sourceLineNo">448</span>         {myPanel.requestFocus(); } } );<a name="line.448"></a>
+<span class="sourceLineNo">449</span>   /*<a name="line.449"></a>
+<span class="sourceLineNo">450</span>   ** bottomWindow<a name="line.450"></a>
+<span class="sourceLineNo">451</span>   ** I changed from SCROLLBARS_VERTICAL_ONLY to<a name="line.451"></a>
+<span class="sourceLineNo">452</span>   ** SCROLLBARS_BOTH<a name="line.452"></a>
+<span class="sourceLineNo">453</span>   */<a name="line.453"></a>
+<span class="sourceLineNo">454</span>   bottomWindow = new java.awt.TextArea("", 4, 80,<a name="line.454"></a>
+<span class="sourceLineNo">455</span>         java.awt.TextArea.SCROLLBARS_VERTICAL_ONLY);<a name="line.455"></a>
+<span class="sourceLineNo">456</span>   bottomWindow.setEditable(false);<a name="line.456"></a>
+<span class="sourceLineNo">457</span>   bottomWindow.addFocusListener(new FocusAdapter()<a name="line.457"></a>
+<span class="sourceLineNo">458</span>      { public void focusGained(FocusEvent e) <a name="line.458"></a>
+<span class="sourceLineNo">459</span>         {myPanel.requestFocus(); } } );<a name="line.459"></a>
+<span class="sourceLineNo">460</span>   /*<a name="line.460"></a>
+<span class="sourceLineNo">461</span>   ** sendButton<a name="line.461"></a>
+<span class="sourceLineNo">462</span>   */<a name="line.462"></a>
+<span class="sourceLineNo">463</span>   sendButton = new Button("Send");<a name="line.463"></a>
+<span class="sourceLineNo">464</span>   sendButton.addActionListener (new ActionListener()<a name="line.464"></a>
+<span class="sourceLineNo">465</span>     { public final void actionPerformed (ActionEvent e)<a name="line.465"></a>
+<span class="sourceLineNo">466</span>        {<a name="line.466"></a>
+<span class="sourceLineNo">467</span>        sendMessage();<a name="line.467"></a>
+<span class="sourceLineNo">468</span>        } } );<a name="line.468"></a>
+<span class="sourceLineNo">469</span>   /*<a name="line.469"></a>
+<span class="sourceLineNo">470</span>   ** closeButton<a name="line.470"></a>
+<span class="sourceLineNo">471</span>   */<a name="line.471"></a>
+<span class="sourceLineNo">472</span>   closeButton = new Button("Close");<a name="line.472"></a>
+<span class="sourceLineNo">473</span>   closeButton.addActionListener (new ActionListener()<a name="line.473"></a>
+<span class="sourceLineNo">474</span>     { public final void actionPerformed (ActionEvent e)<a name="line.474"></a>
+<span class="sourceLineNo">475</span>        {try <a name="line.475"></a>
+<span class="sourceLineNo">476</span>            {<a name="line.476"></a>
+<span class="sourceLineNo">477</span>            if (debugLevel &gt; 1)<a name="line.477"></a>
+<span class="sourceLineNo">478</span>               { System.out.println("Close button activated"); }<a name="line.478"></a>
+<span class="sourceLineNo">479</span>            sock.close(); <a name="line.479"></a>
+<span class="sourceLineNo">480</span>            myFrame.removeAll();<a name="line.480"></a>
+<span class="sourceLineNo">481</span>            return;<a name="line.481"></a>
+<span class="sourceLineNo">482</span>            } <a name="line.482"></a>
+<span class="sourceLineNo">483</span>         catch (Exception e2) <a name="line.483"></a>
+<span class="sourceLineNo">484</span>            {<a name="line.484"></a>
+<span class="sourceLineNo">485</span>            System.out.println("*** Start of error message");<a name="line.485"></a>
+<span class="sourceLineNo">486</span>            System.out.println("unexpected Exception while"<a name="line.486"></a>
+<span class="sourceLineNo">487</span>                  .concat(" processing Close button"));<a name="line.487"></a>
+<span class="sourceLineNo">488</span>            e2.printStackTrace();<a name="line.488"></a>
+<span class="sourceLineNo">489</span>            System.out.println("*** End of error message");<a name="line.489"></a>
+<span class="sourceLineNo">490</span>            }<a name="line.490"></a>
+<span class="sourceLineNo">491</span>           } } );<a name="line.491"></a>
+<span class="sourceLineNo">492</span>   /*<a name="line.492"></a>
+<span class="sourceLineNo">493</span>   ** Set up the various window items and prepare them<a name="line.493"></a>
+<span class="sourceLineNo">494</span>   ** for interaction<a name="line.494"></a>
+<span class="sourceLineNo">495</span>   */<a name="line.495"></a>
+<span class="sourceLineNo">496</span>   myPanel.add(topWindow);<a name="line.496"></a>
+<span class="sourceLineNo">497</span>   myPanel.add(bottomWindow);<a name="line.497"></a>
+<span class="sourceLineNo">498</span>   myPanel.add(sendButton);<a name="line.498"></a>
+<span class="sourceLineNo">499</span>   myPanel.add(closeButton);<a name="line.499"></a>
+<span class="sourceLineNo">500</span>   myFrame.add(myPanel);<a name="line.500"></a>
+<span class="sourceLineNo">501</span>   myPanel.setLayout(layout);<a name="line.501"></a>
+<span class="sourceLineNo">502</span>   myFrame.doLayout();<a name="line.502"></a>
+<span class="sourceLineNo">503</span>   myPanel.doLayout();<a name="line.503"></a>
+<span class="sourceLineNo">504</span>   myFrame.setVisible(true);<a name="line.504"></a>
+<span class="sourceLineNo">505</span>   myPanel.setVisible(true);<a name="line.505"></a>
+<span class="sourceLineNo">506</span>   myPanel.requestFocus();<a name="line.506"></a>
+<span class="sourceLineNo">507</span>   // String response = ""; <a name="line.507"></a>
+<span class="sourceLineNo">508</span>   if (debugLevel &gt; 1)<a name="line.508"></a>
+<span class="sourceLineNo">509</span>      { System.out.println("Creating frame"); }<a name="line.509"></a>
+<span class="sourceLineNo">510</span>   initialized = true;<a name="line.510"></a>
+<span class="sourceLineNo">511</span>   /*<a name="line.511"></a>
+<span class="sourceLineNo">512</span>   ** Determine the limits for shrinking and growing<a name="line.512"></a>
+<span class="sourceLineNo">513</span>   ** TextArea items<a name="line.513"></a>
+<span class="sourceLineNo">514</span>   */<a name="line.514"></a>
+<span class="sourceLineNo">515</span>   colsCurrent = 80;<a name="line.515"></a>
+<span class="sourceLineNo">516</span>   colsSmaller = 75;<a name="line.516"></a>
+<span class="sourceLineNo">517</span>   colsLarger = 85;<a name="line.517"></a>
+<span class="sourceLineNo">518</span>   widthSmaller = (topWindow.getMinimumSize(25, colsSmaller)).width;<a name="line.518"></a>
+<span class="sourceLineNo">519</span>   widthCurrent = (topWindow.getMinimumSize(25, colsCurrent)).width;<a name="line.519"></a>
+<span class="sourceLineNo">520</span>   widthLarger = (topWindow.getMinimumSize(25, colsLarger)).width;<a name="line.520"></a>
+<span class="sourceLineNo">521</span>   rowsCurrent = 33;<a name="line.521"></a>
+<span class="sourceLineNo">522</span>   rowsSmaller = 31;<a name="line.522"></a>
+<span class="sourceLineNo">523</span>   rowsLarger = 35;<a name="line.523"></a>
+<span class="sourceLineNo">524</span>   heightSmaller = topWindow.getMinimumSize(31, 75).height;<a name="line.524"></a>
+<span class="sourceLineNo">525</span>   heightCurrent = topWindow.getMinimumSize(33, 75).height;<a name="line.525"></a>
+<span class="sourceLineNo">526</span>   heightLarger = topWindow.getMinimumSize(35, 75).height;<a name="line.526"></a>
+<span class="sourceLineNo">527</span>   if (debugLevel &gt; 0)<a name="line.527"></a>
+<span class="sourceLineNo">528</span>      {<a name="line.528"></a>
+<span class="sourceLineNo">529</span>      addMessage ("Next smaller: "<a name="line.529"></a>
+<span class="sourceLineNo">530</span>         .concat(Integer.toString(colsSmaller))<a name="line.530"></a>
+<span class="sourceLineNo">531</span>         .concat("   ")<a name="line.531"></a>
+<span class="sourceLineNo">532</span>         .concat(Integer.toString(widthSmaller)));<a name="line.532"></a>
+<span class="sourceLineNo">533</span>      addMessage ("Next larger: "<a name="line.533"></a>
+<span class="sourceLineNo">534</span>         .concat(Integer.toString(colsLarger))<a name="line.534"></a>
+<span class="sourceLineNo">535</span>         .concat("   ")<a name="line.535"></a>
+<span class="sourceLineNo">536</span>         .concat(Integer.toString(widthLarger)));<a name="line.536"></a>
+<span class="sourceLineNo">537</span>      addMessage("Current window width: "<a name="line.537"></a>
+<span class="sourceLineNo">538</span>         .concat(Integer.toString(myPanel.getWidth())));<a name="line.538"></a>
+<span class="sourceLineNo">539</span>      addMessage("Trigger heights are "<a name="line.539"></a>
+<span class="sourceLineNo">540</span>         .concat(Integer.toString(heightSmaller)).concat(" ")<a name="line.540"></a>
+<span class="sourceLineNo">541</span>         .concat(Integer.toString(heightCurrent)).concat(" ")<a name="line.541"></a>
+<span class="sourceLineNo">542</span>         .concat(Integer.toString(heightLarger)));<a name="line.542"></a>
+<span class="sourceLineNo">543</span>      }<a name="line.543"></a>
+<span class="sourceLineNo">544</span><a name="line.544"></a>
+<span class="sourceLineNo">545</span>   try <a name="line.545"></a>
+<span class="sourceLineNo">546</span>      { <a name="line.546"></a>
+<span class="sourceLineNo">547</span>       if (System.getProperty("LOCAL_HOST") == null) <a name="line.547"></a>
+<span class="sourceLineNo">548</span>          { System.setProperty("LOCAL_HOST", <a name="line.548"></a>
+<span class="sourceLineNo">549</span>                   sock.getLocalAddress().getHostName());} <a name="line.549"></a>
+<span class="sourceLineNo">550</span>       pw = new PrintWriter(sock.getOutputStream(),<a name="line.550"></a>
+<span class="sourceLineNo">551</span>               true); <a name="line.551"></a>
+<span class="sourceLineNo">552</span>       streamReader = new InputStreamReader(sock.getInputStream(),<a name="line.552"></a>
+<span class="sourceLineNo">553</span>          "8859_1");<a name="line.553"></a>
+<span class="sourceLineNo">554</span>       in = new BufferedReader(streamReader); <a name="line.554"></a>
+<span class="sourceLineNo">555</span>       // Socket now ready for data transfer <a name="line.555"></a>
+<span class="sourceLineNo">556</span>       /*<a name="line.556"></a>
+<span class="sourceLineNo">557</span>       ** The problem is how to make the application close<a name="line.557"></a>
+<span class="sourceLineNo">558</span>       ** when the socket is closed<a name="line.558"></a>
+<span class="sourceLineNo">559</span>       **<a name="line.559"></a>
+<span class="sourceLineNo">560</span>       ** The method readLine waits until information is <a name="line.560"></a>
+<span class="sourceLineNo">561</span>       ** available.  However, if the connection has been<a name="line.561"></a>
+<span class="sourceLineNo">562</span>       ** closed, it returns a null value.<a name="line.562"></a>
+<span class="sourceLineNo">563</span>       */<a name="line.563"></a>
+<span class="sourceLineNo">564</span>       while (true)<a name="line.564"></a>
+<span class="sourceLineNo">565</span>          {<a name="line.565"></a>
+<span class="sourceLineNo">566</span>          if (inputSock.isClosed())<a name="line.566"></a>
+<span class="sourceLineNo">567</span>             { break; }<a name="line.567"></a>
+<span class="sourceLineNo">568</span>          String request = in.readLine(); <a name="line.568"></a>
+<span class="sourceLineNo">569</span>          if (request == null)<a name="line.569"></a>
+<span class="sourceLineNo">570</span>             {break;}<a name="line.570"></a>
+<span class="sourceLineNo">571</span>          topWindow.append(request.concat("\n"));<a name="line.571"></a>
+<span class="sourceLineNo">572</span>          if (logFileActive)<a name="line.572"></a>
+<span class="sourceLineNo">573</span>             { logWriter.println(request); }<a name="line.573"></a>
+<span class="sourceLineNo">574</span>          }<a name="line.574"></a>
+<span class="sourceLineNo">575</span>       if (logFileActive)<a name="line.575"></a>
+<span class="sourceLineNo">576</span>          {<a name="line.576"></a>
+<span class="sourceLineNo">577</span>          logWriter.flush();<a name="line.577"></a>
+<span class="sourceLineNo">578</span>          logWriter.close();<a name="line.578"></a>
+<span class="sourceLineNo">579</span>          } <a name="line.579"></a>
+<span class="sourceLineNo">580</span>       } <a name="line.580"></a>
+<span class="sourceLineNo">581</span>   catch (SocketException e)<a name="line.581"></a>
+<span class="sourceLineNo">582</span>       {<a name="line.582"></a>
+<span class="sourceLineNo">583</span>       System.out.println("*** Start of error message");<a name="line.583"></a>
+<span class="sourceLineNo">584</span>       System.out.println("SocketException while reading data");<a name="line.584"></a>
+<span class="sourceLineNo">585</span>       System.out.println("Message: ".concat(e.getMessage()));<a name="line.585"></a>
+<span class="sourceLineNo">586</span>       System.out.println("Can be ignored if message is *Socket closed*"<a name="line.586"></a>
+<span class="sourceLineNo">587</span>             .concat(" when socket is closed"));<a name="line.587"></a>
+<span class="sourceLineNo">588</span>       e.printStackTrace();<a name="line.588"></a>
+<span class="sourceLineNo">589</span>       System.out.println("*** End of error message");<a name="line.589"></a>
+<span class="sourceLineNo">590</span>       return;<a name="line.590"></a>
+<span class="sourceLineNo">591</span>       } <a name="line.591"></a>
+<span class="sourceLineNo">592</span>   catch (InterruptedIOException e) <a name="line.592"></a>
+<span class="sourceLineNo">593</span>       {<a name="line.593"></a>
+<span class="sourceLineNo">594</span>       System.out.println("*** Start of error message");<a name="line.594"></a>
+<span class="sourceLineNo">595</span>       System.out.println("InterruptedIOException while reading data");<a name="line.595"></a>
+<span class="sourceLineNo">596</span>       System.out.println("Message: ".concat(e.getMessage()));<a name="line.596"></a>
+<span class="sourceLineNo">597</span>       e.printStackTrace(); <a name="line.597"></a>
+<span class="sourceLineNo">598</span>       System.out.println("*** End of error message");} <a name="line.598"></a>
+<span class="sourceLineNo">599</span>   catch (Exception e) <a name="line.599"></a>
+<span class="sourceLineNo">600</span>       {<a name="line.600"></a>
+<span class="sourceLineNo">601</span>       System.out.println("*** Start of error message");<a name="line.601"></a>
+<span class="sourceLineNo">602</span>       System.out.println("unexpected Exception while reading data");<a name="line.602"></a>
+<span class="sourceLineNo">603</span>       System.out.println("Message: ".concat(e.getMessage()));<a name="line.603"></a>
+<span class="sourceLineNo">604</span>       e.printStackTrace(); <a name="line.604"></a>
+<span class="sourceLineNo">605</span>       } <a name="line.605"></a>
+<span class="sourceLineNo">606</span>   // Test if socket still open <a name="line.606"></a>
+<span class="sourceLineNo">607</span>   if (debugLevel &gt; 1)<a name="line.607"></a>
+<span class="sourceLineNo">608</span>      { System.out.println("Removing frame"); }<a name="line.608"></a>
+<span class="sourceLineNo">609</span>   myFrame.removeAll();<a name="line.609"></a>
+<span class="sourceLineNo">610</span>   myFrame.removeNotify();<a name="line.610"></a>
+<span class="sourceLineNo">611</span>   try <a name="line.611"></a>
+<span class="sourceLineNo">612</span>      {if (! sock.isClosed()) <a name="line.612"></a>
+<span class="sourceLineNo">613</span>          {sock.close(); } <a name="line.613"></a>
+<span class="sourceLineNo">614</span>      } <a name="line.614"></a>
+<span class="sourceLineNo">615</span>   catch (Exception e) <a name="line.615"></a>
+<span class="sourceLineNo">616</span>      {<a name="line.616"></a>
+<span class="sourceLineNo">617</span>      System.out.println("*** Start of error message"); <a name="line.617"></a>
+<span class="sourceLineNo">618</span>      System.out.println("Error when closing socket");<a name="line.618"></a>
+<span class="sourceLineNo">619</span>      System.out.println("Message: ".concat(e.getMessage()));<a name="line.619"></a>
+<span class="sourceLineNo">620</span>      e.printStackTrace();<a name="line.620"></a>
+<span class="sourceLineNo">621</span>      System.out.println("*** End of error message");<a name="line.621"></a>
+<span class="sourceLineNo">622</span>      } <a name="line.622"></a>
+<span class="sourceLineNo">623</span>    return;<a name="line.623"></a>
+<span class="sourceLineNo">624</span>   }  // end of  method<a name="line.624"></a>
+<span class="sourceLineNo">625</span>} // end of class<a name="line.625"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</pre>
+</div>
+</body>
+</html>

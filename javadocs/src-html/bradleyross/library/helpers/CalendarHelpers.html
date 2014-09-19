@@ -1,0 +1,190 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head>
+<title>Source code</title>
+<link rel="stylesheet" type="text/css" href="../../../../stylesheet.css" title="Style">
+</head>
+<body>
+<div class="sourceContainer">
+<pre><span class="sourceLineNo">001</span>package bradleyross.library.helpers;<a name="line.1"></a>
+<span class="sourceLineNo">002</span>import java.util.Date;<a name="line.2"></a>
+<span class="sourceLineNo">003</span>import java.util.TimeZone;<a name="line.3"></a>
+<span class="sourceLineNo">004</span>import java.util.Calendar;<a name="line.4"></a>
+<span class="sourceLineNo">005</span>import java.util.GregorianCalendar;<a name="line.5"></a>
+<span class="sourceLineNo">006</span>/**<a name="line.6"></a>
+<span class="sourceLineNo">007</span> * Classes for manipulating calendar dates.<a name="line.7"></a>
+<span class="sourceLineNo">008</span> * @author Bradley Ross<a name="line.8"></a>
+<span class="sourceLineNo">009</span> *<a name="line.9"></a>
+<span class="sourceLineNo">010</span> */<a name="line.10"></a>
+<span class="sourceLineNo">011</span>public class CalendarHelpers <a name="line.11"></a>
+<span class="sourceLineNo">012</span>{<a name="line.12"></a>
+<span class="sourceLineNo">013</span>        protected Calendar refCalendar;<a name="line.13"></a>
+<span class="sourceLineNo">014</span>        /**<a name="line.14"></a>
+<span class="sourceLineNo">015</span>         * Controls amount of intermediate output to aid<a name="line.15"></a>
+<span class="sourceLineNo">016</span>         * in software development and diagnostices.<a name="line.16"></a>
+<span class="sourceLineNo">017</span>         * &lt;p&gt;A more positive value indicates that more <a name="line.17"></a>
+<span class="sourceLineNo">018</span>         *    output is to be generated.  A more negative <a name="line.18"></a>
+<span class="sourceLineNo">019</span>         *    value indicates that less output is to be<a name="line.19"></a>
+<span class="sourceLineNo">020</span>         *    generated.&lt;/p&gt;<a name="line.20"></a>
+<span class="sourceLineNo">021</span>         */<a name="line.21"></a>
+<span class="sourceLineNo">022</span>        protected int debugLevel = 0;<a name="line.22"></a>
+<span class="sourceLineNo">023</span>        /**<a name="line.23"></a>
+<span class="sourceLineNo">024</span>         * Getter for debugLevel<a name="line.24"></a>
+<span class="sourceLineNo">025</span>         * @see #debugLevel<a name="line.25"></a>
+<span class="sourceLineNo">026</span>         * @return Value of debugLevel<a name="line.26"></a>
+<span class="sourceLineNo">027</span>         */<a name="line.27"></a>
+<span class="sourceLineNo">028</span>        public int getDebugLevel()<a name="line.28"></a>
+<span class="sourceLineNo">029</span>        {<a name="line.29"></a>
+<span class="sourceLineNo">030</span>                return debugLevel;<a name="line.30"></a>
+<span class="sourceLineNo">031</span>        }<a name="line.31"></a>
+<span class="sourceLineNo">032</span>        /**<a name="line.32"></a>
+<span class="sourceLineNo">033</span>         * Setter for debugLevel<a name="line.33"></a>
+<span class="sourceLineNo">034</span>         * @see #debugLevel<a name="line.34"></a>
+<span class="sourceLineNo">035</span>         * @param value Value for debugLevel<a name="line.35"></a>
+<span class="sourceLineNo">036</span>         */<a name="line.36"></a>
+<span class="sourceLineNo">037</span>        public void setDebugLevel(int value)<a name="line.37"></a>
+<span class="sourceLineNo">038</span>        {<a name="line.38"></a>
+<span class="sourceLineNo">039</span>                debugLevel = value;<a name="line.39"></a>
+<span class="sourceLineNo">040</span>        }<a name="line.40"></a>
+<span class="sourceLineNo">041</span>        public CalendarHelpers()<a name="line.41"></a>
+<span class="sourceLineNo">042</span>        {<a name="line.42"></a>
+<span class="sourceLineNo">043</span>                refCalendar = new GregorianCalendar();<a name="line.43"></a>
+<span class="sourceLineNo">044</span>        }<a name="line.44"></a>
+<span class="sourceLineNo">045</span>        public CalendarHelpers(TimeZone value)<a name="line.45"></a>
+<span class="sourceLineNo">046</span>        {<a name="line.46"></a>
+<span class="sourceLineNo">047</span>                refCalendar = new GregorianCalendar(value);<a name="line.47"></a>
+<span class="sourceLineNo">048</span>        }<a name="line.48"></a>
+<span class="sourceLineNo">049</span>        public CalendarHelpers(Calendar value)<a name="line.49"></a>
+<span class="sourceLineNo">050</span>        {<a name="line.50"></a>
+<span class="sourceLineNo">051</span>                refCalendar = (Calendar) value.clone();<a name="line.51"></a>
+<span class="sourceLineNo">052</span>        }<a name="line.52"></a>
+<span class="sourceLineNo">053</span>        /**<a name="line.53"></a>
+<span class="sourceLineNo">054</span>         * Returns number of milliseconds since start of day.<a name="line.54"></a>
+<span class="sourceLineNo">055</span>         * @param value Date for which calculation is to be run<a name="line.55"></a>
+<span class="sourceLineNo">056</span>         * @return Number of milliseconds<a name="line.56"></a>
+<span class="sourceLineNo">057</span>         */<a name="line.57"></a>
+<span class="sourceLineNo">058</span>        public long getTimeOfDay(Date value)<a name="line.58"></a>
+<span class="sourceLineNo">059</span>        {<a name="line.59"></a>
+<span class="sourceLineNo">060</span>                long working;<a name="line.60"></a>
+<span class="sourceLineNo">061</span>                Calendar local = (Calendar) refCalendar.clone();<a name="line.61"></a>
+<span class="sourceLineNo">062</span>                local.setTime(value);<a name="line.62"></a>
+<span class="sourceLineNo">063</span>                working = (long) local.get(Calendar.MILLISECOND) +<a name="line.63"></a>
+<span class="sourceLineNo">064</span>                (long) (local.get(Calendar.SECOND)*1000) +<a name="line.64"></a>
+<span class="sourceLineNo">065</span>                (long) (local.get(Calendar.MINUTE)*60*1000) +<a name="line.65"></a>
+<span class="sourceLineNo">066</span>                (long) (local.get(Calendar.HOUR_OF_DAY)*60*1000*60);<a name="line.66"></a>
+<span class="sourceLineNo">067</span>                return working;<a name="line.67"></a>
+<span class="sourceLineNo">068</span>        }<a name="line.68"></a>
+<span class="sourceLineNo">069</span>        public Date getStartOfDay(Date value)<a name="line.69"></a>
+<span class="sourceLineNo">070</span>        {<a name="line.70"></a>
+<span class="sourceLineNo">071</span>                Calendar local = (Calendar) refCalendar.clone();<a name="line.71"></a>
+<span class="sourceLineNo">072</span>                local.setTime(value);<a name="line.72"></a>
+<span class="sourceLineNo">073</span>                local.set(Calendar.MILLISECOND, 0);<a name="line.73"></a>
+<span class="sourceLineNo">074</span>                local.set(Calendar.SECOND, 0);<a name="line.74"></a>
+<span class="sourceLineNo">075</span>                local.set(Calendar.MINUTE, 0);<a name="line.75"></a>
+<span class="sourceLineNo">076</span>                local.set(Calendar.HOUR_OF_DAY, 0);<a name="line.76"></a>
+<span class="sourceLineNo">077</span>                return local.getTime();<a name="line.77"></a>
+<span class="sourceLineNo">078</span>        }<a name="line.78"></a>
+<span class="sourceLineNo">079</span>        public Date getNextDay(Date value)<a name="line.79"></a>
+<span class="sourceLineNo">080</span>        {<a name="line.80"></a>
+<span class="sourceLineNo">081</span>                Calendar local = (Calendar) refCalendar.clone();<a name="line.81"></a>
+<span class="sourceLineNo">082</span>                local.setTime(getStartOfDay(value));<a name="line.82"></a>
+<span class="sourceLineNo">083</span>                local.add(Calendar.DAY_OF_MONTH, 1);<a name="line.83"></a>
+<span class="sourceLineNo">084</span>                return local.getTime();<a name="line.84"></a>
+<span class="sourceLineNo">085</span>        }<a name="line.85"></a>
+<span class="sourceLineNo">086</span>        /**<a name="line.86"></a>
+<span class="sourceLineNo">087</span>         * This was to get around a bug in some data feeds.<a name="line.87"></a>
+<span class="sourceLineNo">088</span>         * &lt;p&gt;The problem was that the source program was incorrectly assigning<a name="line.88"></a>
+<span class="sourceLineNo">089</span>         *    am and pm for some times.  It appears that this problem has now been corrected.&lt;/p&gt;<a name="line.89"></a>
+<span class="sourceLineNo">090</span>         * @param value  Date as provided by program<a name="line.90"></a>
+<span class="sourceLineNo">091</span>         * @return Corrected date<a name="line.91"></a>
+<span class="sourceLineNo">092</span>         * @deprecated<a name="line.92"></a>
+<span class="sourceLineNo">093</span>         */<a name="line.93"></a>
+<span class="sourceLineNo">094</span>        public Date specialFix(Date value)<a name="line.94"></a>
+<span class="sourceLineNo">095</span>        {<a name="line.95"></a>
+<span class="sourceLineNo">096</span>                Calendar local = (Calendar) refCalendar.clone();<a name="line.96"></a>
+<span class="sourceLineNo">097</span>                local.setTime(value);<a name="line.97"></a>
+<span class="sourceLineNo">098</span>                int hour = local.get(Calendar.HOUR);<a name="line.98"></a>
+<span class="sourceLineNo">099</span>                if (hour == 0)<a name="line.99"></a>
+<span class="sourceLineNo">100</span>                {<a name="line.100"></a>
+<span class="sourceLineNo">101</span>                        local.set(Calendar.HOUR, 12);<a name="line.101"></a>
+<span class="sourceLineNo">102</span>                }<a name="line.102"></a>
+<span class="sourceLineNo">103</span>                else if (hour == 12)<a name="line.103"></a>
+<span class="sourceLineNo">104</span>                {<a name="line.104"></a>
+<span class="sourceLineNo">105</span>                        local.set(Calendar.HOUR, 0);<a name="line.105"></a>
+<span class="sourceLineNo">106</span>                }<a name="line.106"></a>
+<span class="sourceLineNo">107</span>                return local.getTime();<a name="line.107"></a>
+<span class="sourceLineNo">108</span>        }<a name="line.108"></a>
+<span class="sourceLineNo">109</span>        /**<a name="line.109"></a>
+<span class="sourceLineNo">110</span>         * @param args<a name="line.110"></a>
+<span class="sourceLineNo">111</span>         */<a name="line.111"></a>
+<span class="sourceLineNo">112</span>        public static void main(String[] args) <a name="line.112"></a>
+<span class="sourceLineNo">113</span>        {<a name="line.113"></a>
+<span class="sourceLineNo">114</span>                System.out.println("Starting program at " + new Date().toString());<a name="line.114"></a>
+<span class="sourceLineNo">115</span><a name="line.115"></a>
+<span class="sourceLineNo">116</span>        }<a name="line.116"></a>
+<span class="sourceLineNo">117</span><a name="line.117"></a>
+<span class="sourceLineNo">118</span>}<a name="line.118"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</pre>
+</div>
+</body>
+</html>

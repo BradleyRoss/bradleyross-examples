@@ -1,0 +1,127 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head>
+<title>Source code</title>
+<link rel="stylesheet" type="text/css" href="../../../../../stylesheet.css" title="Style">
+</head>
+<body>
+<div class="sourceContainer">
+<pre><span class="sourceLineNo">001</span>package bradleyross.opensource.jfreechart.helpers;<a name="line.1"></a>
+<span class="sourceLineNo">002</span>import java.util.Date;<a name="line.2"></a>
+<span class="sourceLineNo">003</span>import org.jfree.data.time.TimeSeries;<a name="line.3"></a>
+<span class="sourceLineNo">004</span>import org.jfree.data.time.Second;<a name="line.4"></a>
+<span class="sourceLineNo">005</span>/**<a name="line.5"></a>
+<span class="sourceLineNo">006</span> * Creates sets of sample data for testing of the JFreeChart product.<a name="line.6"></a>
+<span class="sourceLineNo">007</span> * @author Bradley Ross<a name="line.7"></a>
+<span class="sourceLineNo">008</span> *<a name="line.8"></a>
+<span class="sourceLineNo">009</span> */<a name="line.9"></a>
+<span class="sourceLineNo">010</span>public class DataGenerator <a name="line.10"></a>
+<span class="sourceLineNo">011</span>{<a name="line.11"></a>
+<span class="sourceLineNo">012</span>        /**<a name="line.12"></a>
+<span class="sourceLineNo">013</span>         * Since all of the methods are static, the constructor should<a name="line.13"></a>
+<span class="sourceLineNo">014</span>         * never be used.<a name="line.14"></a>
+<span class="sourceLineNo">015</span>         */<a name="line.15"></a>
+<span class="sourceLineNo">016</span>        protected DataGenerator()<a name="line.16"></a>
+<span class="sourceLineNo">017</span>        { ; }<a name="line.17"></a>
+<span class="sourceLineNo">018</span>        /**<a name="line.18"></a>
+<span class="sourceLineNo">019</span>         * Generate data according to a sine wave.<a name="line.19"></a>
+<span class="sourceLineNo">020</span>         * @param name<a name="line.20"></a>
+<span class="sourceLineNo">021</span>         * @param wavelength Wavelength of sine wave in milliseconds<a name="line.21"></a>
+<span class="sourceLineNo">022</span>         * @param duration Duration for which series is to be generated in milliseconds<a name="line.22"></a>
+<span class="sourceLineNo">023</span>         * @param interval Interval between data points in milliseconds - The value must be <a name="line.23"></a>
+<span class="sourceLineNo">024</span>         *        greater than or equal to one second<a name="line.24"></a>
+<span class="sourceLineNo">025</span>         * @return TimeSeries containing data values<a name="line.25"></a>
+<span class="sourceLineNo">026</span>         */<a name="line.26"></a>
+<span class="sourceLineNo">027</span>        public static TimeSeries generateSine(String name, long wavelength, long duration, long interval,<a name="line.27"></a>
+<span class="sourceLineNo">028</span>                        double magnitude, double offset)        <a name="line.28"></a>
+<span class="sourceLineNo">029</span>        {<a name="line.29"></a>
+<span class="sourceLineNo">030</span>                return  generateSine(name, wavelength, duration, interval,<a name="line.30"></a>
+<span class="sourceLineNo">031</span>                                magnitude, offset, new java.util.Date());<a name="line.31"></a>
+<span class="sourceLineNo">032</span>        }<a name="line.32"></a>
+<span class="sourceLineNo">033</span>        /**<a name="line.33"></a>
+<span class="sourceLineNo">034</span>         * Generate data according to a sine wave.<a name="line.34"></a>
+<span class="sourceLineNo">035</span>         * @param name<a name="line.35"></a>
+<span class="sourceLineNo">036</span>         * @param wavelength Wavelength of sine wave in milliseconds<a name="line.36"></a>
+<span class="sourceLineNo">037</span>         * @param duration Duration for which series is to be generated in milliseconds<a name="line.37"></a>
+<span class="sourceLineNo">038</span>         * @param interval Interval between data points in milliseconds - The value must be <a name="line.38"></a>
+<span class="sourceLineNo">039</span>         *        greater than or equal to one second<a name="line.39"></a>
+<span class="sourceLineNo">040</span>         * @param startTime Starting time for plot<a name="line.40"></a>
+<span class="sourceLineNo">041</span>         * @return TimeSeries containing data values<a name="line.41"></a>
+<span class="sourceLineNo">042</span>         */<a name="line.42"></a>
+<span class="sourceLineNo">043</span>        public static TimeSeries generateSine(String name, long wavelength, long duration, long interval,<a name="line.43"></a>
+<span class="sourceLineNo">044</span>                        double magnitude, double offset, java.util.Date startTime)<a name="line.44"></a>
+<span class="sourceLineNo">045</span>        {<a name="line.45"></a>
+<span class="sourceLineNo">046</span>                TimeSeries working = new TimeSeries(name, Second.class );<a name="line.46"></a>
+<span class="sourceLineNo">047</span>                long now = startTime.getTime();<a name="line.47"></a>
+<span class="sourceLineNo">048</span>                for (long i = now; i &lt; now + duration; i=i+interval)<a name="line.48"></a>
+<span class="sourceLineNo">049</span>                {<a name="line.49"></a>
+<span class="sourceLineNo">050</span>                        working.add(new Second(new Date(i)),<a name="line.50"></a>
+<span class="sourceLineNo">051</span>                                        magnitude*Math.sin(2.0d*Math.PI*(double) (i - now)/(double) wavelength) + offset);<a name="line.51"></a>
+<span class="sourceLineNo">052</span>                }<a name="line.52"></a>
+<span class="sourceLineNo">053</span>                return working;<a name="line.53"></a>
+<span class="sourceLineNo">054</span>        }<a name="line.54"></a>
+<span class="sourceLineNo">055</span>}<a name="line.55"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</pre>
+</div>
+</body>
+</html>
