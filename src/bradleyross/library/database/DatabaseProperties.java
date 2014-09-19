@@ -1,6 +1,7 @@
 package bradleyross.library.database;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
@@ -50,7 +51,7 @@ import bradleyross.library.helpers.GenericPrinter;
  */
 public abstract class DatabaseProperties 
 {
-
+	protected Driver driver = null;
 	/**
 	 * Constructor using a default system and account name.
 	 */
@@ -251,7 +252,7 @@ public abstract class DatabaseProperties
 	 *    the field.  This improves security for the package.  If necessary,
 	 *    a <i>get</i> method can be added in a subclass.</p>
 	 */
-	private String password = null;
+	protected String password = null;
 	/**
 	 * When creating MySQL tables, this field can be
 	 * used by the getEngineClause to add the ENGINE
@@ -340,6 +341,14 @@ public abstract class DatabaseProperties
 	 */
 	protected boolean invalidParameters = false;
 	/**
+	 * Returns the instance of the JDBC driver used to connect
+	 * to the database.
+	 * @return JDBC driver
+	 */
+	public Driver getDriver() {
+		return driver;
+	}
+	/**
 	 * Return the system identifier used for the database connection.
 	 * @return System identifier
 	 */
@@ -392,7 +401,7 @@ public abstract class DatabaseProperties
 		}
 		try
 		{
-			Class.forName(handlerClass).newInstance();
+			driver = (Driver) Class.forName(handlerClass).newInstance();
 		}
 		catch (InstantiationException e)
 		{

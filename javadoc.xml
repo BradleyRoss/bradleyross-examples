@@ -19,6 +19,6 @@
   <classpath refid="jar.classpath" />
 &external;      
 </javadoc>
-<echo level="info" message="Javadoc files created for sample project" />
+<echo level="info" message="Javadoc files created for bradleyross-examples project" />
 </target>
 </project>

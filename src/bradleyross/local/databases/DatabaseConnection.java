@@ -1,6 +1,3 @@
-/**
- * 
- */
 package bradleyross.local.databases;
 
 import java.sql.SQLException;
@@ -9,12 +6,9 @@ import java.sql.ResultSet;
 import bradleyross.library.database.DatabaseProperties;
 
 /**
- * Information to connecting to databases on my laptop.
- * <ul>
- * <li><p>dummy</p></li>
- * <li><p>sample</p></li>
- * <li><p>test</p></li>
- * <li><p>tomcat</p></li>
+ * Information to connecting to databases on my laptop.  See
+ * https://babbage.inf.unibz.it/trac/obdapublic/wiki/ObdalibPluginJDBC.
+ * 
  * @author Bradley Ross
  *
  */
@@ -83,7 +77,8 @@ public class DatabaseConnection extends DatabaseProperties
 			portNumber=1521;
 			domainName="localhost";
 			handlerClass="com.mysql.jdbc.Driver";
-			connectionString="jdbc:mysql://localhost/sample";
+			connectionString="jdbc:mysql://localhost/sample" + 
+			"?sessionVariables=sql_mode='ANSI'";
 		}
 	}
 	/**

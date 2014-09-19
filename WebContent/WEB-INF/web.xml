@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app id="WebApp_ID" version="2.5" xmlns="http://java.sun.com/xml/ns/javaee" 
+                        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+                        xsi:schemaLocation="http://java.sun.com/xml/ns/javaee 
+                        http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+   <welcome-file-list>
+      <welcome-file>index.html</welcome-file>
+      <welcome-file>index.jsp</welcome-file>
+   </welcome-file-list>
+<!--
+**** database: determines database to be used by application
+****
+**** The parameters for the database are actually references to
+**** the parameters to be used when instantiating the class
+**** com.amtrak.eng.locations.databaseInstance.  See the javadocs
+**** for com.amtrak.eng.locations.databaseInstance.  The constructor
+**** for the class has the format
+****
+**** databaseInstance(String system, String user)
+****
+**** The database parameter contains the value for the 
+**** system parameter.
+-->
+<context-param>
+<description>This value determines which database is to be used by
+   the application.</description>
+<param-name>database</param-name>
+<param-value>tst</param-value>
+</context-param>
+<!--
+**** smtpNode
+-->
+<context-param>
+<description>This is the domain name for the SMTP node to be
+   used for outgoing mail.</description>
+<param-name>smtpNode</param-name>
+<param-value>smtp.amtrak.ad.nrpc</param-value>
+</context-param>
+<!--
+**** readWriteAccount
+****
+**** This is the value to be used in the constructor for
+**** com.amtrak.eng.locations.databaseInstance for the user
+**** parameter when it is desired to carry out both read and
+**** write operations.
+-->
+<context-param>
+<description>readWriteAccount is the database account that can be used
+   for read/write access to the system.  At this time, the same
+   database account is being used for read only and read/write
+   activities.  However, this could change in the future.</description>
+<param-name>readWriteAccount</param-name>
+<param-value>www</param-value>
+</context-param>
+<!--
+**** readOnlyAccount
+****
+**** This is the value to be used in the constructor fo
+**** com.amtrak.eng.locations.databaseInstance for the user
+**** parameter when only read operations are to be carried out
+**** on the database.
+-->
+<context-param>
+<description>readOnlyAccount is the database account that can be
+   used for read only transactions.  See the discussion above for
+   readWriteAccount.</description>
+<param-name>readOnlyAccount</param-name>
+<param-value>www</param-value>
+</context-param>
+<!--
+**** adminAccount
+****
+**** The adminAccount and adminPassword are only used by the
+**** web site to authorize access to the administrative 
+**** menus.  They do not correspond to the account 
+**** information for the application server, computer system,
+**** or database.
+-->
+<context-param>
+<description>This is the account to be used for
+   accessing the administrative options</description>
+<param-name>adminAccount</param-name>
+<param-value>admin</param-value>
+</context-param>
+<!--
+****  adminPassword
+-->
+<context-param>
+<description>Password to be used for the administrative
+   account.</description>
+<param-name>adminPassword</param-name>
+<param-value>mypass</param-value>
+</context-param>
+
+   <servlet>
+      <servlet-name>NumberPage</servlet-name>
+      <servlet-class>bradleyross.j2ee.servlets.NumberPage</servlet-class>
+   </servlet>
+   <servlet>
+      <servlet-name>EchoBack</servlet-name>
+      <servlet-class>bradleyross.j2ee.servlets.EchoBack</servlet-class>
+   </servlet>
+   <servlet>
+      <servlet-name>ShowSchema</servlet-name>
+      <servlet-class>bradleyross.j2ee.servlets.ShowSchema</servlet-class>
+      <init-param>
+         <param-name>class</param-name>
+         <param-value>bradleyross.local.databases.DatabaseConnection</param-value>
+      </init-param>
+            <init-param>
+         <param-name>system</param-name>
+         <param-value>local</param-value>
+      </init-param>
+            <init-param>
+         <param-name>account</param-name>
+         <param-value>sample</param-value>
+      </init-param>
+   </servlet>
+  
+   <servlet-mapping>
+      <servlet-name>NumberPage</servlet-name>
+      <url-pattern>/NumberPage/*</url-pattern>
+   </servlet-mapping>
+   <servlet-mapping>
+      <servlet-name>EchoBack</servlet-name>
+      <url-pattern>/EchoBack/*</url-pattern>
+   </servlet-mapping>
+   <servlet-mapping>
+      <servlet-name>ShowSchema</servlet-name>
+      <url-pattern>/ShowSchema/*</url-pattern>
+   </servlet-mapping>
+ 
+</web-app>

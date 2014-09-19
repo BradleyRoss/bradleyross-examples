@@ -5,10 +5,6 @@
      example, the description of the classpath is needed for both javac 
      and javadoc -->
 <path id="jar.classpath">
-	<fileset dir="/Users/bradleyross/Resources/libraries/exports">
-		<include name="sample.jar" />
- 		<include name="tracing.jar" />
-	</fileset>
 	<fileset dir="/Users/bradleyross/Resources/libraries/dcm4che-3.0.1/lib">
 		<include name="*.jar" />
 	</fileset>
@@ -21,4 +17,4 @@
     <pathelement location="/Users/bradleyross/Resources/externaljars/swt_macosx.jar" />
     <pathelement location="/Users/bradleyross/Resources/externaljars/jackcess.jar" />
 	</path>
-	</project>
+</project>
