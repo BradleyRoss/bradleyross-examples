@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body>
+<p>When you use Git to manage your code changes, you create a
+   directory on your local computer for each branch that you
+   wish to work with.  This is in addition to the set files that
+   exist at github.com.</p>
+<ul>
+<li>When you execute the git commands from the command line 
+    in the shell, you should have the current directory set
+    to the root of the file system on your laptop.</li>
+<li>When you use an IDE such as Eclipse, you should not have the
+    local files within the directory structure that the IDE uses by 
+    default.  You will then specify the directory containing in the
+    files within the IDE.</li>
+</ul>
+<p>Once you have made changes to the files, the following procedure
+   will move the changes to the copy at github.com.</p>
+<ul>
+<li>Set the current directory to the root of the file system for the
+    branch.</li>
+<li>The command <code>git add .</code> will insure that all of the files
+    are marked for management.</li>
+<li>The command <code>git commit -a -m "my comments"</code> will
+    locate all of the modified files and mark them as committed.  The text
+    after the <code>-m</code> operator will become the message Git 
+    uses to describe the commit.</li>
+<li>To move all of the changes to the copy on github.com, you will 
+    execute the command <code>git push origin <i>branch</i></code>
+    where <i>branch</i> is the name of the branch to be processed.
+    On my system, the branches are <i>master</i> for the project
+    and <i>gh-pages</i> for the documentation.</li>
+</ul>
+</body>
+</html>
