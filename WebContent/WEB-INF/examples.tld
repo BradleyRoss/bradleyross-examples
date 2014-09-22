@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE taglib PUBLIC
+   "-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.1//EN"
+   "http://java.sun.com/j2ee/dtds/web-jsptaglibrary_1_1.dtd">
+<taglib>
+   <tlibversion>1.0</tlibversion>
+   <jspversion>1.1</jspversion>
+   <shortname>examples</shortname>
+   <uri>http://bradleyross.github.com/examples</uri>
+   <info>Examples</info>
+   <tag>
+      <name>body</name>
+      <tagclass>bradleyross.j2ee.tags.Body</tagclass>
+      <!-- 
+           This describes how the tag will be interpreted
+           http://docs.oracle.com/cd/E17904_01/web.1111/e13722/quickstart.htm
+           EMPTY This means that that must not be any content between the start and
+                 end tags
+           SCRIPTLESS    The material between the start and end tags can only contain
+                 standard tags, custom tags and HTML text.  Items that may not be included
+                 would include Javascript code and CSS code.
+           TAGDEPENDEMT This means that the material between the start and end tags may
+                 contain code that is not permitted by the SCRIPTLESS option.
+       -->
+      <bodycontent>TAGDEPENDENT</bodycontent>
+      <info></info>
+   </tag>
+   <tag>
+      <name>center</name>
+      <tagclass>bradleyross.j2ee.tags.CenterTag</tagclass>
+      <bodycontent>SCRIPTLESS</bodycontent>
+      <info>The valid values for the align attribute are left, right,
+            and center.</info>
+      <attribute>
+         <name>align</name>
+         <required>false</required>
+      </attribute>
+      <attribute>
+         <name>className</name>
+         <required>false</required>
+      </attribute>
+   </tag>
+</taglib>

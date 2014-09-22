@@ -1,7 +1,7 @@
     <link offline="false" resolveLink="true" 
         href="http://docs.oracle.com/javase/7/docs/api/"   />
     <link offline="false" resolveLink="true"
-        href="http://download.oracle.com/javaee/6/api/"/>
+        href="http://download.oracle.com/javaee/6/api/" />
     <link offline="false" resolveLink="true" 
         href="http://tomcat.apache.org/tomcat-5.5-doc/servletapi/"      />
     <link offline="false" resolveLink="true"

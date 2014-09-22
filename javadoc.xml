@@ -19,6 +19,17 @@
   <classpath refid="jar.classpath" />
 &external;      
 </javadoc>
+<javadoc access="private" 
+  sourcepath="src" destdir="/Users/bradleyross/newGit/bradleyross-docs/bradleyross-examples/javadocs"
+  additionalparam="-linksource"   author="true"   
+  nodeprecated="false" nodeprecatedlist="false" 
+  noindex="false" nonavbar="false" notree="false" 
+  overview="src/overview.html"  verbose="false"
+  splitindex="false" use="true" version="true"
+  windowtitle="Bradley Ross Examples">
+  <classpath refid="jar.classpath" />
+&external;      
+</javadoc>
 <echo level="info" message="Javadoc files created for bradleyross-examples project" />
 </target>
 </project>
