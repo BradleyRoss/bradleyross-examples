@@ -1,0 +1,356 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head>
+<title>Source code</title>
+<link rel="stylesheet" type="text/css" href="../../../../stylesheet.css" title="Style">
+</head>
+<body>
+<div class="sourceContainer">
+<pre><span class="sourceLineNo">001</span>package bradleyross.library.applets;<a name="line.1"></a>
+<span class="sourceLineNo">002</span>//  colorsSample.java<a name="line.2"></a>
+<span class="sourceLineNo">003</span>//  A simple Java applet<a name="line.3"></a>
+<span class="sourceLineNo">004</span>//<a name="line.4"></a>
+<span class="sourceLineNo">005</span>import java.awt.*;<a name="line.5"></a>
+<span class="sourceLineNo">006</span>import java.applet.Applet;<a name="line.6"></a>
+<span class="sourceLineNo">007</span>import java.applet.AppletContext;<a name="line.7"></a>
+<span class="sourceLineNo">008</span>import java.awt.Button;<a name="line.8"></a>
+<span class="sourceLineNo">009</span>import java.awt.event.ActionListener;<a name="line.9"></a>
+<span class="sourceLineNo">010</span>import java.awt.event.ActionEvent;<a name="line.10"></a>
+<span class="sourceLineNo">011</span>import bradleyross.library.helpers.FileHelpers;<a name="line.11"></a>
+<span class="sourceLineNo">012</span>import java.io.IOException;<a name="line.12"></a>
+<span class="sourceLineNo">013</span>import java.io.StringReader;<a name="line.13"></a>
+<span class="sourceLineNo">014</span>import java.io.LineNumberReader;<a name="line.14"></a>
+<span class="sourceLineNo">015</span>import java.net.MalformedURLException;<a name="line.15"></a>
+<span class="sourceLineNo">016</span>import java.net.URL;<a name="line.16"></a>
+<span class="sourceLineNo">017</span>import java.util.Vector;<a name="line.17"></a>
+<span class="sourceLineNo">018</span>//<a name="line.18"></a>
+<span class="sourceLineNo">019</span>/**<a name="line.19"></a>
+<span class="sourceLineNo">020</span> * Demonstrates using a Java applet to display web pages in windows<a name="line.20"></a>
+<span class="sourceLineNo">021</span> *    on the browser.<a name="line.21"></a>
+<span class="sourceLineNo">022</span> * &lt;p&gt;This Java file can be compiled using<a name="line.22"></a>
+<span class="sourceLineNo">023</span> *    &lt;nobr&gt;&lt;code&gt;-source 1.3 -target 1.3&lt;/code&gt;&lt;/nobr&gt;<a name="line.23"></a>
+<span class="sourceLineNo">024</span> *    so that it will run with browsers using Java Run-Time<a name="line.24"></a>
+<span class="sourceLineNo">025</span> *    Environments as early as Java 1.3.  However, the standard<a name="line.25"></a>
+<span class="sourceLineNo">026</span> *    script now uses version 1.5 as the standard.&lt;/p&gt;<a name="line.26"></a>
+<span class="sourceLineNo">027</span> * @see java.awt.Button<a name="line.27"></a>
+<span class="sourceLineNo">028</span> * @see java.awt.Canvas<a name="line.28"></a>
+<span class="sourceLineNo">029</span> * @see java.awt.Panel<a name="line.29"></a>
+<span class="sourceLineNo">030</span> * @see java.awt.GridBagConstraints<a name="line.30"></a>
+<span class="sourceLineNo">031</span> * @see java.awt.GridBagLayout<a name="line.31"></a>
+<span class="sourceLineNo">032</span> * @author Bradley Ross<a name="line.32"></a>
+<span class="sourceLineNo">033</span> */<a name="line.33"></a>
+<span class="sourceLineNo">034</span>public class WebSample  extends Applet implements ActionListener <a name="line.34"></a>
+<span class="sourceLineNo">035</span>{<a name="line.35"></a>
+<span class="sourceLineNo">036</span>        /**<a name="line.36"></a>
+<span class="sourceLineNo">037</span>         * Inserted to satisfy Serializable interface.<a name="line.37"></a>
+<span class="sourceLineNo">038</span>         */<a name="line.38"></a>
+<span class="sourceLineNo">039</span>        private static final long serialVersionUID = 1L;<a name="line.39"></a>
+<span class="sourceLineNo">040</span>        protected AppletContext context = null;<a name="line.40"></a>
+<span class="sourceLineNo">041</span>        protected String listUrl = null;<a name="line.41"></a>
+<span class="sourceLineNo">042</span>        protected String listUrlArray[] = null;<a name="line.42"></a>
+<span class="sourceLineNo">043</span>        protected URL rootUrl = null;<a name="line.43"></a>
+<span class="sourceLineNo">044</span>        protected URL url = null;<a name="line.44"></a>
+<span class="sourceLineNo">045</span>        /** <a name="line.45"></a>
+<span class="sourceLineNo">046</span>         * The inner class colorSet represents the buttons in the panel <a name="line.46"></a>
+<span class="sourceLineNo">047</span>         * which the user sees.<a name="line.47"></a>
+<span class="sourceLineNo">048</span>         * &lt;p&gt;Each of the buttons is defined as a public field in the inner class, with each <a name="line.48"></a>
+<span class="sourceLineNo">049</span>         *    field belonging to the class java.awt.Button.  The entire panel containing<a name="line.49"></a>
+<span class="sourceLineNo">050</span>         *    the buttons is also defined as a public field, with the field of type<a name="line.50"></a>
+<span class="sourceLineNo">051</span>         *    java.awt.Panel.&lt;/p&gt;<a name="line.51"></a>
+<span class="sourceLineNo">052</span>         */<a name="line.52"></a>
+<span class="sourceLineNo">053</span>        class colorSet extends Component<a name="line.53"></a>
+<span class="sourceLineNo">054</span>        {<a name="line.54"></a>
+<span class="sourceLineNo">055</span><a name="line.55"></a>
+<span class="sourceLineNo">056</span>                /**<a name="line.56"></a>
+<span class="sourceLineNo">057</span>                 * <a name="line.57"></a>
+<span class="sourceLineNo">058</span>                 */<a name="line.58"></a>
+<span class="sourceLineNo">059</span>                private static final long serialVersionUID = 1L;<a name="line.59"></a>
+<span class="sourceLineNo">060</span>                /**<a name="line.60"></a>
+<span class="sourceLineNo">061</span>                 * Integer value representing the button that<a name="line.61"></a>
+<span class="sourceLineNo">062</span>                 * was depressed.<a name="line.62"></a>
+<span class="sourceLineNo">063</span>                 */<a name="line.63"></a>
+<span class="sourceLineNo">064</span>                public int ColorChoice;<a name="line.64"></a>
+<span class="sourceLineNo">065</span>                /**<a name="line.65"></a>
+<span class="sourceLineNo">066</span>                 * Object defining the panel of buttons.<a name="line.66"></a>
+<span class="sourceLineNo">067</span>                 */<a name="line.67"></a>
+<span class="sourceLineNo">068</span>                Panel colorPanel = new Panel();<a name="line.68"></a>
+<span class="sourceLineNo">069</span>                /**<a name="line.69"></a>
+<span class="sourceLineNo">070</span>                 * Object for the "black" button.<a name="line.70"></a>
+<span class="sourceLineNo">071</span>                 *&lt;p&gt;The other buttons are defined in the same manner.&lt;/p&gt;<a name="line.71"></a>
+<span class="sourceLineNo">072</span>                 */<a name="line.72"></a>
+<span class="sourceLineNo">073</span>                public Button blackButton = new Button("black");<a name="line.73"></a>
+<span class="sourceLineNo">074</span>                /**<a name="line.74"></a>
+<span class="sourceLineNo">075</span>                 * Object for the "blue" button.<a name="line.75"></a>
+<span class="sourceLineNo">076</span>                 *&lt;p&gt;The actions in the constructor for blueButton<a name="line.76"></a>
+<span class="sourceLineNo">077</span>                 *   differ from the other in that the label is <a name="line.77"></a>
+<span class="sourceLineNo">078</span>                 *   changed to " Blue " while the message returned<a name="line.78"></a>
+<span class="sourceLineNo">079</span>                 *   to the listener is still "blue".&lt;/p&gt;<a name="line.79"></a>
+<span class="sourceLineNo">080</span>                 */<a name="line.80"></a>
+<span class="sourceLineNo">081</span>                public Button blueButton = new Button("blue");<a name="line.81"></a>
+<span class="sourceLineNo">082</span>                /** See the description of blackButton */<a name="line.82"></a>
+<span class="sourceLineNo">083</span>                public Button cyanButton = new Button("cyan");<a name="line.83"></a>
+<span class="sourceLineNo">084</span>                /** See the description of blackButton */<a name="line.84"></a>
+<span class="sourceLineNo">085</span>                public Button darkGrayButton = new Button("darkGray");<a name="line.85"></a>
+<span class="sourceLineNo">086</span>                /** See the description of blackButton */<a name="line.86"></a>
+<span class="sourceLineNo">087</span>                public Button grayButton = new Button("gray");<a name="line.87"></a>
+<span class="sourceLineNo">088</span>                /** See the description of blackButton */<a name="line.88"></a>
+<span class="sourceLineNo">089</span>                public Button lightGrayButton = new Button("lightGray");<a name="line.89"></a>
+<span class="sourceLineNo">090</span>                /** See the description of blackButton */<a name="line.90"></a>
+<span class="sourceLineNo">091</span>                public Button  magentaButton = new Button("magenta");<a name="line.91"></a>
+<span class="sourceLineNo">092</span>                /** See the description of blackButton */<a name="line.92"></a>
+<span class="sourceLineNo">093</span>                public Button orangeButton = new Button("orange");<a name="line.93"></a>
+<span class="sourceLineNo">094</span>                /** See the description of blackButton */<a name="line.94"></a>
+<span class="sourceLineNo">095</span>                public Button pinkButton = new Button("pink");<a name="line.95"></a>
+<span class="sourceLineNo">096</span>                /** See the description of blackButton */<a name="line.96"></a>
+<span class="sourceLineNo">097</span>                public Button redButton = new Button("red");<a name="line.97"></a>
+<span class="sourceLineNo">098</span>                /** See the description of blackButton */<a name="line.98"></a>
+<span class="sourceLineNo">099</span>                public Button whiteButton = new Button("white");<a name="line.99"></a>
+<span class="sourceLineNo">100</span>                /** See the description of blackButton */<a name="line.100"></a>
+<span class="sourceLineNo">101</span>                public Button yellowButton = new Button("yellow");<a name="line.101"></a>
+<span class="sourceLineNo">102</span>                /** See the description of blackButton */<a name="line.102"></a>
+<span class="sourceLineNo">103</span>                public Button greenButton = new Button("green");<a name="line.103"></a>
+<span class="sourceLineNo">104</span>                /**<a name="line.104"></a>
+<span class="sourceLineNo">105</span>                 * This is the constructor for the colorSet class<a name="line.105"></a>
+<span class="sourceLineNo">106</span>                 * which defines the buttons.<a name="line.106"></a>
+<span class="sourceLineNo">107</span>                 *&lt;p&gt;For blackButton, the setLabel and setActionCommand<a name="line.107"></a>
+<span class="sourceLineNo">108</span>                 *   methods are used to set the values.&lt;/p&gt;<a name="line.108"></a>
+<span class="sourceLineNo">109</span>                 *&lt;p&gt;For the other buttons, label for the button and<a name="line.109"></a>
+<span class="sourceLineNo">110</span>                 *   the message returned when the button is depressed<a name="line.110"></a>
+<span class="sourceLineNo">111</span>                 *   are set equal to the string used in the constructor<a name="line.111"></a>
+<span class="sourceLineNo">112</span>                 *   for the java.awt.Button object.&lt;/p&gt;<a name="line.112"></a>
+<span class="sourceLineNo">113</span>                 *&lt;p&gt;The add method for the colorPanel object places the<a name="line.113"></a>
+<span class="sourceLineNo">114</span>                 *   various buttons in the panel according to the<a name="line.114"></a>
+<span class="sourceLineNo">115</span>                 *   GridBagLayout and GridBagConstraints classes.&lt;/p&gt;<a name="line.115"></a>
+<span class="sourceLineNo">116</span>                 */<a name="line.116"></a>
+<span class="sourceLineNo">117</span>                public colorSet()<a name="line.117"></a>
+<span class="sourceLineNo">118</span>                {<a name="line.118"></a>
+<span class="sourceLineNo">119</span>                        ColorChoice = 1;<a name="line.119"></a>
+<span class="sourceLineNo">120</span>                        setBackground(Color.white);<a name="line.120"></a>
+<span class="sourceLineNo">121</span>                        GridBagLayout layout = new GridBagLayout();<a name="line.121"></a>
+<span class="sourceLineNo">122</span>                        GridBagConstraints constraints = new GridBagConstraints();<a name="line.122"></a>
+<span class="sourceLineNo">123</span>                        colorPanel.setLayout(layout);<a name="line.123"></a>
+<span class="sourceLineNo">124</span>                        constraints.insets = new Insets (5, 5, 5, 5);<a name="line.124"></a>
+<span class="sourceLineNo">125</span>                        constraints.fill = GridBagConstraints.BOTH;<a name="line.125"></a>
+<span class="sourceLineNo">126</span>                        constraints.anchor = GridBagConstraints.SOUTHWEST;<a name="line.126"></a>
+<span class="sourceLineNo">127</span>                        constraints.weightx = 0; constraints.weighty = 0;<a name="line.127"></a>
+<span class="sourceLineNo">128</span>                        constraints.gridwidth = 1; constraints.gridheight = 1;<a name="line.128"></a>
+<span class="sourceLineNo">129</span>                        //<a name="line.129"></a>
+<span class="sourceLineNo">130</span>                        constraints.gridx = 1; constraints.gridy = 1;<a name="line.130"></a>
+<span class="sourceLineNo">131</span>                        colorPanel.add(blackButton, constraints);<a name="line.131"></a>
+<span class="sourceLineNo">132</span>                        //<a name="line.132"></a>
+<span class="sourceLineNo">133</span>                        constraints.gridx = 2; constraints.gridy = 1;<a name="line.133"></a>
+<span class="sourceLineNo">134</span>                        colorPanel.add(blueButton, constraints);<a name="line.134"></a>
+<span class="sourceLineNo">135</span>                        blueButton.setLabel("  Blue  ");<a name="line.135"></a>
+<span class="sourceLineNo">136</span>                        blueButton.setActionCommand("blue");<a name="line.136"></a>
+<span class="sourceLineNo">137</span>                        //<a name="line.137"></a>
+<span class="sourceLineNo">138</span>                        constraints.gridx = 3; constraints.gridy = 1;<a name="line.138"></a>
+<span class="sourceLineNo">139</span>                        colorPanel.add(cyanButton, constraints);<a name="line.139"></a>
+<span class="sourceLineNo">140</span>                        //<a name="line.140"></a>
+<span class="sourceLineNo">141</span>                        constraints.gridx = 4; constraints.gridy = 1;<a name="line.141"></a>
+<span class="sourceLineNo">142</span>                        colorPanel.add(darkGrayButton, constraints);<a name="line.142"></a>
+<span class="sourceLineNo">143</span>                        //<a name="line.143"></a>
+<span class="sourceLineNo">144</span>                        constraints.gridx = 5; constraints.gridy = 1;<a name="line.144"></a>
+<span class="sourceLineNo">145</span>                        colorPanel.add(grayButton, constraints);<a name="line.145"></a>
+<span class="sourceLineNo">146</span>                        //<a name="line.146"></a>
+<span class="sourceLineNo">147</span>                        constraints.gridx = 1; constraints.gridy = 2;<a name="line.147"></a>
+<span class="sourceLineNo">148</span>                        colorPanel.add(greenButton, constraints);<a name="line.148"></a>
+<span class="sourceLineNo">149</span>                        //<a name="line.149"></a>
+<span class="sourceLineNo">150</span>                        constraints.gridx = 2; constraints.gridy = 2;<a name="line.150"></a>
+<span class="sourceLineNo">151</span>                        colorPanel.add(lightGrayButton, constraints);<a name="line.151"></a>
+<span class="sourceLineNo">152</span>                        //<a name="line.152"></a>
+<span class="sourceLineNo">153</span>                        constraints.gridx = 3; constraints.gridy = 2;<a name="line.153"></a>
+<span class="sourceLineNo">154</span>                        colorPanel.add(magentaButton, constraints);<a name="line.154"></a>
+<span class="sourceLineNo">155</span>                        //<a name="line.155"></a>
+<span class="sourceLineNo">156</span>                        constraints.gridx = 4; constraints.gridy = 2;<a name="line.156"></a>
+<span class="sourceLineNo">157</span>                        colorPanel.add(orangeButton, constraints);<a name="line.157"></a>
+<span class="sourceLineNo">158</span>                        //<a name="line.158"></a>
+<span class="sourceLineNo">159</span>                        constraints.gridx = 5; constraints.gridy = 2;<a name="line.159"></a>
+<span class="sourceLineNo">160</span>                        colorPanel.add(pinkButton, constraints);<a name="line.160"></a>
+<span class="sourceLineNo">161</span>                        //<a name="line.161"></a>
+<span class="sourceLineNo">162</span>                        constraints.gridx = 1; constraints.gridy = 3;<a name="line.162"></a>
+<span class="sourceLineNo">163</span>                        colorPanel.add(redButton, constraints);<a name="line.163"></a>
+<span class="sourceLineNo">164</span>                        //<a name="line.164"></a>
+<span class="sourceLineNo">165</span>                        constraints.gridx = 2; constraints.gridy = 3;<a name="line.165"></a>
+<span class="sourceLineNo">166</span>                        colorPanel.add(whiteButton, constraints);<a name="line.166"></a>
+<span class="sourceLineNo">167</span>                        //<a name="line.167"></a>
+<span class="sourceLineNo">168</span>                        constraints.gridx = 3; constraints.gridy = 3;<a name="line.168"></a>
+<span class="sourceLineNo">169</span>                        colorPanel.add(yellowButton, constraints);<a name="line.169"></a>
+<span class="sourceLineNo">170</span>                }<a name="line.170"></a>
+<span class="sourceLineNo">171</span>        } // This is the end of the inner class<a name="line.171"></a>
+<span class="sourceLineNo">172</span>        static final String message = "Hello World!";<a name="line.172"></a>
+<span class="sourceLineNo">173</span>        static final String errorMessage = "Illegal Code";<a name="line.173"></a>
+<span class="sourceLineNo">174</span><a name="line.174"></a>
+<span class="sourceLineNo">175</span>        /**<a name="line.175"></a>
+<span class="sourceLineNo">176</span>         * The buttons object is the instantiation of the inner class colorSet.<a name="line.176"></a>
+<span class="sourceLineNo">177</span>         */<a name="line.177"></a>
+<span class="sourceLineNo">178</span>        colorSet buttons = new colorSet();<a name="line.178"></a>
+<span class="sourceLineNo">179</span>        /**<a name="line.179"></a>
+<span class="sourceLineNo">180</span>         * Initialize the applet.<a name="line.180"></a>
+<span class="sourceLineNo">181</span>         *&lt;p&gt;The class colorsSample implements the interface<a name="line.181"></a>
+<span class="sourceLineNo">182</span>         *   java.awt.ActionListener as well as extending the<a name="line.182"></a>
+<span class="sourceLineNo">183</span>         *   class java.applet.Applet.&lt;/p&gt;<a name="line.183"></a>
+<span class="sourceLineNo">184</span>         *&lt;p&gt;The addActionListener methods arrange for the<a name="line.184"></a>
+<span class="sourceLineNo">185</span>         *   colorsSample class to receive the messages<a name="line.185"></a>
+<span class="sourceLineNo">186</span>         *   when the buttons are depressed.  This means that<a name="line.186"></a>
+<span class="sourceLineNo">187</span>         *   that the ActionPerformed method for the class<a name="line.187"></a>
+<span class="sourceLineNo">188</span>         *   is executed whenever a button is depressed.&lt;/p&gt;<a name="line.188"></a>
+<span class="sourceLineNo">189</span>         * @see java.awt.event.ActionListener<a name="line.189"></a>
+<span class="sourceLineNo">190</span>         * @see java.applet.Applet<a name="line.190"></a>
+<span class="sourceLineNo">191</span>         */<a name="line.191"></a>
+<span class="sourceLineNo">192</span>        public void init() <a name="line.192"></a>
+<span class="sourceLineNo">193</span>        {<a name="line.193"></a>
+<span class="sourceLineNo">194</span>                System.out.println("Starting program");<a name="line.194"></a>
+<span class="sourceLineNo">195</span><a name="line.195"></a>
+<span class="sourceLineNo">196</span><a name="line.196"></a>
+<span class="sourceLineNo">197</span>                listUrl = getParameter("ImageList");<a name="line.197"></a>
+<span class="sourceLineNo">198</span>                rootUrl = getDocumentBase();<a name="line.198"></a>
+<span class="sourceLineNo">199</span>                if (listUrl != null)<a name="line.199"></a>
+<span class="sourceLineNo">200</span>                {<a name="line.200"></a>
+<span class="sourceLineNo">201</span>                        try <a name="line.201"></a>
+<span class="sourceLineNo">202</span>                        {<a name="line.202"></a>
+<span class="sourceLineNo">203</span>                                String urlFile = FileHelpers.readTextFile(new URL(rootUrl, listUrl));<a name="line.203"></a>
+<span class="sourceLineNo">204</span>                                LineNumberReader reader = new LineNumberReader(new StringReader(urlFile));<a name="line.204"></a>
+<span class="sourceLineNo">205</span>                                Vector&lt;String&gt; urlSet = new Vector&lt;String&gt;();<a name="line.205"></a>
+<span class="sourceLineNo">206</span>                                while (true)<a name="line.206"></a>
+<span class="sourceLineNo">207</span>                                {<a name="line.207"></a>
+<span class="sourceLineNo">208</span>                                        String temp = reader.readLine();<a name="line.208"></a>
+<span class="sourceLineNo">209</span>                                        if (temp == null) { break; }<a name="line.209"></a>
+<span class="sourceLineNo">210</span>                                        if (temp.length() == 0) { continue; }<a name="line.210"></a>
+<span class="sourceLineNo">211</span>                                        urlSet.add(temp);<a name="line.211"></a>
+<span class="sourceLineNo">212</span>                                }<a name="line.212"></a>
+<span class="sourceLineNo">213</span>                        } <a name="line.213"></a>
+<span class="sourceLineNo">214</span>                        catch (MalformedURLException e) <a name="line.214"></a>
+<span class="sourceLineNo">215</span>                        {<a name="line.215"></a>
+<span class="sourceLineNo">216</span>                                showStatus(e.getClass().getName());<a name="line.216"></a>
+<span class="sourceLineNo">217</span>                        } <a name="line.217"></a>
+<span class="sourceLineNo">218</span>                        catch (IOException e) <a name="line.218"></a>
+<span class="sourceLineNo">219</span>                        {<a name="line.219"></a>
+<span class="sourceLineNo">220</span>                                showStatus(e.getClass().getName());<a name="line.220"></a>
+<span class="sourceLineNo">221</span>                        }<a name="line.221"></a>
+<span class="sourceLineNo">222</span>                }<a name="line.222"></a>
+<span class="sourceLineNo">223</span>                context = this.getAppletContext();<a name="line.223"></a>
+<span class="sourceLineNo">224</span>                FlowLayout layout = new FlowLayout();<a name="line.224"></a>
+<span class="sourceLineNo">225</span>                setLayout(layout);<a name="line.225"></a>
+<span class="sourceLineNo">226</span>                setBackground(Color.white);<a name="line.226"></a>
+<span class="sourceLineNo">227</span>                add(buttons.colorPanel);<a name="line.227"></a>
+<span class="sourceLineNo">228</span>                buttons.blackButton.addActionListener(this);<a name="line.228"></a>
+<span class="sourceLineNo">229</span>                buttons.blueButton.addActionListener(this);<a name="line.229"></a>
+<span class="sourceLineNo">230</span>                buttons.cyanButton.addActionListener(this);<a name="line.230"></a>
+<span class="sourceLineNo">231</span>                buttons.darkGrayButton.addActionListener(this);<a name="line.231"></a>
+<span class="sourceLineNo">232</span>                buttons.grayButton.addActionListener(this);<a name="line.232"></a>
+<span class="sourceLineNo">233</span>                buttons.greenButton.addActionListener(this);<a name="line.233"></a>
+<span class="sourceLineNo">234</span>                buttons.lightGrayButton.addActionListener(this);<a name="line.234"></a>
+<span class="sourceLineNo">235</span>                buttons.magentaButton.addActionListener(this);<a name="line.235"></a>
+<span class="sourceLineNo">236</span>                buttons.orangeButton.addActionListener(this);<a name="line.236"></a>
+<span class="sourceLineNo">237</span>                buttons.pinkButton.addActionListener(this);<a name="line.237"></a>
+<span class="sourceLineNo">238</span>                buttons.redButton.addActionListener(this);<a name="line.238"></a>
+<span class="sourceLineNo">239</span>                buttons.whiteButton.addActionListener(this);<a name="line.239"></a>
+<span class="sourceLineNo">240</span>                buttons.yellowButton.addActionListener(this);<a name="line.240"></a>
+<span class="sourceLineNo">241</span>                doLayout();<a name="line.241"></a>
+<span class="sourceLineNo">242</span>                System.out.println("Layout complete");<a name="line.242"></a>
+<span class="sourceLineNo">243</span>        } // End of init<a name="line.243"></a>
+<span class="sourceLineNo">244</span>        /**<a name="line.244"></a>
+<span class="sourceLineNo">245</span>         * The paint method is called whenever it is necessary to<a name="line.245"></a>
+<span class="sourceLineNo">246</span>         * redraw the contents of the applet.<a name="line.246"></a>
+<span class="sourceLineNo">247</span>         * &lt;p&gt;The paint method is called whenever it is necessary<a name="line.247"></a>
+<span class="sourceLineNo">248</span>         *    redraw the image.  It can be called by the window manager<a name="line.248"></a>
+<span class="sourceLineNo">249</span>         *    when a window is resized, covered, or uncovered or when it<a name="line.249"></a>
+<span class="sourceLineNo">250</span>         *    detects that another method has executed the repaint method.&lt;/p&gt;<a name="line.250"></a>
+<span class="sourceLineNo">251</span>         * @param g The graphics item which is to be redrawn.<a name="line.251"></a>
+<span class="sourceLineNo">252</span>         */<a name="line.252"></a>
+<span class="sourceLineNo">253</span>        /**<a name="line.253"></a>
+<span class="sourceLineNo">254</span>         * The actionPerformed method is executed whenever<a name="line.254"></a>
+<span class="sourceLineNo">255</span>         *    an action is taken by the user.<a name="line.255"></a>
+<span class="sourceLineNo">256</span>         *&lt;p&gt;The event created by depressing the<a name="line.256"></a>
+<span class="sourceLineNo">257</span>         *   the button is passed as argument of<a name="line.257"></a>
+<span class="sourceLineNo">258</span>         *   the method and the getActionCommand method<a name="line.258"></a>
+<span class="sourceLineNo">259</span>         *   obtains the character string associated<a name="line.259"></a>
+<span class="sourceLineNo">260</span>         *   with the button as defined by the constructor<a name="line.260"></a>
+<span class="sourceLineNo">261</span>         *   and other methods for the button.&lt;/p&gt;<a name="line.261"></a>
+<span class="sourceLineNo">262</span>         *&lt;p&gt;This method then sets the ColorChoice field<a name="line.262"></a>
+<span class="sourceLineNo">263</span>         *   in the buttons object according to which <a name="line.263"></a>
+<span class="sourceLineNo">264</span>         *   button was depressed and then uses the<a name="line.264"></a>
+<span class="sourceLineNo">265</span>         *   repaint method to cause the graphics on the<a name="line.265"></a>
+<span class="sourceLineNo">266</span>         *   applet to be redrawn.&lt;/p&gt;<a name="line.266"></a>
+<span class="sourceLineNo">267</span>         */<a name="line.267"></a>
+<span class="sourceLineNo">268</span>        public void actionPerformed (ActionEvent e)<a name="line.268"></a>
+<span class="sourceLineNo">269</span>        {<a name="line.269"></a>
+<span class="sourceLineNo">270</span>                String command = new String();<a name="line.270"></a>
+<span class="sourceLineNo">271</span>                command = e.getActionCommand();<a name="line.271"></a>
+<span class="sourceLineNo">272</span>                System.out.println("ActionEvent **" + command + "**");<a name="line.272"></a>
+<span class="sourceLineNo">273</span>                URL test = null;<a name="line.273"></a>
+<span class="sourceLineNo">274</span>                try<a name="line.274"></a>
+<span class="sourceLineNo">275</span>                {<a name="line.275"></a>
+<span class="sourceLineNo">276</span>                        test = new URL(rootUrl, "colors/" + command.toLowerCase() + ".html");<a name="line.276"></a>
+<span class="sourceLineNo">277</span>                }<a name="line.277"></a>
+<span class="sourceLineNo">278</span>                catch (MalformedURLException e1)<a name="line.278"></a>
+<span class="sourceLineNo">279</span>                {<a name="line.279"></a>
+<span class="sourceLineNo">280</span>                        System.out.println(e1.getClass().getName() + " " + e1.getMessage());<a name="line.280"></a>
+<span class="sourceLineNo">281</span>                }<a name="line.281"></a>
+<span class="sourceLineNo">282</span>                context.showDocument(test, "pages");     <a name="line.282"></a>
+<span class="sourceLineNo">283</span>        } // end of actionPerformed<a name="line.283"></a>
+<span class="sourceLineNo">284</span>}<a name="line.284"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</pre>
+</div>
+</body>
+</html>

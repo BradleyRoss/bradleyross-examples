@@ -1,0 +1,126 @@
+-- The database is composed of three tables that
+-- form a hierarchical set.  The relation of
+-- COUNTRY to STATE is one to many, as is the
+-- relationship of STATE to CITY.  (The many is
+-- actually 0, 1, or many.
+--
+-- The values for COUNTRY.COUNTRY and STATE.STATE
+-- are code values.  In this case, the state codes
+-- are only valid for Canada and the USA because these
+-- are the state/province codes used by the post offices.
+--
+CREATE TABLE COUNTRY (
+   COUNTRY VARCHAR(2) NOT NULL,
+   NAME    VARCHAR(40),
+   PRIMARY KEY (COUNTRY) )
+;
+--
+--
+CREATE TABLE STATE (
+  STATE   VARCHAR(2) NOT NULL,
+  NAME    VARCHAR(40),
+  COUNTRY VARCHAR(2) NOT NULL,
+  PRIMARY KEY (COUNTRY, STATE),
+  CONSTRAINT FOREIGN KEY (COUNTRY) REFERENCES COUNTRY(COUNTRY),
+)
+;
+--
+--
+CREATE TABLE CITY (
+  CITY VARCHAR(40) NOT NULL,
+  COUNTRY VARCHAR(2) NOT NULL,
+  STATE   VARCHAR(2) NOT NULL,
+  PRIMARY KEY (COUNTRY, STATE, CITY),
+  FOREIGN KEY (COUNTRY, STATE) REFERENCES STATE(COUNTRY, STATE),
+)
+;
+--
+-- This SQL statement populates the COUNTRY table.
+--
+INSERT INTO COUNTRY (COUNTRY, NAME) VALUES
+   ('CA', 'Canada'),
+   ('US', 'United States of America');
+--
+-- This SQL statement populates the STATE table with names
+-- and postal codes of American states and Canadian provinces.
+--
+INSERT INTO STATE (STATE, NAME, COUNTRY)  VALUES
+   ('AK', 'Alaska',         'US'),     
+   ('AL', 'Alabama',        'US'),    
+   ('AR', 'Arkansas',       'US'),
+   ('AZ', 'Arizona',        'US'),
+   ('CA', 'California',     'US'),
+   ('CO', 'Colorado',       'US'),
+   ('CT', 'Connecticut',    'US'),
+   ('DC', 'District of Columbia', 'US'),
+   ('DE', 'Delaware',       'US'),
+   ('FL', 'Florida',        'US'),
+   ('GA', 'Georgia',        'US'),
+   ('HI', 'Hawaii',         'US'),
+   ('IA', 'Iowa',           'US'),
+   ('ID', 'Idaho',          'US'),
+   ('IL', 'Illinois',       'US'),
+   ('IN', 'Indiana',        'US'),
+   ('KS', 'Kansas',         'US'),
+   ('KY', 'Kentucky',       'US'),
+   ('LA', 'Louisiana',      'US'),
+   ('MA', 'Massachusetts',  'US'),
+   ('MD', 'Maryland',       'US'),
+   ('ME', 'Maine',          'US'),
+   ('MI', 'Michigan',       'US'),
+   ('MN', 'Minnesota',      'US'),
+   ('MO', 'Missouri',       'US'),
+   ('MS', 'Mississippi',    'US'),
+   ('MT', 'Montana',        'US'),
+   ('NC', 'North Carolina', 'US'),
+   ('ND', 'North Dakota',   'US'),
+   ('NE', 'Nebraska',       'US'),
+   ('NH', 'New Hampshire',  'US'),
+   ('NJ', 'New Jersey',     'US'),
+   ('NM', 'New Mexico',     'US'),
+   ('NV', 'Nevada',         'US'),
+   ('NY', 'New York',       'US'),
+   ('OH', 'Ohio',           'US'),
+   ('OK', 'Oklahoma',       'US'),
+   ('OR', 'Oregon',         'US'),
+   ('PA', 'Pennsylvania',   'US'),
+   ('RI', 'Rhode Island',   'US'),
+   ('SC', 'South Carolina', 'US'),
+   ('SD', 'South Dakota',   'US'),
+   ('TN', 'Tennessee',      'US'),
+   ('TX', 'Texas',          'US'),
+   ('UT', 'Utah',           'US'),
+   ('VA', 'Virginia',       'US'),
+   ('VT', 'Vermont',        'US'),
+   ('WA', 'Washington',     'US'),
+   ('WI', 'Wisconsin',      'US'),
+   ('WV', 'West Virginia',  'US'),
+   ('WY', 'Wyoming',        'US'),
+   ('AB', 'Alberta',        'CA'),
+   ('BC', 'British Columbia',  'CA'),
+   ('MB', 'Manitoba',       'CA'),
+   ('NB', 'New Brunswick',  'CA'),
+   ('NL', 'Newfoundland and Labrador', 'CA'),
+   ('NT', 'Northwest Territories', 'CA'),
+   ('NS', 'Nova Scotia',    'CA'),
+   ('NU', 'Nunavut',        'CA'),
+   ('ON', 'Ontario',        'CA'),
+   ('PE', 'Prince Edward Island',  'CA'),
+   ('QC', 'Quebec',         'CA'),
+   ('SK', 'Saskatchewan',   'CA'),
+   ('YT', 'Yukon',          'CA');
+INSERT INTO CITY (COUNTRY, STATE, CITY) VALUES
+   ('US', 'PA', 'Philadelphia'),
+   ('US', 'NY', 'New York City');
+-- 
+-- This is what I refer to as a sanity check
+-- transaction.  The inner SQL statement 
+-- returns the number of states in the STATE
+-- table for each value of COUNTRY.
+--
+SELECT MULT, COUNT(MULT) AS FREQ
+FROM
+( SELECT COUNT(COUNTRY) AS MULT, COUNTRY 
+  FROM STATE GROUP BY COUNTRY )  FIRST
+GROUP BY MULT
+ORDER BY MULT;

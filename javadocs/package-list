@@ -3,6 +3,7 @@ bradleyross.demonstrations
 bradleyross.j2ee.servlets
 bradleyross.j2ee.tags
 bradleyross.library
+bradleyross.library.applets
 bradleyross.library.database
 bradleyross.library.helpers
 bradleyross.library.helpers.tests
