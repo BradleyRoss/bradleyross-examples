@@ -1,22 +1,22 @@
 package bradleyross.j2ee.tags;
-import javax.servlet.jsp.*;
+// import javax.servlet.jsp.*;
+import javax.servlet.jsp.JspWriter;
+import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
+import javax.servlet.jsp.PageContext;
 /**
  * This custom tag can be used to center an object on
  * the web page horizontally.
  * <p>By using optional attributes, it can also
  *    position the element against the left or right
- *    border.</p>
+ *    border and can provide the material with a class
+ *    that can be referenced by the CSS style sheet.</p>
  * @author Bradley Ross
  *
  */
+@SuppressWarnings("serial")
 public class CenterTag extends TagSupport 
 {
-/**
- * This is a default entry used for the support of
- * serialization of the class.
- */
-private static final long serialVersionUID = 1L;
 /**
  * Value of the attribute <code>align</code> for the
  * custom tag.

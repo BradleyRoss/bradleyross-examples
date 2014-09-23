@@ -8,6 +8,7 @@
 <target name="javadoc">
 <delete dir="doc" />
 <mkdir dir="doc" />
+<echo level="info" message="Javadoc placed in project" />
 <javadoc access="private" 
   sourcepath="src" destdir="doc"
   additionalparam="-linksource"   author="true"   
@@ -19,6 +20,7 @@
   <classpath refid="jar.classpath" />
 &external;      
 </javadoc>
+<echo level="info" message="Javadoc created in documentation application" />
 <javadoc access="private" 
   sourcepath="src" destdir="/Users/bradleyross/newGit/bradleyross-docs/bradleyross-examples/javadocs"
   additionalparam="-linksource"   author="true"   

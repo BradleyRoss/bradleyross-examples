@@ -8,13 +8,18 @@ import java.io.IOException;
 // import java.util.Enumeration;
 /**
  * Demonstration custom body tag.
+ * 
+ * <p>Use of this tag means that the
+ *    material between the start and
+ *    end tags must be a properly formed
+ *    XML element with no in line code
+ *    for JavaScript or CSS styles.</p>
+ *    
+ * @author Bradley Ross
  */
+@SuppressWarnings("serial")
 public class Body extends TagSupport 
 {
-	/**
-	 * Inserted to satisfy Serializable interface.
-	 */
-	private static final long serialVersionUID = 1L;
 	public int doStartTag() throws JspException
 	{	
 		try

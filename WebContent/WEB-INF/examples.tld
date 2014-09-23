@@ -23,14 +23,17 @@
                  contain code that is not permitted by the SCRIPTLESS option.
        -->
       <bodycontent>TAGDEPENDENT</bodycontent>
-      <info></info>
+      <info>This tag surrounds the contents with a table and sets
+            the text-alignment.</info>
    </tag>
    <tag>
       <name>center</name>
       <tagclass>bradleyross.j2ee.tags.CenterTag</tagclass>
       <bodycontent>SCRIPTLESS</bodycontent>
-      <info>The valid values for the align attribute are left, right,
-            and center.</info>
+      <info>This tag surrounds the contents with a table and sets
+            the text-alignment.  The valid values for the align attribute 
+            are left, right, and center. The value of the class attribute 
+            is the class to be used for the surrounding div.</info>
       <attribute>
          <name>align</name>
          <required>false</required>
@@ -40,4 +43,21 @@
          <required>false</required>
       </attribute>
    </tag>
+   <tag>
+      <name>ConvertToComment</name>
+      <tagclass>bradleyross.j2ee.tags.ConvertToComment</tagclass>
+      <bodycontent>TAGDEPENDENT</bodycontent>
+      <info></info>
+      <attribute>
+         <name>className</name>
+         <required>false</required>
+      </attribute>
+   </tag>  
+   <tag>
+      <name>ConvertToComment</name>
+      <tagclass>bradleyross.j2ee.tags.Body</tagclass>
+      <bodycontent>SCRIPTLESS</bodycontent>
+      <info>This can be used in place of the body tag to yield
+            a common header and footer.</info>
+   </tag>      
 </taglib>
