@@ -106,6 +106,9 @@ public void setPageContext(PageContext context)
  *    less that the available width.  Setting margin-left and
  *    margin-right to auto causes the table to be centered in
  *    this situation.</p>
+ * <p>The method returns {@link #EVAL_BODY_INCLUDE} to indicate that
+ *    the material in the body of the tag will be processed by the
+ *    JSP preprocessor.</p>
  */
 public int doStartTag() throws JspException
 {	
@@ -147,12 +150,15 @@ public int doStartTag() throws JspException
 	}
 	catch (java.io.IOException e)
 	{
+		throw new JspException(e.getClass().getName() + " " + e.getMessage(), e);
 	}
 	return EVAL_BODY_INCLUDE;
 }
 /**
  * Writes test for the JSP when the closing tag for the custom
  *    tag is encountered.
+ * <p>The method returns {@link #EVAL_PAGE} to indicate
+ *    that processing of the Java Server Page should continue.</p>
  */
 public int doEndTag() throws JspException
 {

@@ -13,16 +13,21 @@ import javax.servlet.jsp.JspException;
  * This is a demonstration action that converts the material between
  * the start and end tags to escaped text and displays it on the output
  * page.
+ * 
+ * <p>The Tag Library Descriptor defines this tag as TAGDEPENDENT, which 
+ *    means that the material in the body of the tag will not be
+ *    processed by the JSP preprocessor</p>
  * @author Bradley Ross
  *
  */
 @SuppressWarnings("serial")
 public class ConvertToComment extends BodyTagSupport {
 	protected String className = new String();
-
-
 	/**
 	 * Actions to be carried out when end tag is encountered.
+	 * 
+	 * <p>The method returns {@link #EVAL_PAGE} to indicate
+	 *    that processing of the JSP page will continue.</p>
 	 * 
 	 * @see LineNumberReader
 	 * @see JspWriter
