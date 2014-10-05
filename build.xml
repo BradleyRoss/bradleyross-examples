@@ -6,7 +6,7 @@
 	 -->
 
 	<target name="compile">
-		<copy file="src/log4j.conf" toFile="bin" />
+		<copy file="src/log4j.xml" toFile="WebContent/WEB-INF/classes/log4j.xml" />
 		<javac srcdir="src" destdir="bin"
 			includeantruntime="false" debug="true" debugLevel="lines,vars,source">
 			<classpath refid="jar.classpath" />

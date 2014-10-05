@@ -16,5 +16,12 @@
     <pathelement location="/Users/bradleyross/Resources/externaljars/jfreechart-1.0.10-swt.jar" />
     <pathelement location="/Users/bradleyross/Resources/externaljars/swt_macosx.jar" />
     <pathelement location="/Users/bradleyross/Resources/externaljars/jackcess.jar" />
+	<pathelement location="/Users/bradleyross/Resources/externaljars/javax.faces-2.1.24.jar" />
+	<!--
+	<pathelement location="/Applications/Tomcat-7.0.55/lib/annotations-api.jar" />
+	<pathelement location="/Applications/Tomcat-7.0.55/lib/servlet-api.jar" />
+	<pathelement location="/Applications/Tomcat-7.0.55/lib/tomcat-api.jar" />
+	<pathelement location="/Applications/Tomcat-7.0.55/lib/jsp-api.jar" />
+	-->
 	</path>
 </project>

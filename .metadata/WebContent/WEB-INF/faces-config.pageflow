@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pageflow:Pageflow xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:pageflow="http://www.sybase.com/suade/pageflow" id="pf14123726956390" configfile="/bradleyross-examples/WebContent/WEB-INF/faces-config.xml">
+  <nodes xsi:type="pageflow:PFPage" name="faces/login.xhtml" x="143" y="76" id="pf14123764826211" referenceLink="//@navigationRule.0/@fromViewId|" outlinks="pf14123764826212 pf14123865944897" inlinks="pf14123860333574" path="/faces/login.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="faces/welcome.xhtml" x="543" y="301" id="pf14123764826213" referenceLink="//@navigationRule.0/@navigationCase.0/@toViewId|" outlinks="pf14123860333575" inlinks="pf14123764826212" path="/faces/welcome.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="faces/loginError.xhtml" x="149" y="277" id="pf14123860333576" outlinks="pf14123860333574" inlinks="pf14123860333575 pf14123865944897" path="/faces/loginError.xhtml"/>
+  <links id="pf14123764826212" target="pf14123764826213" source="pf14123764826211" outcome="login"/>
+  <links id="pf14123860333575" target="pf14123860333576" source="pf14123764826213"/>
+  <links id="pf14123860333574" target="pf14123764826211" source="pf14123860333576" outcome="retry"/>
+  <links id="pf14123865944897" target="pf14123860333576" source="pf14123764826211" outcome="error"/>
+</pageflow:Pageflow>
