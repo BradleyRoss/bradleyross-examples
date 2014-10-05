@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>JSF example</title>
+<f:metadata>
+<f:viewParam name="name" value="#{loginBean.userName}" />
+</f:metadata>
+</head>
+<body>
+<!-- 
+     http://stackoverflow.com/questions/7775179/how-get-get-parameters-with-jsf2
+ -->
+<ul>
+   <li><a href="login.xhtml" target="_blank">Login page</a></li>
+   <li><a href="login.xhtml?name=test" target="_blank">Login page with
+       specified name</a>
+</ul>
+</body>
+</html>
