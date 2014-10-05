@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd" >
+<!-- 
+     It appears that ${catalina.base} is the way to
+     refer to the root of the files for the Tomcat server.
+     I'm not sure if the same would apply to other
+     application servers.
+ -->
+<log4j:configuration debug="false">
+   <appender name="default.file" class="org.apache.log4j.FileAppender">
+      <param name="file" value="${catalina.base}/logs/bradleyross_examples.log" />
+      <param name="append" value="true" />
+      <param name="threshold" value="info" />
+      <layout class="org.apache.log4j.PatternLayout" >
+         <param name="ConversionPattern" value="%d{ISO8601} %-5p [%c{1}] - %m%n" />
+      </layout>
+   </appender>
+   <root>
+      <priority value="info" />
+      <appender-ref ref="default.file" />
+   </root>
+</log4j:configuration>

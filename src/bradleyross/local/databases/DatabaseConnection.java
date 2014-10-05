@@ -6,8 +6,10 @@ import java.sql.ResultSet;
 import bradleyross.library.database.DatabaseProperties;
 
 /**
- * Information to connecting to databases on my laptop.  See
+ * Information for connecting to databases on my laptop.  See
  * https://babbage.inf.unibz.it/trac/obdapublic/wiki/ObdalibPluginJDBC.
+ * 
+ * <p>Postgres   Port 5432</p>
  * 
  * @author Bradley Ross
  *
@@ -80,6 +82,15 @@ public class DatabaseConnection extends DatabaseProperties
 			connectionString="jdbc:mysql://localhost/sample" + 
 			"?sessionVariables=sql_mode='ANSI'";
 		}
+		else if (system.equalsIgnoreCase("postgre") && user.equalsIgnoreCase("sample")) {
+			accountName = "sample";
+			setPassword("mypass");
+			portNumber = 5432;
+			domainName = "localhost";
+			handlerClass= "org.postgresql.Driver";
+			connectionString = "jdbc:postgresql://localhost:5432/sample";
+		}
+				
 	}
 	/**
 	 * @param args

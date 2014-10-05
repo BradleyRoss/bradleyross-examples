@@ -7,7 +7,7 @@
  * <li>{@link javax.servlet.jsp.tagext.ConditionalTagSupport} 
  *       (JSTL library)</li>
  * <li>{@link javax.servlet.jsp.jstl.core.LoopTagSupport} (JSTL library)</li>
- * <li>{@link javax.servlet.jsp.tagxt.SimpleTagSupport} (JSP tag)</li>
+ * <li>{@link javax.servlet.jsp.tagext.SimpleTagSupport} (JSP tag)</li>
  * </ul>
  * <p>The following base classes for tags are used in Java Server Faces</p>
  * <ul>
