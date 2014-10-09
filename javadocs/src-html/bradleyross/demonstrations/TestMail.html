@@ -1,0 +1,165 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head>
+<title>Source code</title>
+<link rel="stylesheet" type="text/css" href="../../../stylesheet.css" title="Style">
+</head>
+<body>
+<div class="sourceContainer">
+<pre><span class="sourceLineNo">001</span>package bradleyross.demonstrations;<a name="line.1"></a>
+<span class="sourceLineNo">002</span>import java.io.PrintWriter;<a name="line.2"></a>
+<span class="sourceLineNo">003</span>import java.io.OutputStreamWriter;<a name="line.3"></a>
+<span class="sourceLineNo">004</span>import java.net.URL;<a name="line.4"></a>
+<span class="sourceLineNo">005</span>import java.net.URLConnection;<a name="line.5"></a>
+<span class="sourceLineNo">006</span>import java.text.SimpleDateFormat;<a name="line.6"></a>
+<span class="sourceLineNo">007</span>import java.util.Date;<a name="line.7"></a>
+<span class="sourceLineNo">008</span>/**<a name="line.8"></a>
+<span class="sourceLineNo">009</span> * Demonstration of sending mail using Java.<a name="line.9"></a>
+<span class="sourceLineNo">010</span> *&lt;p&gt;&lt;ul&gt;<a name="line.10"></a>
+<span class="sourceLineNo">011</span> *&lt;li&gt;&lt;p&gt;First parameter - domain name for SMTP (RFC 822) server.&lt;/p&gt;&lt;/li&gt;<a name="line.11"></a>
+<span class="sourceLineNo">012</span> *&lt;li&gt;&lt;p&gt;Second parameter - Email address to use for destination&lt;/p&gt;&lt;/li&gt;<a name="line.12"></a>
+<span class="sourceLineNo">013</span> *&lt;li&gt;&lt;p&gt;Third parameter - Text to go with Email address&lt;/p&gt;&lt;/li&gt;<a name="line.13"></a>
+<span class="sourceLineNo">014</span> *&lt;li&gt;&lt;p&gt;Fourth parameter - Email address of sender&lt;/p&gt;&lt;/li&gt;<a name="line.14"></a>
+<span class="sourceLineNo">015</span> *&lt;li&gt;&lt;p&gt;Fifth parameter - Text to go with e-mail address of sender&lt;/p&gt;&lt;/li&gt;<a name="line.15"></a>
+<span class="sourceLineNo">016</span> *&lt;/ul&gt;&lt;/p&gt;<a name="line.16"></a>
+<span class="sourceLineNo">017</span> *&lt;p&gt;Example:&lt;br&gt;<a name="line.17"></a>
+<span class="sourceLineNo">018</span> *&lt;code&gt;bradleyross.demonstrations.testMail "smtp.foo.com"<a name="line.18"></a>
+<span class="sourceLineNo">019</span> *  "john.smith@foo.com" "John Smith" "bob.jones@foo.com" "Bob Jones"&lt;/code&gt;&lt;/p&gt;<a name="line.19"></a>
+<span class="sourceLineNo">020</span> *&lt;p&gt;Whether or not you will be able to use the SMTP port in this manner will<a name="line.20"></a>
+<span class="sourceLineNo">021</span> *   depend on how it is configured.&lt;/p&gt;<a name="line.21"></a>
+<span class="sourceLineNo">022</span> * @author Bradley Ross<a name="line.22"></a>
+<span class="sourceLineNo">023</span> */<a name="line.23"></a>
+<span class="sourceLineNo">024</span>public class TestMail {<a name="line.24"></a>
+<span class="sourceLineNo">025</span>        public static void main (String args[])<a name="line.25"></a>
+<span class="sourceLineNo">026</span>        {<a name="line.26"></a>
+<span class="sourceLineNo">027</span>                if (args.length &lt; 5)<a name="line.27"></a>
+<span class="sourceLineNo">028</span>                {<a name="line.28"></a>
+<span class="sourceLineNo">029</span>                        System.out.println("Parameters for testMail program are");<a name="line.29"></a>
+<span class="sourceLineNo">030</span>                        System.out.println("1 - Name of SMTP server (e.g. smtp.foo.com)");<a name="line.30"></a>
+<span class="sourceLineNo">031</span>                        System.out.println("2 - EMail address (e.g. john.smith@foo.com)");<a name="line.31"></a>
+<span class="sourceLineNo">032</span>                        System.out.println("3 - Text representation of EMail recipient (John Smith)");<a name="line.32"></a>
+<span class="sourceLineNo">033</span>                        System.out.println("4 - Email of sender");<a name="line.33"></a>
+<span class="sourceLineNo">034</span>                        System.out.println("5 - Text representation of sender");<a name="line.34"></a>
+<span class="sourceLineNo">035</span>                        return;<a name="line.35"></a>
+<span class="sourceLineNo">036</span>                }<a name="line.36"></a>
+<span class="sourceLineNo">037</span>                try<a name="line.37"></a>
+<span class="sourceLineNo">038</span>                {<a name="line.38"></a>
+<span class="sourceLineNo">039</span>                        System.getProperties().put("mail.host", args[0]);<a name="line.39"></a>
+<span class="sourceLineNo">040</span>                        System.out.println("SMTP host set to " + args[0]);<a name="line.40"></a>
+<span class="sourceLineNo">041</span>                        // BufferedReader in = new BufferedReader (new InputStreamReader(System.in));<a name="line.41"></a>
+<span class="sourceLineNo">042</span>                        URL u = new URL("mailto:" + args[1]);<a name="line.42"></a>
+<span class="sourceLineNo">043</span>                        URLConnection c = u.openConnection();<a name="line.43"></a>
+<span class="sourceLineNo">044</span>                        System.out.println("Connection opened");<a name="line.44"></a>
+<span class="sourceLineNo">045</span>                        c.setDoInput(false);<a name="line.45"></a>
+<span class="sourceLineNo">046</span>                        c.setDoOutput(true);<a name="line.46"></a>
+<span class="sourceLineNo">047</span>                        c.setReadTimeout(20000);<a name="line.47"></a>
+<span class="sourceLineNo">048</span>                        c.setConnectTimeout(20000);<a name="line.48"></a>
+<span class="sourceLineNo">049</span>                        System.out.flush();<a name="line.49"></a>
+<span class="sourceLineNo">050</span>                        c.connect();<a name="line.50"></a>
+<span class="sourceLineNo">051</span>                        System.out.println("Connected");<a name="line.51"></a>
+<span class="sourceLineNo">052</span>                        System.out.flush();<a name="line.52"></a>
+<span class="sourceLineNo">053</span>                        PrintWriter out = <a name="line.53"></a>
+<span class="sourceLineNo">054</span>                                        new PrintWriter(new OutputStreamWriter(c.getOutputStream()));<a name="line.54"></a>
+<span class="sourceLineNo">055</span>                        System.out.println("New PrintWriter created");<a name="line.55"></a>
+<span class="sourceLineNo">056</span>                        System.out.println("To: address is " + args[1]);<a name="line.56"></a>
+<span class="sourceLineNo">057</span>                        System.out.println("From: address is " + args[3] + "&lt;" + args[4] + "&gt;");<a name="line.57"></a>
+<span class="sourceLineNo">058</span>                        System.out.println("Reply-To: address is " + args[3] +<a name="line.58"></a>
+<span class="sourceLineNo">059</span>                                        "&lt;" + args[4] + "&gt;"); <a name="line.59"></a>
+<span class="sourceLineNo">060</span>                        System.out.flush();<a name="line.60"></a>
+<span class="sourceLineNo">061</span>                        out.println("From: \"" + args[3] + "\" &lt;" + args[4] + "&gt;");<a name="line.61"></a>
+<span class="sourceLineNo">062</span>                        System.out.println("First line sent");<a name="line.62"></a>
+<span class="sourceLineNo">063</span>                        out.println("Reply-To: \"" + args[3] + "\" &lt;" + args[4] + "&gt;");<a name="line.63"></a>
+<span class="sourceLineNo">064</span>                        // long currentTime = System.currentTimeMillis();<a name="line.64"></a>
+<span class="sourceLineNo">065</span>                        Date currentDate = new Date(System.currentTimeMillis());<a name="line.65"></a>
+<span class="sourceLineNo">066</span>                        SimpleDateFormat df = <a name="line.66"></a>
+<span class="sourceLineNo">067</span>                                        new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss Z (zzz)");<a name="line.67"></a>
+<span class="sourceLineNo">068</span>                        out.println("Date: " + df.format(currentDate));<a name="line.68"></a>
+<span class="sourceLineNo">069</span>                        System.out.println("Date: value is " + df.format(currentDate));<a name="line.69"></a>
+<span class="sourceLineNo">070</span>                        out.println("To: " + args[1]);<a name="line.70"></a>
+<span class="sourceLineNo">071</span>                        out.println("Subject: Demonstration");<a name="line.71"></a>
+<span class="sourceLineNo">072</span>                        out.println("Content-type: text/html; charset=iso-8859-1");<a name="line.72"></a>
+<span class="sourceLineNo">073</span>                        out.print("\n");<a name="line.73"></a>
+<span class="sourceLineNo">074</span>                        out.println("&lt;html&gt;&lt;head&gt;&lt;/head&gt;&lt;body&gt;");<a name="line.74"></a>
+<span class="sourceLineNo">075</span>                        out.println("&lt;title&gt;Test&lt;/title&gt;");<a name="line.75"></a>
+<span class="sourceLineNo">076</span>                        out.println("&lt;p&gt;&lt;font color=\"red\"&gt;");<a name="line.76"></a>
+<span class="sourceLineNo">077</span>                        out.println("This is a demonstration of how easy it is to send mail");<a name="line.77"></a>
+<span class="sourceLineNo">078</span>                        out.println("to an SMTP (RFC 822) server using Java");<a name="line.78"></a>
+<span class="sourceLineNo">079</span>                        out.println("&lt;/font&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;");<a name="line.79"></a>
+<span class="sourceLineNo">080</span>                        out.close();<a name="line.80"></a>
+<span class="sourceLineNo">081</span>                        System.out.println("Closed");<a name="line.81"></a>
+<span class="sourceLineNo">082</span>                        System.out.flush();<a name="line.82"></a>
+<span class="sourceLineNo">083</span>                }<a name="line.83"></a>
+<span class="sourceLineNo">084</span>                catch (Exception e)<a name="line.84"></a>
+<span class="sourceLineNo">085</span>                {<a name="line.85"></a>
+<span class="sourceLineNo">086</span>                        System.out.println("Error encountered in bradleyross.demonstrations.testMail");<a name="line.86"></a>
+<span class="sourceLineNo">087</span>                        System.out.println("Error: " + e.getMessage());<a name="line.87"></a>
+<span class="sourceLineNo">088</span>                        e.printStackTrace(System.out);<a name="line.88"></a>
+<span class="sourceLineNo">089</span>                        System.out.flush();<a name="line.89"></a>
+<span class="sourceLineNo">090</span>                        // System.err.println(e);<a name="line.90"></a>
+<span class="sourceLineNo">091</span>                }<a name="line.91"></a>
+<span class="sourceLineNo">092</span>        }<a name="line.92"></a>
+<span class="sourceLineNo">093</span>}<a name="line.93"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</pre>
+</div>
+</body>
+</html>

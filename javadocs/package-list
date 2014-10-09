@@ -1,5 +1,8 @@
 bradleyross.common
 bradleyross.demonstrations
+bradleyross.j2ee.beans
+bradleyross.j2ee.filters
+bradleyross.j2ee.listeners
 bradleyross.j2ee.servlets
 bradleyross.j2ee.tags
 bradleyross.library
@@ -12,4 +15,3 @@ bradleyross.opensource.jackcess
 bradleyross.opensource.jfreechart
 bradleyross.opensource.jfreechart.helpers
 bradleyross.opensource.xerces
-j2ee.abstracts
