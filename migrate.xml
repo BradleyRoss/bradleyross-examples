@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project default="move" basedir=".">
+	<target name="move">
+		<copy file="war/bradleyross-examples.war" 
+		      toFile="/Applications/Tomcat/webapps/bradleyross-examples.war" />	
+		<copy file="war/bradleyross-examples.war" 
+		      toFile="/Applications/Tomcat-7.0.55/webapps/bradleyross-examples.war" />
+		<copy file="war/bradleyross-examples.war" 
+		      toFile="/Applications/Tomcat-8.0.12/webapps/bradleyross-examples.war" />
+		</target>
+
+	</project>

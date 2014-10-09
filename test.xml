@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="utf-8" ?>
+<!--  
+      This was a WSDL file used for WADO (Web access
+      for DICOM objects.  I was using it as a test case.
+ -->
 <wsdl:definitions name="WadoService-2012" 
   xmlns="urn:dicom:wado:ws:wsdl:yyyymmdd"
   targetNamespace="urn:dicom:wado:ws:wsdl:yyyymmdd"

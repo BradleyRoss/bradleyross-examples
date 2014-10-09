@@ -8,7 +8,7 @@
  -->
 <log4j:configuration debug="false">
    <appender name="default.file" class="org.apache.log4j.FileAppender">
-      <param name="file" value="${catalina.base}/logs/bradleyross_examples.log" />
+      <param name="file" value="${catalina.base}/logs/bradleyross-examples.log" />
       <param name="append" value="true" />
       <param name="threshold" value="info" />
       <layout class="org.apache.log4j.PatternLayout" >

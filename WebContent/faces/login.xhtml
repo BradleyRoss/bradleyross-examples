@@ -4,9 +4,11 @@
    xmlns:ui="http://java.sun.com/jsf/facelets">
 <h:head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="stylesheet" type="text/css" href="faces-examples.css" />
 <title>Demonstration login page</title>
 </h:head>
 <h:body>
+<h1>Login Page</h1>
 <p>This is a test of Java Server Faces</p>
 <h:form>
             <h:panelGrid columns="2">
@@ -20,5 +22,24 @@
 <p>In this simplified example, the only valid password is <i>password</i>.</p>
 <p>At startup, user name parameter is #{param.name}</p>
 <p>At startup, authorized flag is #{sessionProperties.authorized}</p>
+<hr />
+<p>I'm trying to find some good definitions of the h, f, c, and ui tags.</p>
+<ul>
+<li><h:outputLink value="http://docs.oracle.com/javaee/6/tutorial/doc/bnarf.html" target="_blank">
+    <h:outputText>Java J2EE tutorial</h:outputText></h:outputLink></li>
+<li><h:outputLink value="http://www.jsftoolbox.com/documentation/help/12-TagReference/html/h_outputLink.html"
+    target="_blank"><h:outputText>Description of h:outputLink</h:outputText></h:outputLink></li>
+<li><h:outputLink value="http://www.jsftoolbox.com/documentation/facelets/10-TagReference/ui.jsf"
+    target="_blank"><h:outputText>Facelets UI Tag Library</h:outputText></h:outputLink></li>
+<li><h:outputLink value="http://www.jsftoolbox.com/documentation/help/12-TagReference/index.jsf"
+    target="_blank"><h:outputText>JSF Core (f:), HTML(h:), and
+    Composite (composite:) tag libraries</h:outputText></h:outputLink></li>
+<li><h:outputLink value="http://docs.oracle.com/javaee/" target="_blank"><h:outputText>
+    Java EE documentation</h:outputText></h:outputLink></li>
+<li><h:outputLink value="http://docs.oracle.com/javaee/5/jstl/1.1/docs/tlddocs/" target="_blank">
+    <h:outputText>Oracle JSTL Documentation</h:outputText></h:outputLink></li>
+<li><h:outputLink value="http://docs.oracle.com/javaee/7/tutorial/doc/jsf-custom012.htm" target="_blank">
+    <h:outputText>Oracle Binding component values</h:outputText></h:outputLink></li>    
+</ul>
 </h:body>
 </html>

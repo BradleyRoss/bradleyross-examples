@@ -14,9 +14,9 @@
 		</target>
 	<target name="jar" depends="compile">
 		<jar destfile="jar/bradleyross_examples.jar" basedir="bin" />
-		<jar destfile="WebContent/WEB-INF/lib/bradleyross_examples.jar" basedir="bin" />
+		<jar destfile="WebContent/WEB-INF/lib/bradleyross-examples.jar" basedir="bin" />
 		<jar destfile="jar/bradleyross_examples.jar" basedir="bin" />
-		<jar destfile="WebContent/applets/bradleyross_examples.jar" basedir="bin" />
-		<jar destfile="war/bradleyross_examples.war" basedir="WebContent" />
+		<jar destfile="WebContent/applets/bradleyross-examples.jar" basedir="bin" />
+		<jar destfile="war/bradleyross-examples.war" basedir="WebContent" />
 		</target>
 	</project>

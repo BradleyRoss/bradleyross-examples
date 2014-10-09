@@ -11,6 +11,7 @@
 </style>
 </head>
 <body>
+<h1>Applets</h1>
 <p>This page uses the JSP plugin to create a page using
    an applet.  It selects the correct code for inserting
    the applet based on the type of browser being used.
@@ -35,7 +36,7 @@ height="150" width="500" ></applet>
 <jsp:plugin type="applet" code="bradleyross.library.applets.ScrollbarSample.class" 
      codebase="../applets" 
      jreversion="5"
-     archive="bradleyross_examples.jar" height="400" width="500" >
+     archive="bradleyross-examples.jar" height="400" width="500" >
      <jsp:fallback>
      <p>Problem running applet</p>
      </jsp:fallback>
@@ -46,7 +47,7 @@ height="150" width="500" ></applet>
 <jsp:plugin type="applet" code="bradleyross.library.applets.ColorsSample.class" 
      codebase="../applets" 
      jreversion="5"
-     archive="bradleyross_examples.jar" height="300" width="500" >
+     archive="bradleyross-examples.jar" height="300" width="500" >
      <jsp:fallback>
      <p>Problem running applet</p>
      </jsp:fallback>

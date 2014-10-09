@@ -9,11 +9,10 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <title>center tag</title>
-<style type="text/css">
-.border { border: black 2px solid;}
-</style>
+<link rel="stylesheet" type="text/css" href="jsp-examples" />
 </head>
 <body>
+<h1>ConvertToComment Tag</h1>
 <p>The tag ex:ConvertToComment should convert the text between the start and
    end tags so that it appears on the page as a comment with the control
    characters being escaped.</p>

@@ -2,12 +2,25 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Demonstrations</title>
+<title>J2EE Demonstrations</title>
 </head>
 <body>
-<p><a href="serverpages" target="_blank">JSP</a> JSP tests</p>
-<p><a href="faces" target="_blank">JSF</a> examples</p>
-<p><a href="EchoBack" target="_blank">EchoBack</a></p>
-<p><a href="ShowSchema" target="_blank">MySQL Schema</a></p>
-<p><a href="PostgreSchema" target="_blank">Postgre Schema</a></p>
+<h1>J2EE Demonstrations</h1>
+<p><a href="serverpages" target="_blank">JSP examples</a> The JSP (Java Server Page) pages are
+   indicated by the suffix JSP.  When one of them is called, the JSP processor writes
+   a servlet for the JSP and then registers the servlet with the application
+   container.  The location of the TLD (Tag Library Definition) file is given by the
+   &lt;jsp-config&gt;&lt;taglib&gt; tag in the WEB-INF/web.xml file. </p>
+<p><a href="faces" target="_blank">JSF examples</a> The JSF (Java Server Faces or
+   Java Server Facelets) xhtml files are indicated by mapping the URL values to the 
+   javax.servlet.faces.FacesServlet class.  JSF also requires a context listener
+   class to be specified.  For MyFaces, this is 
+   org.apache.myfaces.webapp.StartupServletContextListener.</p>
+<p>Servlet examples - The mapping of the URL's to the servlets
+   is given by WEB-INF/web.xml.</p>
+<ul>
+<li><a href="EchoBack" target="_blank">EchoBack</a></li>
+<li><a href="ShowSchema" target="_blank">MySQL Schema</a></li>
+<li><a href="PostgreSchema" target="_blank">Postgre Schema</a></li>
+</ul>
 </html>

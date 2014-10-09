@@ -1,3 +1,11 @@
+    <!--  
+          This file contains references to other Javadoc libraries
+          that can be used when creating this Javadoc library.
+          Any references to classes in these other libraries
+          will be converted to a link in the Javadoc document.
+          
+          See javadoc.xml to see how the file is used.
+     -->
     <link offline="false" resolveLink="true" 
         href="http://docs.oracle.com/javase/7/docs/api/"   />
     <link offline="false" resolveLink="true"

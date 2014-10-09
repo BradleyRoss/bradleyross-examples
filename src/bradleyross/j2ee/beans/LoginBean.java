@@ -14,7 +14,13 @@ import javax.faces.context.ExternalContext;
  * Sample bean for login information.
  * 
  * <p>Uses the annotations {@link ManagedBean} and {@link RequestScoped}.</p>
+ * 
+ * <p> It appears that I can't use the implicit objects for JSF expression language
+ *     (param, request, response, etc.) in the
+ *     ManagedBean annotations.</p>
+ * 
  * @author Bradley Ross
+ * 
  *
  */
 @SuppressWarnings("serial")
@@ -24,6 +30,14 @@ public class LoginBean implements Serializable {
 	/**
 	 * This constructor reads the HTTP request parameter name and places
 	 * it in the user name field of the form.
+	 * 
+	 * <p>I had previously tried using #{param} in the
+	 *    ManagedBean annotation for a property, but it
+	 *    didn't seem to work.  Some messages on the web 
+	 *    indicated that it worked, but it may be implementation
+	 *    dependent.</p>
+	 * <p>The constructor will set the userName property to the value of the
+	 *    "name" parameter if the parameter is present.</p>
 	 * @see FacesContext
 	 * @see ExternalContext
 	 */
@@ -48,6 +62,7 @@ public class LoginBean implements Serializable {
 		return userName;
 	}
 	public void setUserName(String value) {
+		if (value == null) return;
 		userName = value;
 	}
 	/**
@@ -60,6 +75,16 @@ public class LoginBean implements Serializable {
 	public void setPassword(String value) {
 		password = value;
 	}
+	/**
+	 * Determines whether the combination of user name and user password represents
+	 * a valid user.
+	 * 
+	 * <p>In this case, the method accepts any login attempt using "password"
+	 *    for the password.  In a real application, a more complicated
+	 *    algorithm would be used.</p>
+	 * @return "login" if properties are valid, otherwise "error"
+	 */
+	
 	public String authorized() {
 		if (password.trim().equalsIgnoreCase("password")) {
 			Map<String,Object> sessionMap = FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
@@ -128,13 +153,14 @@ public class LoginBean implements Serializable {
 		builder.append("\r\n");
 		return builder.toString();
 	}
+
 	/**
 	 * I believe that the ManagedProperty annotation in
 	 * this method will cause the sessionProperties
 	 * bean to be created at the same time as the
 	 * loginBean.
 	 */
-	@ManagedProperty(value="#{sessionProperties}")
+    @ManagedProperty("#{sessionProperties}")
 	private SessionProperties sessionBean;
 	public SessionProperties getSessionBean() {
 		return sessionBean;

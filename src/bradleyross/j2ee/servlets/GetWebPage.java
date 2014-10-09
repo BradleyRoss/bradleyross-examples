@@ -266,7 +266,6 @@ public class GetWebPage extends HttpServlet
 	 * @see HttpServletResponse
 	 * @see IOException
 	 */
-	@SuppressWarnings("unchecked")
 	public void service (HttpServletRequest req,
 			HttpServletResponse res) throws IOException
 	{

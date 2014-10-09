@@ -9,9 +9,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <title>center tag</title>
-<style type="text/css">
-.border { border: black 2px solid;}
-</style>
+<link rel="stylesheet" type="text/css" href="jsp-examples.css" />
 </head>
 <body>
 <p> A tag handler bradleyross.j2ee.tags.CenterTag was created

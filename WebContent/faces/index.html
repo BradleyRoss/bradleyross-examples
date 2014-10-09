@@ -2,16 +2,35 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>JSF example</title>
+<title>JSF examples</title>
+<link rel="stylesheet" type="text/css" href="faces-examples.css" />
 </head>
 <body>
+<h1>JSF Examples</h1>
 <!-- 
      http://stackoverflow.com/questions/7775179/how-get-get-parameters-with-jsf2
  -->
+ <p>This section contains some examples of JSF pages.  In order to understand these
+    pages, it is necessary to look at WEB-INF/web.xml and WEB-INF/faces-config.xml in the web
+    site as well as the Javadoc descriptions of the various beans.</p>
 <ul>
    <li><a href="login.xhtml" target="_blank">Login page</a></li>
    <li><a href="login.xhtml?name=test" target="_blank">Login page with
        specified name</a>
+</ul>
+<p>In order to get the listeners to work, I placed the MyFaces jar files in
+   WEB-INF/lib.  MyFaces also required the installation of a listener.</p>
+<p>Documentation for tag libraries</p>
+<ul>
+<li><a href="http://www.jsftoolbox.com/documentation/facelets/10-TagReference/ui.jsf"
+    target="_blank">JSF Toolbox: Facelets UI Tag Library</a></li>
+<li><a href="http://www.jsftoolbox.com/documentation/help/12-TagReference/index.jsf"
+    target="_blank">JSF Toolbox: JSF Core (f:), HTML(h:), and
+    Composite (composite:) tag libraries</a></li>
+<li><a href="http://docs.oracle.com/javaee/" target="_blank">
+    Java EE documentation</a></li>
+<li><a href="http://docs.oracle.com/javaee/5/jstl/1.1/docs/tlddocs/" target="_blank">
+    Oracle JSTL Documentation</a></li>
 </ul>
 </body>
 </html>

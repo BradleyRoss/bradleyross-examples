@@ -778,6 +778,11 @@ standard deployment descriptor.
     <welcome-file>index.jsp</welcome-file>
   </welcome-file-list>
   <context-param>
+     <description>http://forum.spring.io/forum/spring-projects/web/51748-tomcat-severe-error-listenerstart</description>
+     <param-name>log4jExposeWebAppRoot</param-name>
+     <param-value>false</param-value>
+  </context-param>
+  <context-param>
     <description>This is the account to be used for
          accessing the administrative options</description>
     <param-name>adminAccount</param-name>
@@ -918,4 +923,9 @@ standard deployment descriptor.
   <listener>
     <listener-class>org.apache.myfaces.webapp.StartupServletContextListener</listener-class>
   </listener>
+
+  <listener>
+    <listener-class>bradleyross.j2ee.listeners.SampleListener</listener-class>
+  </listener>
+
 </web-app>
