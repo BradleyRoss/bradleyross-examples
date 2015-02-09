@@ -3,3 +3,4 @@
 /doc
 *.class
 .DS_Store
+/.apt_generated/

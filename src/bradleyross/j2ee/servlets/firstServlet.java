@@ -91,7 +91,7 @@ private String firstCell(String contents)
       { super.init(config); }
    public void destroy()
       { super.destroy(); }
-   @SuppressWarnings("unchecked")
+//    @SuppressWarnings("unchecked")
    /**
    * @param req Information concerning the HTTP request received
    *        by the server.

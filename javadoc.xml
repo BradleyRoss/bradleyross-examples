@@ -5,6 +5,10 @@
 <!-- ENTITY clause in the DOCTYPE statement above allows a file
 	to be included in the Ant script. This would allow you to use the
 	same set of entries in multiple javadoc steps. -->
+<path id="src.path">
+   <pathelement location="src"/>
+
+  </path>
 <target name="javadoc">
 <delete dir="doc" />
 <mkdir dir="doc" />

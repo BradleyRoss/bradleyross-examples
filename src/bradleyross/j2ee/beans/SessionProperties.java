@@ -2,8 +2,7 @@ package bradleyross.j2ee.beans;
 // import java.util.Map;
 import java.util.Enumeration;
 import javax.faces.context.FacesContext;
-// import javax.faces.context.ExternalContext;
-// import javax.servlet.http.HttpServletRequest;
+
 import javax.servlet.http.HttpSession;
 import javax.faces.bean.SessionScoped;
 import javax.faces.bean.ManagedBean;

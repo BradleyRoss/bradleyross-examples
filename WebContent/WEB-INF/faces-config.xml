@@ -20,6 +20,30 @@
     	<managed-bean-scope>session</managed-bean-scope>
     </managed-bean>
     <managed-bean>
+       <description>This will contain references to many other beans and will
+             demonstrate some of the uses of managed properties.</description>
+       <managed-bean-name>requestProperties</managed-bean-name>
+       <managed-bean-class>bradleyross.j2ee.beans.RequestProperties</managed-bean-class>
+       <managed-bean-scope>request</managed-bean-scope>
+       <!-- 
+            It appears that the execution of the managed property value setting takes
+            place at different times depending on whether it is set through an annotation
+            or an entry in the faces-config.xml file.  The param property was set
+            properly when it was specified here but didn't work right when it was in an annotation.
+            This problem may only occur with implicit objects.
+            
+            See http://stackoverflow.com/questions/2369987/why-are-managed-beans-not-loaded-in-tomcat
+       -->
+       <managed-property>
+          <property-name>param</property-name>
+          <value>#{param}</value>
+       </managed-property>
+       <managed-property>
+          <property-name>paramXml</property-name>
+          <value>#{param}</value>
+       </managed-property>       
+    </managed-bean>
+    <managed-bean>
     	<description>This will be the backing bean for the login page for the application.</description>
     	<managed-bean-name>loginBean</managed-bean-name>
     	<managed-bean-class>bradleyross.j2ee.beans.LoginBean</managed-bean-class>

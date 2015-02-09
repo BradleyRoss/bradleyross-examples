@@ -159,6 +159,9 @@ public class LoginBean implements Serializable {
 	 * this method will cause the sessionProperties
 	 * bean to be created at the same time as the
 	 * loginBean.
+	 * 
+	 * <p>The ManagedProperty annotation appears to work when referencing other 
+	 *    managed beans but not when referencing implicit objects.</p>
 	 */
     @ManagedProperty("#{sessionProperties}")
 	private SessionProperties sessionBean;

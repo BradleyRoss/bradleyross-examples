@@ -280,7 +280,7 @@ public class GetFile extends HttpServlet
 	 * @see HttpServletResponse
 	 * @see IOException
 	 */
-	@SuppressWarnings("unchecked")
+//	@SuppressWarnings("unchecked")
 	public void service (HttpServletRequest req,
 			HttpServletResponse res) throws IOException
 	{

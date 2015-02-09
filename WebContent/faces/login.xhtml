@@ -41,5 +41,16 @@
 <li><h:outputLink value="http://docs.oracle.com/javaee/7/tutorial/doc/jsf-custom012.htm" target="_blank">
     <h:outputText>Oracle Binding component values</h:outputText></h:outputLink></li>    
 </ul>
+<p>#{requestProperties.param.name}  requestProperties.param.name</p>
+<p>#{loginBean.userName}   loginBean.userName</p>
+<p>The param and paramXml properties of the requestProperties bean are both set by managed-property tags
+   in faces-config.xml.  The param and paramAnn properties are both set by ManagedProperty annotations
+   in bradleyross.j2ee.beans.RequestProperties.</p>
+   <table border="1">
+   <tr><td>requestProperties.param.name</td><td>#{requestProperties.param.name}</td></tr>
+   <tr><td>requestProperties.paramXml.name</td><td>#{requestProperties.paramXml.name}</td></tr>
+   <tr><td>requestProperties.paramAnn.name</td><td>#{requestProperties.paramAnn.name}</td></tr>
+   </table>
+
 </h:body>
 </html>

@@ -54,14 +54,15 @@
       </attribute>
    </tag>  
    <tag>
-      <name>ConvertToComment</name>
+      <name>body</name>
       <tagclass>bradleyross.j2ee.tags.Body</tagclass>
       <bodycontent>SCRIPTLESS</bodycontent>
+      <info>This can be used in place of the body tag to yield
+            a common header and footer.</info>    
       <attribute>
          <name>className</name>
          <required>false</required>
       </attribute>      
-      <info>This can be used in place of the body tag to yield
-            a common header and footer.</info>
+
    </tag>      
 </taglib>

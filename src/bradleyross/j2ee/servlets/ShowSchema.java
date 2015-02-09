@@ -461,7 +461,7 @@ public class ShowSchema extends HttpServlet
 		output.println("<html><head>");
 		output.println("<title>Database Information</title>");
 		output.println("</head><body>");
-		output.println("<p>The root name is" + rootName + "</p>");
+		output.println("<p>The root URL is " + rootName + "</p>");
 		output.println("<h1>Database Schema</h1>");
 		output.println("<ul>");
 		output.println("<li><a href=\"" + rootName + "/DatabaseInformation\">Database Information</a></li>");

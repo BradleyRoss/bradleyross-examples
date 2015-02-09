@@ -9,7 +9,7 @@
     <link offline="false" resolveLink="true" 
         href="http://docs.oracle.com/javase/7/docs/api/"   />
     <link offline="false" resolveLink="true"
-        href="http://download.oracle.com/javaee/6/api/" />
+        href="http://download.oracle.com/javaee/7/api/" />
     <link offline="false" resolveLink="true" 
         href="http://tomcat.apache.org/tomcat-5.5-doc/servletapi/"      />
     <link offline="false" resolveLink="true"
@@ -20,3 +20,5 @@
         href="http://www.jfree.org/jcommon/api"/>
     <link offline="false" resolveLink="true"
         href="http://google-web-toolkit.googlecode.com/svn/javadoc/2.2/"/>  
+    <link offline="false" resolveLink="true"
+        href="http://logging.apache.org/log4j/extras/apidocs/" />
