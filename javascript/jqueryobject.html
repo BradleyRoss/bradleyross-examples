@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+#wrapper {border: solid black 2px; vertical-aligh:top;}
+#wrapper  tr td {vertical-align:top; border: solid black 2px;}
+</style>
+<title>jQuery objects and functions</title>
+<script src="./commonTools.js"></script>
+<script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+<script src="http://code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css">
+<script>
+function getSource(funct, dest) {
+	var working = funct.toString();
+	working = working.replace(/&/gm, "&amp;")
+	working = working.replace(/</g,"&lt;").
+	working = working.replace(/>/gm, "&gt;");
+    working = working.replace(/(\r\n|\r|\n)/gm, "<br />");
+    var loc = document.getElementById(dest);
+    loc.innerHTML = working;
+}
+function runWhenReady() {
+	commonTools.getObjectInfo('table1', jQuery);
+	var second = jQuery('p');
+	commonTools.getObjectInfo('table2', second, jQuery.fn);
+	commonTools.getObjectInfo('table3', window);
+	getSource(jQuery.fn.init, "item3");
+    getSource(window.jQuery, "item4");
+}
+$('document').ready(runWhenReady);
+</script>
+</head>
+<body>
+<h1>Demonstration of jQuery</h1>
+<p>The purpose of this page is to help the reader 
+   understand the jQuery works.  When you load the jQuery code,
+   you create the global jQuery function object into window.jQuery.This means that
+   window jQuery serves as a function and also has properties that can be used 
+   like any other object.  When the jQuery documentation refers to jQuery objects,
+   it is referring to objects returned by the jQuery function.</p>
+<p>The following code uses a JavaScript function that will create a table listing the properties possessed
+   by an object.  It can also list the properties for two objects side by side so that they can be compared.</p>
+<ol>
+<li>The first column lists the properties of the window.jQuery object.</li>
+<li>The second column compares the properties of the window.jQuery.fn object and the object
+    created by jQuery('p').  Note that the object created by jQuery contains a few additional properties
+    that indicate the HTML elements that are to be processed.  (These extra properties have numbers as
+    the keys.)</li>
+<li>The final column lists the properties of the window global object.</li>
+</ol>
+<p>This page then uses JavaScript to list the contents of the window.jQuery.fn.init() and
+   window.jQuery() functions.</p>
+<table id="wrapper"><tr><td>
+window.jQuery</td>
+<td>window.jQuery('p')<br />window.jQuery.fn</td>
+<td>window</td></tr>
+<tr><td><table id="table1"></table></td>
+<td><table id="table2"></table>
+</td>
+<td><table id="table3"></table>
+</td></tr></table>
+<h2>window.jQuery.fn.init function</h2>
+<p id="item3"></p><p>
+<h2>window.jQuery function</h2>
+<p id="item4"></p>
+</body>
+</html>
