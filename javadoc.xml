@@ -36,6 +36,10 @@
   <classpath refid="jar.classpath" />
 &external;      
 </javadoc>
+<copy todir="/Users/bradleyross/newGit/bradleyross-docs/bradleyross-examples/javascript">
+   <fileset dir="WebContent/javascript">
+   </fileset>
+</copy>
 <echo level="info" message="Javadoc files created for bradleyross-examples project" />
 </target>
 </project>

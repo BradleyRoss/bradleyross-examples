@@ -7,32 +7,11 @@
 #wrapper  tr td {vertical-align:top; border: solid black 2px;}
 </style>
 <title>jQuery objects and functions</title>
+<script src="./commonTools.js"></script>
 <script src="http://code.jquery.com/jquery-1.10.2.js"></script>
 <script src="http://code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
 <link rel="stylesheet" href="http://code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css">
 <script>
-var xxx = "TestCase";
-var globalObject = this;
-function getInfo(obj, dest) {
-	var working = new Array();
-	var iPos = 0;
-	for (key in obj) {
-		working[iPos] = key;
-		iPos++;
-	}
-	// alert ("Size of array is " + working.length);
-	working.sort();
-	var list = "";
-	var iTemp;
-    for ( iTemp = 0; iTemp < working.length; iTemp++) {
-		list = list + "<tr><td>" + iTemp + "</td><td>"+ working[iTemp] + "</td><td>" +
-		typeof obj[working[iTemp]] + "</td></tr>\r";
-	}
-	var loc = document.getElementById(dest);
-	loc.innerHTML = list;
-	// alert(list);
-	return list;
-}
 function getSource(funct, dest) {
 	var working = funct.toString();
 	working = working.replace(/&/gm, "&amp;")
@@ -43,11 +22,10 @@ function getSource(funct, dest) {
     loc.innerHTML = working;
 }
 function runWhenReady() {
-	getInfo(jQuery, "table1");
+	commonTools.getObjectInfo('table1', jQuery);
 	var second = jQuery('p');
-	getInfo(second, 'table2');
-	getInfo(window, 'table3');
-	getInfo(jQuery.fn, 'table4');
+	commonTools.getObjectInfo('table2', second, jQuery.fn);
+	commonTools.getObjectInfo('table3', window);
 	getSource(jQuery.fn.init, "item3");
     getSource(window.jQuery, "item4");
 }
@@ -57,53 +35,35 @@ $('document').ready(runWhenReady);
 <body>
 <h1>Demonstration of jQuery</h1>
 <p>The purpose of this page is to help the reader 
-   understand how jQuery works.  I have seen a number
-   of books describing how to set up jQuery statements,
-   but I haven't really seen many good explanations of how
-   it works.</p>
-<p>When you load the JavaScript code for jQuery, you create two
-   items.</p>
-   <ol>
-   <li>The first is the global jQuery object.  
-       <a href="http://api.jquery.com/category/properties/global-jquery-object-properties/"
-       target="_blank">(See jQuery API information)</a>  This is tricky because this is not
-       what the jQuery documentation refers to as a jQuery object.  It is a set of utilities  and properties
-       used by the jQuery system.</li>
-   <li>The second item is the jQuery function.  This function creates an object that contains
-       a list of elements in the HTML document.  What the jQuery documentation refers to as the
-       jQuery object is an object created by the jQuery function.  The jQuery function is attached
-       to the global window object.</li>
+   understand the jQuery works.  When you load the jQuery code,
+   you create the global jQuery function object into window.jQuery.This means that
+   window jQuery serves as a function and also has properties that can be used 
+   like any other object.  When the jQuery documentation refers to jQuery objects,
+   it is referring to objects returned by the jQuery function.</p>
+<p>The following code uses a JavaScript function that will create a table listing the properties possessed
+   by an object.  It can also list the properties for two objects side by side so that they can be compared.</p>
+<ol>
+<li>The first column lists the properties of the window.jQuery object.</li>
+<li>The second column compares the properties of the window.jQuery.fn object and the object
+    created by jQuery('p').  Note that the object created by jQuery contains a few additional properties
+    that indicate the HTML elements that are to be processed.  (These extra properties have numbers as
+    the keys.)</li>
+<li>The final column lists the properties of the window global object.</li>
 </ol>
-<p>In the table below, you will see the contents of the global jQuery object on the left.  The list in
-   the middle shows the contents of the jQuery object created by jQuery('p'), which contains a list of 
-   all the p (paragraph) tags.  The item length is the number of elements that were found, 
-   and the individual elements
-   are in the objects whose names are numbers (0, 1, 2, etc).  The jQuery object also contains all
-   of the functions that can be executed against the object.</p>
+<p>This page then uses JavaScript to list the contents of the window.jQuery.fn.init() and
+   window.jQuery() functions.</p>
 <table id="wrapper"><tr><td>
-Contents of global jQuery object.  Some of the documentation says that the
-global object is attached to the window object, but I see the jQuery function there
-instead.</td>
-<td>Contents of jQuery.fn (jQuery prototype)</td>
-<td>Contents of jQuery object created by jQuery('p')</td>
-<td>Contents of window object.  Please note that the jQuery function
-    appears here instead of the jQuery object.  However, the xxx string
-    variable does appear in this list.</td></tr>
+window.jQuery</td>
+<td>window.jQuery('p')<br />window.jQuery.fn</td>
+<td>window</td></tr>
 <tr><td><table id="table1"></table></td>
-<td><table id="table4"></table></td>
 <td><table id="table2"></table>
 </td>
 <td><table id="table3"></table>
 </td></tr></table>
-
-<h2>jQuery.fn.init function</h2>
+<h2>window.jQuery.fn.init function</h2>
 <p id="item3"></p><p>
-<h2>window.jQuery</h2>
+<h2>window.jQuery function</h2>
 <p id="item4"></p>
-<h2>Global Objects</h2>
-<p>It appears that using var to create a variable will put it in the
-   global set and copy it to the window properties.  However, if you then
-   create a function with the same name, it will overwrite the 
-   window property.</p>
 </body>
 </html>
