@@ -14,8 +14,8 @@
 <script>
 function getSource(funct, dest) {
 	var working = funct.toString();
-	working = working.replace(/&/gm, "&amp;")
-	working = working.replace(/</g,"&lt;").
+	working = working.replace(/&/gm, "&amp;");
+	working = working.replace(/</g,"&lt;");
 	working = working.replace(/>/gm, "&gt;");
     working = working.replace(/(\r\n|\r|\n)/gm, "<br />");
     var loc = document.getElementById(dest);
@@ -33,9 +33,9 @@ $('document').ready(runWhenReady);
 </script>
 </head>
 <body>
-<h1>Demonstration of jQuery</h1>
+<h1>jQuery Objects and Functions</h1>
 <p>The purpose of this page is to help the reader 
-   understand the jQuery works.  When you load the jQuery code,
+   understand how jQuery works.  When you load the jQuery code,
    you create the global jQuery function object into window.jQuery.This means that
    window jQuery serves as a function and also has properties that can be used 
    like any other object.  When the jQuery documentation refers to jQuery objects,
