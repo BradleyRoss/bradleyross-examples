@@ -1,4 +1,28 @@
+/*
+ * This code creates an object as a property in the
+ * window object.  This allows commonTools to be used
+ * like a namespace, so that changes are unlikely to affect
+ * other packages.  However, it is not actually a namespace,
+ * even though it acts like one.
+ */
 var commonTools = new Object();
+/**
+ * Obtain a list of the properties of an object and
+ * show the types for all of the property values.  The 
+ * contents are placed into a table so that the information
+ * can be presented easily.
+ * 
+ * dest - id for element into which information is to be
+ *    placed using innerHTML
+ * 
+ * obj1 - first object to be analyzed
+ * 
+ * obj2 - second object to be analyzed (optional).  If a second object
+ *    is placed in the parameter list, the third column will show the
+ *    type of the property value in obj1 and the fourth column will show
+ *    the type of the property value in obj2.  If the property doesn't 
+ *    exist in one of the objects, there will be a blank.
+ */
 commonTools.getObjectInfo = function(dest, obj1, obj2) {
 	var allKeys = new Array();
 	var working = "";
@@ -10,9 +34,7 @@ commonTools.getObjectInfo = function(dest, obj1, obj2) {
 	}
 	if (obj2 != null) {
 		for (var key in obj2) {
-			for (var key in obj2) {
-				allKeys.push(key);
-			}
+			allKeys.push(key);
 		}
 	}
 	allKeys.sort();
@@ -34,7 +56,24 @@ commonTools.getObjectInfo = function(dest, obj1, obj2) {
 			}
 		}
 		working = working + "</tr>";
-		var loc = document.getElementById(dest);
-		loc.innerHTML = working;
 	}
+	var loc = document.getElementById(dest);
+	loc.innerHTML = working;	
 };
+/*
+ * This function will place the source code for a JavaScript function on
+ * a web page.
+ * 
+ * dest - id for element into which text will be inserted using innterHTML
+ * 
+ * funct - the function for which the source is to be displayed
+ */
+commonTools.getFunctionSource = function(dest, funct) {
+	var working = funct.toString();
+	working = working.replace(/&/gm, "&amp;");
+	working = working.replace(/</g,"&lt;");
+	working = working.replace(/>/gm, "&gt;");
+    working = working.replace(/(\r\n|\r|\n)/gm, "<br />");
+    var loc = document.getElementById(dest);
+    loc.innerHTML = working;
+}

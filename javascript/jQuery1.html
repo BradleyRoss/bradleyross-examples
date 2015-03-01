@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+<!--   script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.0/jquery.min.js" ></script -->
+<!--  see http://jqueryui.com/datepicker/ -->
+  <script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+  <script src="http://code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
+  <link rel="stylesheet" href="http://code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css">
+<!-- 
+      There is both a global jQuery object and a global jQuery function.
+ -->
+<script>
+function starter() {
+}
+/*
+ * This is safer than window.onload = starter
+ * because you don't risk other code overloading the
+ * handling of the event.
+ */
+if (window.addEventListener) {
+	window.addEventListener("load", starter);
+} else if (document.attachEvent) {
+	/*
+	 *  IE 8 and earlier, Opera 6 and earlier
+	 */
+	document.attachEvent("onload",starter);
+} else {
+	window.onload = starter;
+}
+</script>
+<meta charset="UTF-8">
+<title>jQuery examples</title>
+</head>
+<body>
+<h1>jQuery Examples</h1>
+<p>For information on seeing the source code and other JavaScript examples,
+   <a href="../index.html" target="blank">click here</a></p>
+ <script>
+$(document).ready(function() {
+	messagesList = document.getElementById('messages');
+	elementList = $('p.red');
+	$('p.red').css('color', 'red');
+	$('p.green').css('color', 'green');
+	$('p.big').css('font-size', '200%');
+	$('#fadein').click(function() {
+		$('#fader').fadeIn(1000);
+	});
+	$('#fadeout').click(function() {
+		$('#fader').fadeOut(1000);
+	});
+	$('#date').datepicker({changeYear:true, yearRange : "1990:2030"});
+});
+</script>
+<hr />
+<h2>Changing CSS properties</h2>
+<p>In this case, jQuery is used to change the attributes of elements based on their
+    class and tag type.</p>
+<p class="red">This is the first line to be shifted to red text</p>
+<p class="black">This the first line of text of class="black"</p>
+<p class="green">This is the first line to be shifted to green text</p>
+<p class="red">Another line of text that is to be converted to red</p>
+<p class="big">This line will be enlarged.</p>
+<hr />
+<h2>Fading in and out</h2>
+<div id="fader"><img src="../images/letters/ImageSmiley.jpg"/></div>
+<div><input type="button" value="fade in" id="fadein" />
+     <input type="button" value="fade out" id="fadeout" /></div>
+<hr />
+<h2>Datepicker example</h2>
+<p>This is a demonstration of the Datepicker function.  Click in
+   the text box below and you can pick the date.</p>
+<p><input type="text" id="date"  /></p>
+</body>
+</html>

@@ -14,8 +14,8 @@
 <script>
 function getSource(funct, dest) {
 	var working = funct.toString();
-	working = working.replace(/&/gm, "&amp;")
-	working = working.replace(/</g,"&lt;").
+	working = working.replace(/&/gm, "&amp;");
+	working = working.replace(/</g,"&lt;");
 	working = working.replace(/>/gm, "&gt;");
     working = working.replace(/(\r\n|\r|\n)/gm, "<br />");
     var loc = document.getElementById(dest);
@@ -26,22 +26,23 @@ function runWhenReady() {
 	var second = jQuery('p');
 	commonTools.getObjectInfo('table2', second, jQuery.fn);
 	commonTools.getObjectInfo('table3', window);
-	getSource(jQuery.fn.init, "item3");
-    getSource(window.jQuery, "item4");
+	commonTools.getFunctionSource(jQuery.fn.init, "item3");
+    commonTools.getFunctionSource(window.jQuery, "item4");
 }
 $('document').ready(runWhenReady);
 </script>
 </head>
 <body>
-<h1>Demonstration of jQuery</h1>
+<h1>jQuery Objects and Functions</h1>
 <p>The purpose of this page is to help the reader 
-   understand the jQuery works.  When you load the jQuery code,
+   understand how jQuery works.  When you load the jQuery code,
    you create the global jQuery function object into window.jQuery.This means that
    window jQuery serves as a function and also has properties that can be used 
    like any other object.  When the jQuery documentation refers to jQuery objects,
    it is referring to objects returned by the jQuery function.</p>
 <p>The following code uses a JavaScript function that will create a table listing the properties possessed
-   by an object.  It can also list the properties for two objects side by side so that they can be compared.</p>
+   by an object.  It can also list the properties for two objects side by side so that they can be compared.
+   <a href="../index.html" target="_blank">Click here to see information about the source code.</a></p>
 <ol>
 <li>The first column lists the properties of the window.jQuery object.</li>
 <li>The second column compares the properties of the window.jQuery.fn object and the object
