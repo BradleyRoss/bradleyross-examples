@@ -11,7 +11,6 @@
  -->
 <script>
 function starter() {
-	// alert("This is the starter function");
 }
 /*
  * This is safer than window.onload = starter
@@ -20,7 +19,6 @@ function starter() {
  */
 if (window.addEventListener) {
 	window.addEventListener("load", starter);
-	// alert("Adding event listener");
 } else if (document.attachEvent) {
 	/*
 	 *  IE 8 and earlier, Opera 6 and earlier
@@ -35,10 +33,10 @@ if (window.addEventListener) {
 </head>
 <body>
 <h1>jQuery Examples</h1>
-
+<p>For information on seeing the source code and other JavaScript examples,
+   <a href="../index.html" target="blank">click here</a></p>
  <script>
 $(document).ready(function() {
-	// alert("Starting the jQuery actions for document is ready");
 	messagesList = document.getElementById('messages');
 	elementList = $('p.red');
 	$('p.red').css('color', 'red');
