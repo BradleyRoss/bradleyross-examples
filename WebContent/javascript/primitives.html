@@ -1,0 +1,135 @@
+<html>
+<head>
+<title>Logical Operations and Primitives</title>
+<script>
+function cc() {
+   alert("changed");
+}
+function topdata() {
+   document.write("<p>" + navigator.userAgent + "</p>");
+}
+function test(item, text) {
+   document.writeln("<p>Testing " + text + "</p><ul>");
+  
+   document.writeln("<li>   typeof is " + typeof item + "</li>");
+   try {
+      document.writeln("<li>toString: " + item.toString() + "</li>");
+   } catch(err) {
+      document.writeln("<li>Error executing toString: " + err + "</li>");
+   }
+   try {
+       document.writeln("<li>Boolean value is " + Boolean(item).toString() + "</li>");
+   } catch(err) {
+       document.writeln("<li>Error getting boolean value: " + err + "</li>");
+   }
+   try {
+       if (item) {
+          document.writeln("<li>If statement treats as true</li>");
+       } else if (!item) {
+          document.writeln("<li>If statement treats as not true</li>");
+       }
+   }  catch(err) {
+      document.writeln("<li>Error in if test: " + err + "<li>");
+   }
+   if (item == false) {
+      document.writeln("<li>== false;  ");
+   }
+   if (item != false) {
+      document.writeln("<li>!= false;  ");
+   }  
+   if (item == true) {
+      document.writeln("== true</li>");
+   }
+   if (item != true) {
+      document.writeln("!= true</li>");
+   }
+   if (item == undefined) {
+      document.writeln("<li>   == undefined</li>");
+   }
+   if (item != undefined) {
+      document.writeln("<li>  != undefined</li>");
+   }
+   if (item == null) {
+       document.writeln("<li>   == null </li>");
+   }
+   if (item != null) {
+       document.writeln("<li> != null</li>");
+   }
+
+   // Tests for strict equality   
+   if (item === false) {
+      document.writeln("<li>=== false;  ");
+   } else if (item !== false) {
+      document.writeln("<li>!== false;  ");
+   }  
+
+   if (item === true) {
+      document.writeln("=== true;</li>  ");
+   }else if (item !== true) {
+      document.writeln("!== true</li>");
+   }
+   if (item === undefined) {
+      document.writeln("<li>   === undefined</li>");
+   }
+   if (item !== undefined) {
+      document.writeln("<li>  !== undefined</li>");
+   }
+   if (item === null) {
+       document.writeln("<li>   === null </li>");
+   }
+   if (item !== null) {
+       document.writeln("<li> !== null</li>");
+   }
+   // Tests for strict equality   
+   document.writeln("</ul>");
+}
+</script>
+</head>
+<body>
+<h1>Logical Expressions Not Obvious</h1>
+<p>The purpose of this page is to examine how various items are 
+   treated when used as booleans.</p>
+<ol>
+<li><a href=http://wiki.ecmascript.org/doku.php?id=harmony:specification_drafts#draft_specification_for_es.next_ecma-262_edition_6" target="_blank">
+ECMAScript 6 drafts and release candidates</a></li>
+<li><a href="http://www.ecma-international.org/ecma-262/5.1/" target="_blank">
+    ECMAScript standard 5.1</a></li>
+</ol>
+<p>When testing logical operations and methods on some of the values below, the results are not
+   always obvious.  (Itested the code below with Safari on Mac OS X.  However, 
+   you can use whatever browser you like.)</p>
+<ul>
+<li><code>[]</code> is the shortcut notion for an empty array.  If you state 
+    that <code>var a = [];</code> the following expressions are true:  <code>Boolean(a)</code>,
+    <code>a == false</code>, and <code>a != true</code>.  The same 
+    results occur when the value is
+    created as <code>var a = new Array();</code></li>
+<li>If you create a new object using <code>var a = {}'</code> or <code>var a = new Object();</code>, the 
+    expressions that are true are <code>Boolean(a)</code>, <code>a != false</code>, 
+    and <code>a != true</code>.</li>
+<li>If you have a string primitive that contains a single blank (e.g., <code>var a = " ";</code>, the following
+    expressions are true: <code>Boolean(a)</code>, <code>a == false</code>, 
+    and <code>a != true</code>.</li>
+</ul>
+<script>
+topdata();
+
+test([], "[]");
+test(new Array(), "new Array()");
+test({}, "{}");
+test(new Object(), "new Object()");
+test(false, "false");
+test(true, "true");
+test(0, "number 0");
+test('0', "character 0");
+test(" ", "blank");
+test("", "empty string");
+test(null, "null");
+test(undefined,"undefined");
+test(144, "number 144");
+test( new Number(144), "new Number(144)");
+</script>
+<hr />
+<p><a href="index.html">Return to index page</a></p>
+</body>
+</html>
