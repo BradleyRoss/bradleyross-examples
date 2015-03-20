@@ -39,6 +39,7 @@ public class ToneGenerator extends JApplet {
 	protected class ControlPanel extends JPanel {
 		
 	}
+	@SuppressWarnings("serial")
 	protected class FrequencySelector extends JPanel {
 		
 	}
