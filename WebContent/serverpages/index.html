@@ -2,8 +2,42 @@
 <html>
 <head>
 <meta charset="UTF-8">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <title>JSP Examples</title>
 <link rel="stylesheet" type="text/css" href="jsp-examples.css" />
+<script>
+var form
+var submitButton;
+var textString1;
+var textString2;
+function trigger() {
+	alert("Running trigger");
+	alert("textString1: " + textString1.value);
+	alert("textString2: " + textString2.value);
+	textString2.value = encodeURI(textString1.value);
+	alert(textString1.value);
+	alert(textString2.value);
+}
+function starter() {
+	alert("Starting starter");
+	// submitButton = document.getElementById("submitter");
+	textString1 = document.getElementById("entered");
+	if (textString1 == null) {
+		alert("textString1 is null");
+	}
+	textString1.value="empty";
+	textString2 = document.getElementById("INPUT");
+	if (textString2 == null) {
+		alert("textString2 is null");
+	}
+	textString2.value="empty";
+	// form = document.getElementById("testForm");
+	//submitButton.onsubmit = trigger;
+	
+}
+window.onload = starter;
+
+</script>
 </head>
 <body>
 <h1>JSP Examples</h1>
@@ -15,5 +49,10 @@
 <li><a href="applet.jsp" target="_blank">Use of jsp:plugin to load applet</a></li>
 <li><a href="comment.jsp" target="_blank">Test of ex:ConvertToComment</a>
 </ul>
+<form action="UnicodeExamples.jsp" target="_blank" accept-charset="UTF-8" onsubmit="trigger();">
+<p>String passed to JSP <input type="text" name="entered" id="entered" /></p>
+<input id="INPUT" type="hidden" name="INPUT" />
+<p><input id="submitter" type="submit" value="Submit" /></p>
+</form>
 </body>
 </html>

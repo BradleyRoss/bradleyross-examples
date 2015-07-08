@@ -252,12 +252,14 @@ public class ShowSchema extends HttpServlet
 			errorMessages.add("Error while instantiating DatabaseProperties object");
 			errorMessages.add(e.getClass().getName() + " " + e.getMessage());
 			isValid = false;
+			return null;
 		} 
 		catch (IllegalAccessException e) 
 		{
 			errorMessages.add("Error while instantiating DatabaseProperties object");
 			errorMessages.add(e.getClass().getName() + " " + e.getMessage());
 			isValid = false;
+			return null;
 		}
 		data.setDatabaseInstance(databaseSystem, databaseAccount);
 		try 
@@ -622,7 +624,10 @@ public class ShowSchema extends HttpServlet
 	 * @param output Object for writing web page
 	 * @param req HTTP request information
 	 * @param res HTTP response information
+	 * 
 	 * @throws IOException
+	 * 
+	 * @see DatabaseMetaData#getProcedures(String, String, String)
 	 */	
 	protected void processListProcedures(DatabaseProperties data, GenericPrinter output,
 			HttpServletRequest req, HttpServletResponse res) throws IOException
@@ -651,11 +656,15 @@ public class ShowSchema extends HttpServlet
 	/**
 	 * Generate the list of user defined types for the database system.
 	 * 
+	 * <p>Needs to have code for User Defined Types inserted.</p>
+	 * 
 	 * @param data Database connection information
 	 * @param output GenericPrinter object to which material is sent
 	 * @param req HTTP request object
 	 * @param res HTTP response object
 	 * @throws IOException
+	 * 
+	 * @see DatabaseMetaData#getUDTs(String, String, String, int[])
 	 */
 	protected void processUDTInformation(DatabaseProperties data, GenericPrinter output,
 			HttpServletRequest req, HttpServletResponse res) throws IOException
@@ -676,6 +685,7 @@ public class ShowSchema extends HttpServlet
 	 * @param req HTTP request information
 	 * @param res HTTP response information
 	 * @throws IOException
+	 * @see DatabaseMetaData
 	 */	
 	protected void processDatabaseInformation(DatabaseProperties data, GenericPrinter output,
 			HttpServletRequest req, HttpServletResponse res) throws IOException
@@ -692,13 +702,16 @@ public class ShowSchema extends HttpServlet
 		catch (SQLException e)
 		{
 			hasMetaData = false;
+			meta = null;
 		}
 		output.println("<html><head>");
 		output.println("<title>" + rootName + "/DatabaseInformation</title>");
 		output.println("</head><body>");
-		if (!hasMetaData)
+		if (!hasMetaData || meta == null)
 		{
 			output.println("<p>Unable to obtain data about database</p>");
+			output.println("</body></html>");
+			return;
 		}
 		else
 		{
@@ -828,6 +841,11 @@ public class ShowSchema extends HttpServlet
 	 * @param req HTTP request object
 	 * @param res HTTP response object
 	 * @throws IOException
+	 * @see DatabaseMetaData#getTables(String, String, String, String[])
+	 * @see DatabaseMetaData#getColumns(String, String, String, String)
+	 * @see DatabaseMetaData#getIndexInfo(String, String, String, boolean, boolean)
+	 * @see DatabaseMetaData#getExportedKeys(String, String, String)
+	 * @see DatabaseMetaData#getImportedKeys(String, String, String)
 	 */
 	protected void processDescribeTable(DatabaseProperties data, GenericPrinter output, 
 			HttpServletRequest req, HttpServletResponse res) throws IOException
