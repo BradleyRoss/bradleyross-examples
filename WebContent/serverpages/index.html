@@ -11,29 +11,13 @@ var submitButton;
 var textString1;
 var textString2;
 function trigger() {
-	alert("Running trigger");
-	alert("textString1: " + textString1.value);
-	alert("textString2: " + textString2.value);
 	textString2.value = encodeURI(textString1.value);
-	alert(textString1.value);
-	alert(textString2.value);
 }
+
 function starter() {
-	alert("Starting starter");
-	// submitButton = document.getElementById("submitter");
 	textString1 = document.getElementById("entered");
-	if (textString1 == null) {
-		alert("textString1 is null");
-	}
-	textString1.value="empty";
 	textString2 = document.getElementById("INPUT");
-	if (textString2 == null) {
-		alert("textString2 is null");
-	}
-	textString2.value="empty";
-	// form = document.getElementById("testForm");
-	//submitButton.onsubmit = trigger;
-	
+
 }
 window.onload = starter;
 
@@ -49,10 +33,26 @@ window.onload = starter;
 <li><a href="applet.jsp" target="_blank">Use of jsp:plugin to load applet</a></li>
 <li><a href="comment.jsp" target="_blank">Test of ex:ConvertToComment</a>
 </ul>
-<form action="UnicodeExamples.jsp" target="_blank" accept-charset="UTF-8" onsubmit="trigger();">
-<p>String passed to JSP <input type="text" name="entered" id="entered" /></p>
+<h2>Using Unicode</h2>
+<form action="UnicodeExamples.jsp" method="GET" target="_blank" accept-charset="UTF-8" onsubmit="trigger();">
+<p>Using GET method (parameters passed in URI with JavaScript encoding)<br />
+String passed to JSP <input type="text" name="entered" id="entered" />
 <input id="INPUT" type="hidden" name="INPUT" />
-<p><input id="submitter" type="submit" value="Submit" /></p>
+<input  type="submit" value="Submit" /></p>
 </form>
+<br />
+<br />
+<form action="UnicodeExamples.jsp" method="POST" target="_blank" accept-charset="UTF-8">
+<p>Using POST method (parameters passed in body without JavaScript encoding)<br />
+Bad characters at other end<br />
+String passed to JSP <input type="text" name="INPUT" />
+<input type="hidden" value="notused" name="entered" />
+<input type="submit" value="Submit" /></p>
+</form>
+<br />
+
+
+
+
 </body>
 </html>

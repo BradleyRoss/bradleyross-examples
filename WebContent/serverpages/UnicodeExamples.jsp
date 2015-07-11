@@ -19,12 +19,39 @@
 <tr><td>&#x0114;</td><td>&#0276;</td><td>Latin capital letter e with breve</td></tr>
 <tr><td>&#x0115;</td><td>&#0277;</td><td>Latin small letter e with breve</td></tr>
 </table>
-<% String val =URLDecoder.decode(request.getParameter("INPUT"), "UTF-8"); %>
-<p>Test: <% out.print(val); %></p>
-
+<% 
+    request.setCharacterEncoding("UTF-8");
+    String unicodeValue = new String();
+    String method = request.getMethod();
+    if (method.equalsIgnoreCase("GET")) {
+    	unicodeValue = URLDecoder.decode(request.getParameter("INPUT"), "UTF-8");
+    } else if (method.equalsIgnoreCase("POST")) {
+    	unicodeValue = request.getParameter("INPUT");
+    }
+    
+%>
+<p>Method: <%= request.getMethod() %></p>
+<p>Processed value: <%= unicodeValue %></p>
 <h2>References</h2>
-<p><a href="http://www.hypergurl.com/urlencode.html" target="_blank"> http://www.hypergurl.com/urlencode.html</a></p>
-<p><a href="http://andre.arko.net/2012/09/18/force-encoding-in-javascript/" target="_blank"> http://andre.arko.net/2012/09/18/force-encoding-in-javascript/</a></p>
+<p><a href="http://www.hypergurl.com/urlencode.html" target="_blank"> 
+http://www.hypergurl.com/urlencode.html</a></p>
+<p><a href="http://andre.arko.net/2012/09/18/force-encoding-in-javascript/" target="_blank"> 
+http://andre.arko.net/2012/09/18/force-encoding-in-javascript/</a></p>
+<p><a href="http://www.456bereastreet.com/archive/201006/be_careful_with_non-ascii_characters_in_urls/" target="_blank">
+http://www.456bereastreet.com/archive/201006/be_careful_with_non-ascii_characters_in_urls/</a></p>
+<p><a href="http://stackoverflow.com/questions/19086190/request-getparameter-does-not-display-properly-character-encoding-in-java-serv" target="_blank">
+http://stackoverflow.com/questions/19086190/request-getparameter-does-not-display-properly-character-encoding-in-java-serv
+</a></p>
+<p>A Unicode character string encoded using UTF-8 contains characters that are illegal in URI
+   strings.  The string must therefore be encoded (escaped) on the requesting page and
+   decoded (unescaped) on the server when using the GET method.</p>
+<ul>
 
+<li>If method is GET, parameters must be encoded in JavaScript using encodeURI and 
+    decoded in JSP using URLDecoder.decode to avoid characters which
+    are illegal in URI.</li>
+<li>If method is POST, there are two options.  The first is to encode in JavaScript and
+    decode in Java.  The second choice is to skip both processes.</li>
+</ul>
 </body>
 </html>
