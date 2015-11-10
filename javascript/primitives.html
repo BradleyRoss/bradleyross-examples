@@ -10,8 +10,12 @@ function topdata() {
 }
 function test(item, text) {
    document.writeln("<p>Testing " + text + "</p><ul>");
-  
    document.writeln("<li>   typeof is " + typeof item + "</li>");
+   try {
+	   document.writeln("<li>valueOf(): " + item.valueOf() + " :: " + typeof item.valueOf() + "</li>");
+   } catch (err) {
+	   document.writeln("<li>Error obtaining valueOf(): " + err + "</li>");
+   }
    try {
       document.writeln("<li>toString: " + item.toString() + "</li>");
    } catch(err) {
@@ -90,7 +94,7 @@ function test(item, text) {
 <p>The purpose of this page is to examine how various items are 
    treated when used as booleans.</p>
 <ol>
-<li><a href=http://wiki.ecmascript.org/doku.php?id=harmony:specification_drafts#draft_specification_for_es.next_ecma-262_edition_6" target="_blank">
+<li><a href="http://wiki.ecmascript.org/doku.php?id=harmony:specification_drafts#draft_specification_for_es.next_ecma-262_edition_6" target="_blank">
 ECMAScript 6 drafts and release candidates</a></li>
 <li><a href="http://www.ecma-international.org/ecma-262/5.1/" target="_blank">
     ECMAScript standard 5.1</a></li>
@@ -118,6 +122,7 @@ test([], "[]");
 test(new Array(), "new Array()");
 test({}, "{}");
 test(new Object(), "new Object()");
+test(new Image(), "new Image()");
 test(false, "false");
 test(true, "true");
 test(0, "number 0");
@@ -128,6 +133,8 @@ test(null, "null");
 test(undefined,"undefined");
 test(144, "number 144");
 test( new Number(144), "new Number(144)");
+var list = ["alpha", "beta", "gamma"];
+test(list, "3 element array");
 </script>
 <hr />
 <p><a href="index.html">Return to index page</a></p>

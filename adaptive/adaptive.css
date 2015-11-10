@@ -1,0 +1,33 @@
+@media screen {
+   div.screen {
+      display:block;
+   }
+   div.print {
+      display:none;
+   }
+   div.handheld {
+      display:none;
+   }
+}
+@media print {
+   div.screen {
+      display:none;
+   }
+   div.print {
+      display:block;
+   }
+   div.handheld {
+      display:none;
+   }
+}
+@media handheld {
+   div.screen {
+      display:none;
+   }
+   display.print {
+      display:none;
+   }
+   div.handheld {
+      display: block;
+   }
+}

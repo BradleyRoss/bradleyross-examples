@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="adaptive.css" />
+<title>Window Test</title>
+<script>
+var iHeight = null;
+var iWidth = null;
+var oHeight = null;
+var oWidth = null;
+var ratio = null;
+var started = false;
+function windowResized() {
+   if (!started) { return; }
+   iHeight.textContent = window.innerHeight.toString(); 
+   iWidth.textContent  = window.innerWidth; 
+   oHeight.textContent = window.outerHeight;
+   oWidth.textContent  = window.outerWidth;
+   ratio.textContent = window.devicePixelRatio;
+}
+</script>
+<script>
+function starter() {
+   ratio = document.getElementById("pixelRatio");
+   ratio.textContent = window.devicePixelRatio;
+   iHeight = document.getElementById("innerHeight");
+
+   if (iHeight == null) {
+      alert("iHeight is null");
+   }
+   iHeight.textContent = window.innerWidth;
+   iWidth = document.getElementById("innerWidth");
+   if (iWidth == null) {
+      alert("iWidth is null");
+   }
+   oHeight = document.getElementById("outerHeight");
+   oWidth = document.getElementById("outerWidth");
+   started = true;
+   windowResized();
+}
+// alert("about to set onresize event listener");
+if (window.addEventListener ) {
+   window.addEventListener("resize", windowResized, false);
+} else if (window.attachEvent) {
+   window.attachEvent("onresize", windowResized);
+} else {
+   alert("Fallback option for onload");
+   window.onresize = windowResized;
+};
+// Had to change document.addEventListener to
+// window.addEventListener
+// alert ("about to set onload event handler");
+if (window.addEventListener) {
+   window.addEventListener("load", starter, false);
+} else if (window.attachEvent) {
+   window.attachEvent("onload", starter);
+} else {
+   alert("Fallback option for onload");
+   document.onload = starter;
+}
+</script>
+</head>
+<body>
+<p>The purpose of this code is demonstrate how data can be
+   collecting for basing the web layout on the type of device
+   being used to view the page.  The values for the window size are
+   refreshed when the window changes size.</p>
+<div class="screen">
+<p>This is a screen-only div.</p>
+</div>
+<div class="print">
+<p>This is a print-only div.</p>
+</div>
+<div class="handheld">
+<p>This is a handheld-only div.</p>
+</div>
+<h2>Window properties</h2>
+<ol>
+<li>innerWidth in pixels = <span id="innerWidth" /></li>
+<li>innerHeight in pixels = <span id="innerHeight" /></li>
+<li>outerWidth in pixels = <span id="outerWidth" /></li>
+<li>outerHeight in pixels = <span id="outerHeight" /></li>
+<li>devicePixelRatio = <span id="pixelRatio" /></li>
+</ol>
+<h2>Screen properties</h2>
+<ol>
+<script>
+document.writeln("<li>availHeight = " + screen.availHeight + "</li>");
+document.writeln("<li>availWidth = " + screen.availWidth + "</li>");
+document.writeln("<li>height = " + screen.height + "</li>");
+document.writeln("<li>width = " + screen.width + "</li>");
+document.writeln("<li>colorDepth = " + screen.colorDepth + "</li>");
+document.writeln("<li>pixelDepth = " + screen.pixelDepth + "</li>");
+</script>
+</ol>
+<h2>Navigator properties</h2>
+<ol>
+<script>
+document.writeln("<li>platform = " + navigator.platform + "</li>");
+document.writeln("<li>userAgent = " + navigator.userAgent + "</li>");
+</script>
+</ol>
+</body>
+</html>

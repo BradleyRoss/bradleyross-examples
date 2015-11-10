@@ -10,9 +10,11 @@ bradleyross.library.applets
 bradleyross.library.database
 bradleyross.library.helpers
 bradleyross.library.helpers.tests
+bradleyross.library.json
 bradleyross.local.databases
 bradleyross.opensource.jackcess
 bradleyross.opensource.jfreechart
 bradleyross.opensource.jfreechart.helpers
 bradleyross.opensource.xerces
+bradleyross.opensource.zxing
 bradleyross.sound
