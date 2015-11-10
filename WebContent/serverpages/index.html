@@ -28,6 +28,7 @@ window.onload = starter;
 <p>These are examples of Java Server Pages using various directives
    and custom tags to add capabilities.  The mapping of the tags to the
    Java classes is given by WEB-INF/web.xml and examples.tld.</p>
+<h2>Using tags</h2>
 <ul>
 <li><a href="sample1.jsp" target="_blank">Demonstration of tags</a></li>
 <li><a href="applet.jsp" target="_blank">Use of jsp:plugin to load applet</a></li>
@@ -36,7 +37,7 @@ window.onload = starter;
 <h2>Using Unicode</h2>
 <form action="UnicodeExamples.jsp" method="GET" target="_blank" accept-charset="UTF-8" onsubmit="trigger();">
 <p>Using GET method (parameters passed in URI with JavaScript encoding)<br />
-String passed to JSP <input type="text" name="entered" id="entered" />
+String to be passed to JSP <input type="text" name="entered" id="entered" />
 <input id="INPUT" type="hidden" name="INPUT" />
 <input  type="submit" value="Submit" /></p>
 </form>
@@ -44,7 +45,6 @@ String passed to JSP <input type="text" name="entered" id="entered" />
 <br />
 <form action="UnicodeExamples.jsp" method="POST" target="_blank" accept-charset="UTF-8">
 <p>Using POST method (parameters passed in body without JavaScript encoding)<br />
-Bad characters at other end<br />
 String passed to JSP <input type="text" name="INPUT" />
 <input type="hidden" value="notused" name="entered" />
 <input type="submit" value="Submit" /></p>

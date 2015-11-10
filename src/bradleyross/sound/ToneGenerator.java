@@ -1,45 +1,44 @@
 package bradleyross.sound;
-import java.awt.*;
-import java.awt.event.*;
+// import java.awt.*;
+// import java.awt.event.*;
 
 // import javax.swing.*;
 import javax.swing.JApplet;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
-import javax.swing.event.*;
-import javax.swing.border.*;
+// import javax.swing.event.*;
+// import javax.swing.border.*;
 
-import java.text.DecimalFormat;
-import java.io.IOException;
+// import java.text.DecimalFormat;
+// import java.io.IOException;
 
 
 //import javax.sound.sampled.*;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.AudioFormat;
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.Clip;
-import javax.sound.sampled.FloatControl;
-import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.UnsupportedAudioFileException;
+// import javax.sound.sampled.AudioSystem;
+// import javax.sound.sampled.AudioFormat;
+// import javax.sound.sampled.AudioInputStream;
+// import javax.sound.sampled.Clip;
+// import javax.sound.sampled.FloatControl;
+// import javax.sound.sampled.LineUnavailableException;
+// import javax.sound.sampled.UnsupportedAudioFileException;
 
-import java.io.ByteArrayInputStream;
+// import java.io.ByteArrayInputStream;
+@SuppressWarnings("serial")
 public class ToneGenerator extends JApplet {
 	protected ControlPanel cp = null;
-	public ToneGenerator() {
-		// TODO Auto-generated constructor stub
-	}
+
 
 	/**
 	 * This is the control panel for the tone generator.
 	 * @author Bradley Ross
 	 *
 	 */
-	@SuppressWarnings("serial")
+
 	protected class ControlPanel extends JPanel {
 		
 	}
-	@SuppressWarnings("serial")
+
 	protected class FrequencySelector extends JPanel {
 		
 	}

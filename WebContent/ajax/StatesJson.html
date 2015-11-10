@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>AJAX/JSON demo</title>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.js"></script>
+
+<script>
+var xhttp;
+var data;
+var list;
+function loadDoc() {
+	// window.alert("Starting loadDoc");
+	xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = function () {
+		if (xhttp.readyState == 4 && xhttp.status == 200 ) {
+			data = xhttp.responseText;
+			// window.alert("response received:" + data);
+			list = JSON.parse(data);
+			// list = $.parseJSON(data);
+			createNode();
+			
+		}
+	}
+	xhttp.open("GET", "../StatesJson", "true");
+	xhttp.send();
+	// window.alert("Request sent");
+	
+}
+</script>
+<script>
+function createNode() {
+	// window.alert("Starting createNode");
+	var target = document.getElementById("replacable");
+	var newnode = "<table border=\"1\">";
+	for (var i = 0; i < list.entries.length; i++) {
+		var row = list.entries[i];
+		newnode = newnode + "<tr>";
+		newnode = newnode + "<td>" + row.country + "</td><td>" + row.state +
+		   "</td><td>" + row.name + "</td></tr>";
+		newnode = newnode + "</tr>";
+	}
+	newnode = newnode + "</table>";
+	target.innerHTML = newnode;
+}
+
+</script>
+</head>
+<body>
+<p>See <a href="https://angularjs.org" target="_blank">this</a> for more information on Angular JS</p>
+<p><a href="http://jsonlint.com" target="_blank">JSONLint</a></p>
+<div id="replacable">
+
+
+</div>
+<hr />
+<p><input type="button" onclick="loadDoc();" value="Trigger" /></p>
+</body>
+</html>

@@ -158,10 +158,6 @@ public class ExceptionHelper {
 			break;	
 		}
 	}
-	public ExceptionHelper() {
-		// TODO Auto-generated constructor stub
-	}
-	
 	protected class Tester implements Runnable {
 		public void run() {
 			try {
@@ -191,9 +187,15 @@ public class ExceptionHelper {
 			throw e;
 		}
 	}
+	/**
+	 * Test driver.
+	 * @param params - not used
+	 */
 	public static void main(String[] params) {
 		/*
-		 * If the methods are run outside Tomcat,  catalina.home won't be set
+		 * If the catalina.home Java system variable is not set,  
+		 * catalina.home will be set
+		 * to the home directory.
 		 */
 		Properties props = System.getProperties();
 		if (!props.containsKey("catalina.home")) {

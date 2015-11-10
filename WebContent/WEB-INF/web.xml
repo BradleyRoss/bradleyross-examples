@@ -838,6 +838,10 @@ standard deployment descriptor.
     <servlet-name>FacesServlet</servlet-name>
     <servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
   </servlet>
+  <servlet>
+    <servlet-name>StatesJson</servlet-name>
+    <servlet-class>bradleyross.library.json.StatesJson</servlet-class>
+  </servlet>
   <servlet-mapping>
     <servlet-name>NumberPage</servlet-name>
     <url-pattern>/NumberPage/*</url-pattern>
@@ -857,6 +861,10 @@ standard deployment descriptor.
   <servlet-mapping>
     <servlet-name>FacesServlet</servlet-name>
     <url-pattern>*.xhtml</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>StatesJson</servlet-name>
+    <url-pattern>/StatesJson</url-pattern>
   </servlet-mapping>
   <jsp-config>
     <taglib>
@@ -916,10 +924,11 @@ standard deployment descriptor.
 	with long lists and you do not want the browser page to always jump to the top
 	if you trigger a link or button action that stays on the same page.
 	Default is 'false'
-</description>
+    </description>
     <param-name>org.apache.myfaces.AUTO_SCROLL</param-name>
     <param-value>true</param-value>
   </context-param>
+
   <listener>
     <listener-class>org.apache.myfaces.webapp.StartupServletContextListener</listener-class>
   </listener>
