@@ -8,7 +8,13 @@ import java.io.IOException;
 import java.io.LineNumberReader;
 import java.io.StringReader;
 import java.util.Properties;
-
+/**
+ * An attempt to write a generic exception logger that will
+ * provide both the location of the exception and the location
+ * of the log request.
+ * @author Bradley Ross
+ *
+ */
 public class ExceptionHelper {
 	public static final int FATAL = 1;
 	public static final int ERROR = 2;
