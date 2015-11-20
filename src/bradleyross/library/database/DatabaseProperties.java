@@ -156,7 +156,7 @@ public abstract class DatabaseProperties
 	public String getTableNamePrefixes(int i)
 	{ return tableNamePrefixes[i]; }
 	/** 
-	 * True indicates that autoCommit is set for this datbase connection when
+	 * True indicates that autoCommit is set for this database connection when
 	 * the connection is opened.
 	 */
 	protected boolean autoCommit = true;

@@ -5,6 +5,10 @@
      refer to the root of the files for the Tomcat server.
      I'm not sure if the same would apply to other
      application servers.
+     
+     However, when not using a Tomcat server, it is possible to change the
+     value of the catalina.home Java system variable to a different 
+     directory so that the logs will appear correctly.
  -->
 <log4j:configuration debug="true">
    <appender name="default.file" class="org.apache.log4j.DailyRollingFileAppender">

@@ -17,6 +17,9 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import bradleyross.library.helpers.ExceptionHelper;
 /**
  * Servlet for showing database schema information using
  *  {@link DatabaseMetaData}.
@@ -48,6 +51,8 @@ import javax.servlet.http.HttpServletResponse;
 @SuppressWarnings("serial")
 public class ShowSchema extends HttpServlet 
 {
+	Logger log = LoggerFactory.getLogger(this.getClass());
+	ExceptionHelper logger = new ExceptionHelper(log);
 	/**
 	 * True if servlet was correctly instantiated.
 	 */
@@ -371,6 +376,7 @@ public class ShowSchema extends HttpServlet
 		}
 		catch (InstantiationException e)
 		{
+			logger.error("Problem setting up database connection: ", e);
 			ProblemFound(e, generic, "Problem setting up database connection: " +
 					"InstantiationException");
 			return;
