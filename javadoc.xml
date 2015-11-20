@@ -40,7 +40,7 @@
    <fileset dir="WebContent/javascript">
    </fileset>
 </copy>
-	<copy todir="/Users/bradleyross/newGit/bradleyross-docs/bradleyross-examples/images">
+<copy todir="/Users/bradleyross/newGit/bradleyross-docs/bradleyross-examples/images">
 	   <fileset dir="WebContent/images">
 	   </fileset>
 </copy>	
