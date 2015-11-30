@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.io.IOException;
 import java.io.LineNumberReader;
 import java.io.StringReader;
+// import java.io.PrintWriter;
+import java.io.PrintStream;
 import java.util.Properties;
 /*
  * SQLException and SOAPFault are in Java SE library.
@@ -16,6 +18,9 @@ import java.sql.SQLException;
 import javax.xml.ws.soap.SOAPFaultException;
 import javax.xml.soap.SOAPFault;
 import bradleyross.library.helpers.ExceptionProcessor;
+// import java.util.regex.Matcher;
+//  import java.util.regex.Pattern;
+// import java.util.regex.PatternSyntaxException;
 /*
  * Although this exception is mentioned in the Java EE 6 documentation,
  * I am unable to find it.  According to 
@@ -28,8 +33,293 @@ import bradleyross.library.helpers.ExceptionProcessor;
  * provide both the location of the exception and the location
  * of the log request.
  * 
- * @author Bradley Ross
+ * <p>The following is a sample log using this class.</p>
+ * <p><pre>
+ * 2015-11-29 19:21:03,278 INFO  [SQLExample] -       Database is now open
+ *    Location where log statement called
+ *            java.lang.Thread.getStackTrace(Thread.java:1589)
+ *            bradleyross.library.helpers.ExceptionHelper.logException(ExceptionHelper.java:123)
+ *            bradleyross.library.helpers.ExceptionHelper.logException(ExceptionHelper.java:168)
+ *            bradleyross.library.helpers.ExceptionHelper.info(ExceptionHelper.java:379)
+ *            bradleyross.library.debugging.SQLExample.run(SQLExample.java:92)
+ *            bradleyross.library.debugging.SQLExample.main(SQLExample.java:177)
  *
+ * 2015-11-29 19:21:03,279 INFO  [SQLExample] -       First statement is SELECT STATE, NAME FROM STATE
+ *    Location where log statement called
+ *            java.lang.Thread.getStackTrace(Thread.java:1589)
+ *            bradleyross.library.helpers.ExceptionHelper.logException(ExceptionHelper.java:123)
+ *            bradleyross.library.helpers.ExceptionHelper.logException(ExceptionHelper.java:168)
+ *            bradleyross.library.helpers.ExceptionHelper.info(ExceptionHelper.java:379)
+ *            bradleyross.library.debugging.SQLExample.run(SQLExample.java:93)
+ *            bradleyross.library.debugging.SQLExample.main(SQLExample.java:177)
+ *
+ * 2015-11-29 19:21:03,280 INFO  [SQLExample] -       Statement created
+ *    Location where log statement called
+ *            java.lang.Thread.getStackTrace(Thread.java:1589)
+ *            bradleyross.library.helpers.ExceptionHelper.logException(ExceptionHelper.java:123)
+ *            bradleyross.library.helpers.ExceptionHelper.logException(ExceptionHelper.java:168)
+ *            bradleyross.library.helpers.ExceptionHelper.info(ExceptionHelper.java:379)
+ *            bradleyross.library.debugging.SQLExample.run(SQLExample.java:96)
+ *            bradleyross.library.debugging.SQLExample.main(SQLExample.java:177)
+ *
+ * 2015-11-29 19:21:03,288 INFO  [SQLExample] -       ResultSet created
+ *    Location where log statement called
+ *            java.lang.Thread.getStackTrace(Thread.java:1589)
+ *            bradleyross.library.helpers.ExceptionHelper.logException(ExceptionHelper.java:123)
+ *            bradleyross.library.helpers.ExceptionHelper.logException(ExceptionHelper.java:168)
+ *            bradleyross.library.helpers.ExceptionHelper.info(ExceptionHelper.java:379)
+ *            bradleyross.library.debugging.SQLExample.run(SQLExample.java:98)
+ *            bradleyross.library.debugging.SQLExample.main(SQLExample.java:177)
+ * 
+ * 2015-11-29 19:21:03,291 INFO  [SQLExample] -       Second statement is SELECT STATE, NAME FROM NOTTHERE
+ *    Location where log statement called
+ *            java.lang.Thread.getStackTrace(Thread.java:1589)
+ *            bradleyross.library.helpers.ExceptionHelper.logException(ExceptionHelper.java:123)
+ *            bradleyross.library.helpers.ExceptionHelper.logException(ExceptionHelper.java:168)
+ *            bradleyross.library.helpers.ExceptionHelper.info(ExceptionHelper.java:379)
+ *            bradleyross.library.debugging.SQLExample.run(SQLExample.java:120)
+ *            bradleyross.library.debugging.SQLExample.main(SQLExample.java:177)
+ * 
+ * 2015-11-29 19:21:03,292 INFO  [SQLExample] -       Statement created
+ *    Location where log statement called
+ *            java.lang.Thread.getStackTrace(Thread.java:1589)
+ *            bradleyross.library.helpers.ExceptionHelper.logException(ExceptionHelper.java:123)
+ *            bradleyross.library.helpers.ExceptionHelper.logException(ExceptionHelper.java:168)
+ *            bradleyross.library.helpers.ExceptionHelper.info(ExceptionHelper.java:379)
+ *            bradleyross.library.debugging.SQLExample.run(SQLExample.java:123)
+ *            bradleyross.library.debugging.SQLExample.main(SQLExample.java:177)
+ * 
+ * 2015-11-29 19:21:03,302 ERROR [SQLExample] -       Problem with second statement
+ *    Subclass of SQLException
+ *    Location of exception
+ *       com.mysql.jdbc.exceptions.jdbc4.MySQLSyntaxErrorException: Table 'sample.notthere' doesn't exist
+ *       	at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+ *       	at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:57)
+ *       	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+ *       	at java.lang.reflect.Constructor.newInstance(Constructor.java:526)
+ *       	at com.mysql.jdbc.Util.handleNewInstance(Util.java:408)
+ *       	at com.mysql.jdbc.Util.getInstance(Util.java:383)
+ *       	at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:1062)
+ *       	at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:4208)
+ *       	at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:4140)
+ *       	at com.mysql.jdbc.MysqlIO.sendCommand(MysqlIO.java:2597)
+ *       	at com.mysql.jdbc.MysqlIO.sqlQueryDirect(MysqlIO.java:2758)
+ *       	at com.mysql.jdbc.ConnectionImpl.execSQL(ConnectionImpl.java:2820)
+ *       	at com.mysql.jdbc.ConnectionImpl.execSQL(ConnectionImpl.java:2769)
+ *       	at com.mysql.jdbc.StatementImpl.executeQuery(StatementImpl.java:1569)
+ *       	at bradleyross.library.debugging.SQLExample.run(SQLExample.java:124)
+ *       	at bradleyross.library.debugging.SQLExample.main(SQLExample.java:177)
+ *    Exception is subclass of SQLException
+ *    Vendor specific error code is 1146
+ *    SQL State is 42S02
+ *    Location where log statement called
+ *            java.lang.Thread.getStackTrace(Thread.java:1589)
+ *            bradleyross.library.helpers.ExceptionHelper.logException(ExceptionHelper.java:123)
+ *            bradleyross.library.helpers.ExceptionHelper.logException(ExceptionHelper.java:168)
+ *            bradleyross.library.helpers.ExceptionHelper.error(ExceptionHelper.java:273)
+ *            bradleyross.library.debugging.SQLExample.run(SQLExample.java:131)
+ *            bradleyross.library.debugging.SQLExample.main(SQLExample.java:177)
+ * 
+ * 2015-11-29 19:21:03,303 INFO  [SQLExample] -       Third statement is SELECT STATE, NAME, NOTTHERE FROM STATE
+ *    Location where log statement called
+ *            java.lang.Thread.getStackTrace(Thread.java:1589)
+ *            bradleyross.library.helpers.ExceptionHelper.logException(ExceptionHelper.java:123)
+ *            bradleyross.library.helpers.ExceptionHelper.logException(ExceptionHelper.java:168)
+ *            bradleyross.library.helpers.ExceptionHelper.info(ExceptionHelper.java:379)
+ *            bradleyross.library.debugging.SQLExample.run(SQLExample.java:144)
+ *            bradleyross.library.debugging.SQLExample.main(SQLExample.java:177)
+ * 
+ * 2015-11-29 19:21:03,303 INFO  [SQLExample] -       Statement created
+ *    Location where log statement called
+ *            java.lang.Thread.getStackTrace(Thread.java:1589)
+ *            bradleyross.library.helpers.ExceptionHelper.logException(ExceptionHelper.java:123)
+ *            bradleyross.library.helpers.ExceptionHelper.logException(ExceptionHelper.java:168)
+ *            bradleyross.library.helpers.ExceptionHelper.info(ExceptionHelper.java:379)
+ *            bradleyross.library.debugging.SQLExample.run(SQLExample.java:147)
+ *            bradleyross.library.debugging.SQLExample.main(SQLExample.java:177)
+ * 
+ * 2015-11-29 19:21:03,304 ERROR [SQLExample] -       Problem with third statement
+ *    Subclass of SQLException
+ *    Location of exception
+ *       com.mysql.jdbc.exceptions.jdbc4.MySQLSyntaxErrorException: Unknown column 'NOTTHERE' in 'field list'
+ *       	at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+ *       	at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:57)
+ *       	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+ *       	at java.lang.reflect.Constructor.newInstance(Constructor.java:526)
+ *       	at com.mysql.jdbc.Util.handleNewInstance(Util.java:408)
+ *       	at com.mysql.jdbc.Util.getInstance(Util.java:383)
+ *       	at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:1062)
+ *       	at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:4208)
+ *       	at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:4140)
+ *       	at com.mysql.jdbc.MysqlIO.sendCommand(MysqlIO.java:2597)
+ *       	at com.mysql.jdbc.MysqlIO.sqlQueryDirect(MysqlIO.java:2758)
+ *       	at com.mysql.jdbc.ConnectionImpl.execSQL(ConnectionImpl.java:2820)
+ *       	at com.mysql.jdbc.ConnectionImpl.execSQL(ConnectionImpl.java:2769)
+ *       	at com.mysql.jdbc.StatementImpl.executeQuery(StatementImpl.java:1569)
+ *       	at bradleyross.library.debugging.SQLExample.run(SQLExample.java:148)
+ *       	at bradleyross.library.debugging.SQLExample.main(SQLExample.java:177)
+ *    Exception is subclass of SQLException
+ *    Vendor specific error code is 1054
+ *    SQL State is 42S22
+ *    Location where log statement called
+ *            java.lang.Thread.getStackTrace(Thread.java:1589)
+ *            bradleyross.library.helpers.ExceptionHelper.logException(ExceptionHelper.java:123)
+ *            bradleyross.library.helpers.ExceptionHelper.logException(ExceptionHelper.java:168)
+ *            bradleyross.library.helpers.ExceptionHelper.error(ExceptionHelper.java:273)
+ *            bradleyross.library.debugging.SQLExample.run(SQLExample.java:155)
+ *            bradleyross.library.debugging.SQLExample.main(SQLExample.java:177)
+ * 
+ * 2015-11-29 19:22:29,874 INFO  [test3] - Starting test with log4j
+ * 2015-11-29 19:22:29,876 INFO  [test3] -       Trap and throw in level 2 - level info
+ *    Location of exception
+ *       java.io.IOException: Triggering IOException
+ *       	at bradleyross.library.helpers.ExceptionHelper$Tester.level3(ExceptionHelper.java:598)
+ *       	at bradleyross.library.helpers.ExceptionHelper$Tester.level2(ExceptionHelper.java:590)
+ *       	at bradleyross.library.helpers.ExceptionHelper$Tester.level1(ExceptionHelper.java:582)
+ *       	at bradleyross.library.helpers.ExceptionHelper$Tester.run(ExceptionHelper.java:575)
+ *       	at bradleyross.library.helpers.ExceptionHelper.main(ExceptionHelper.java:641)
+ *    Location where log statement called
+ *            java.lang.Thread.getStackTrace(Thread.java:1589)
+ *            bradleyross.library.helpers.ExceptionHelper.logException(ExceptionHelper.java:123)
+ *            bradleyross.library.helpers.ExceptionHelper.logException(ExceptionHelper.java:168)
+ *            bradleyross.library.helpers.ExceptionHelper.info(ExceptionHelper.java:372)
+ *            bradleyross.library.helpers.ExceptionHelper$Tester.level2(ExceptionHelper.java:592)
+ *            bradleyross.library.helpers.ExceptionHelper$Tester.level1(ExceptionHelper.java:582)
+ *            bradleyross.library.helpers.ExceptionHelper$Tester.run(ExceptionHelper.java:575)
+ *            bradleyross.library.helpers.ExceptionHelper.main(ExceptionHelper.java:641)
+ * 
+ * 2015-11-29 19:22:29,876 WARN  [test3] -       Trap and throw in level 2 - level warn
+ *    Location of exception
+ *       java.io.IOException: Triggering IOException
+ *       	at bradleyross.library.helpers.ExceptionHelper$Tester.level3(ExceptionHelper.java:598)
+ *       	at bradleyross.library.helpers.ExceptionHelper$Tester.level2(ExceptionHelper.java:590)
+ *       	at bradleyross.library.helpers.ExceptionHelper$Tester.level1(ExceptionHelper.java:582)
+ *       	at bradleyross.library.helpers.ExceptionHelper$Tester.run(ExceptionHelper.java:575)
+ *       	at bradleyross.library.helpers.ExceptionHelper.main(ExceptionHelper.java:641)
+ *    Location where log statement called
+ *            java.lang.Thread.getStackTrace(Thread.java:1589)
+ *            bradleyross.library.helpers.ExceptionHelper.logException(ExceptionHelper.java:123)
+ *            bradleyross.library.helpers.ExceptionHelper.logException(ExceptionHelper.java:168)
+ *            bradleyross.library.helpers.ExceptionHelper.warn(ExceptionHelper.java:323)
+ *            bradleyross.library.helpers.ExceptionHelper$Tester.level2(ExceptionHelper.java:593)
+ *            bradleyross.library.helpers.ExceptionHelper$Tester.level1(ExceptionHelper.java:582)
+ *            bradleyross.library.helpers.ExceptionHelper$Tester.run(ExceptionHelper.java:575)
+ *            bradleyross.library.helpers.ExceptionHelper.main(ExceptionHelper.java:641)
+ * 
+ * 2015-11-29 19:22:29,877 INFO  [test3] -       Trapping in method level1
+ *    Location of exception
+ *       java.io.IOException: Triggering IOException
+ *       	at bradleyross.library.helpers.ExceptionHelper$Tester.level3(ExceptionHelper.java:598)
+ *       	at bradleyross.library.helpers.ExceptionHelper$Tester.level2(ExceptionHelper.java:590)
+ *       	at bradleyross.library.helpers.ExceptionHelper$Tester.level1(ExceptionHelper.java:582)
+ *       	at bradleyross.library.helpers.ExceptionHelper$Tester.run(ExceptionHelper.java:575)
+ *       	at bradleyross.library.helpers.ExceptionHelper.main(ExceptionHelper.java:641)
+ *    Location where log statement called
+ *            java.lang.Thread.getStackTrace(Thread.java:1589)
+ *            bradleyross.library.helpers.ExceptionHelper.logException(ExceptionHelper.java:123)
+ *            bradleyross.library.helpers.ExceptionHelper.logException(ExceptionHelper.java:168)
+ *            bradleyross.library.helpers.ExceptionHelper.info(ExceptionHelper.java:372)
+ *            bradleyross.library.helpers.ExceptionHelper$Tester.level1(ExceptionHelper.java:584)
+ *            bradleyross.library.helpers.ExceptionHelper$Tester.run(ExceptionHelper.java:575)
+ *            bradleyross.library.helpers.ExceptionHelper.main(ExceptionHelper.java:641)
+ * 
+ * 2015-11-29 19:22:29,878 INFO  [test3] -       Trapping in method run
+ *    Location of exception
+ *       java.io.IOException: Triggering IOException
+ *       	at bradleyross.library.helpers.ExceptionHelper$Tester.level3(ExceptionHelper.java:598)
+ *       	at bradleyross.library.helpers.ExceptionHelper$Tester.level2(ExceptionHelper.java:590)
+ *       	at bradleyross.library.helpers.ExceptionHelper$Tester.level1(ExceptionHelper.java:582)
+ *       	at bradleyross.library.helpers.ExceptionHelper$Tester.run(ExceptionHelper.java:575)
+ *       	at bradleyross.library.helpers.ExceptionHelper.main(ExceptionHelper.java:641)
+ *    Location where log statement called
+ *            java.lang.Thread.getStackTrace(Thread.java:1589)
+ *            bradleyross.library.helpers.ExceptionHelper.logException(ExceptionHelper.java:123)
+ *            bradleyross.library.helpers.ExceptionHelper.logException(ExceptionHelper.java:168)
+ *            bradleyross.library.helpers.ExceptionHelper.info(ExceptionHelper.java:372)
+ *            bradleyross.library.helpers.ExceptionHelper$Tester.run(ExceptionHelper.java:577)
+ *            bradleyross.library.helpers.ExceptionHelper.main(ExceptionHelper.java:641)
+ * 
+ * 2015-11-29 19:22:29,878 INFO  [ExceptionHelper] -       Starting test with org.slf4j
+ *    Location where log statement called
+ *            java.lang.Thread.getStackTrace(Thread.java:1589)
+ *            bradleyross.library.helpers.ExceptionHelper.logException(ExceptionHelper.java:123)
+ *            bradleyross.library.helpers.ExceptionHelper.logException(ExceptionHelper.java:168)
+ *            bradleyross.library.helpers.ExceptionHelper.info(ExceptionHelper.java:379)
+ *            bradleyross.library.helpers.ExceptionHelper.main(ExceptionHelper.java:643)
+ * 
+ * 2015-11-29 19:22:29,879 INFO  [ExceptionHelper] -       Trap and throw in level 2 - level info
+ *    Location of exception
+ *       java.io.IOException: Triggering IOException
+ *       	at bradleyross.library.helpers.ExceptionHelper$Tester.level3(ExceptionHelper.java:598)
+ *       	at bradleyross.library.helpers.ExceptionHelper$Tester.level2(ExceptionHelper.java:590)
+ *       	at bradleyross.library.helpers.ExceptionHelper$Tester.level1(ExceptionHelper.java:582)
+ *       	at bradleyross.library.helpers.ExceptionHelper$Tester.run(ExceptionHelper.java:575)
+ *       	at bradleyross.library.helpers.ExceptionHelper.main(ExceptionHelper.java:645)
+ *    Location where log statement called
+ *            java.lang.Thread.getStackTrace(Thread.java:1589)
+ *            bradleyross.library.helpers.ExceptionHelper.logException(ExceptionHelper.java:123)
+ *            bradleyross.library.helpers.ExceptionHelper.logException(ExceptionHelper.java:168)
+ *            bradleyross.library.helpers.ExceptionHelper.info(ExceptionHelper.java:372)
+ *            bradleyross.library.helpers.ExceptionHelper$Tester.level2(ExceptionHelper.java:592)
+ *            bradleyross.library.helpers.ExceptionHelper$Tester.level1(ExceptionHelper.java:582)
+ *            bradleyross.library.helpers.ExceptionHelper$Tester.run(ExceptionHelper.java:575)
+ *            bradleyross.library.helpers.ExceptionHelper.main(ExceptionHelper.java:645)
+ * 
+ * 2015-11-29 19:22:29,879 WARN  [ExceptionHelper] -       Trap and throw in level 2 - level warn
+ *    Location of exception
+ *       java.io.IOException: Triggering IOException
+ *       	at bradleyross.library.helpers.ExceptionHelper$Tester.level3(ExceptionHelper.java:598)
+ *       	at bradleyross.library.helpers.ExceptionHelper$Tester.level2(ExceptionHelper.java:590)
+ *       	at bradleyross.library.helpers.ExceptionHelper$Tester.level1(ExceptionHelper.java:582)
+ *       	at bradleyross.library.helpers.ExceptionHelper$Tester.run(ExceptionHelper.java:575)
+ *       	at bradleyross.library.helpers.ExceptionHelper.main(ExceptionHelper.java:645)
+ *    Location where log statement called
+ *            java.lang.Thread.getStackTrace(Thread.java:1589)
+ *            bradleyross.library.helpers.ExceptionHelper.logException(ExceptionHelper.java:123)
+ *            bradleyross.library.helpers.ExceptionHelper.logException(ExceptionHelper.java:168)
+ *            bradleyross.library.helpers.ExceptionHelper.warn(ExceptionHelper.java:323)
+ *            bradleyross.library.helpers.ExceptionHelper$Tester.level2(ExceptionHelper.java:593)
+ *            bradleyross.library.helpers.ExceptionHelper$Tester.level1(ExceptionHelper.java:582)
+ *            bradleyross.library.helpers.ExceptionHelper$Tester.run(ExceptionHelper.java:575)
+ *            bradleyross.library.helpers.ExceptionHelper.main(ExceptionHelper.java:645)
+ * 
+ * 2015-11-29 19:22:29,880 INFO  [ExceptionHelper] -       Trapping in method level1
+ *    Location of exception
+ *       java.io.IOException: Triggering IOException
+ *       	at bradleyross.library.helpers.ExceptionHelper$Tester.level3(ExceptionHelper.java:598)
+ *       	at bradleyross.library.helpers.ExceptionHelper$Tester.level2(ExceptionHelper.java:590)
+ *       	at bradleyross.library.helpers.ExceptionHelper$Tester.level1(ExceptionHelper.java:582)
+ *       	at bradleyross.library.helpers.ExceptionHelper$Tester.run(ExceptionHelper.java:575)
+ *       	at bradleyross.library.helpers.ExceptionHelper.main(ExceptionHelper.java:645)
+ *    Location where log statement called
+ *            java.lang.Thread.getStackTrace(Thread.java:1589)
+ *            bradleyross.library.helpers.ExceptionHelper.logException(ExceptionHelper.java:123)
+ *            bradleyross.library.helpers.ExceptionHelper.logException(ExceptionHelper.java:168)
+ *            bradleyross.library.helpers.ExceptionHelper.info(ExceptionHelper.java:372)
+ *            bradleyross.library.helpers.ExceptionHelper$Tester.level1(ExceptionHelper.java:584)
+ *            bradleyross.library.helpers.ExceptionHelper$Tester.run(ExceptionHelper.java:575)
+ *            bradleyross.library.helpers.ExceptionHelper.main(ExceptionHelper.java:645)
+ * 
+ * 2015-11-29 19:22:29,881 INFO  [ExceptionHelper] -       Trapping in method run
+ *    Location of exception
+ *       java.io.IOException: Triggering IOException
+ *       	at bradleyross.library.helpers.ExceptionHelper$Tester.level3(ExceptionHelper.java:598)
+ *       	at bradleyross.library.helpers.ExceptionHelper$Tester.level2(ExceptionHelper.java:590)
+ *       	at bradleyross.library.helpers.ExceptionHelper$Tester.level1(ExceptionHelper.java:582)
+ *       	at bradleyross.library.helpers.ExceptionHelper$Tester.run(ExceptionHelper.java:575)
+ *       	at bradleyross.library.helpers.ExceptionHelper.main(ExceptionHelper.java:645)
+ *    Location where log statement called
+ *            java.lang.Thread.getStackTrace(Thread.java:1589)
+ *            bradleyross.library.helpers.ExceptionHelper.logException(ExceptionHelper.java:123)
+ *            bradleyross.library.helpers.ExceptionHelper.logException(ExceptionHelper.java:168)
+ *            bradleyross.library.helpers.ExceptionHelper.info(ExceptionHelper.java:372)
+ *            bradleyross.library.helpers.ExceptionHelper$Tester.run(ExceptionHelper.java:577)
+ *            bradleyross.library.helpers.ExceptionHelper.main(ExceptionHelper.java:645)
+ * </pre></p>
+ * @author Bradley Ross
+ * @see bradleyross.library.helpers.ExceptionProcessor
+ * @see bradleyross.library.debugging.SQLExample
+ * 
  */
 public class ExceptionHelper {
 	/**
@@ -99,28 +389,44 @@ public class ExceptionHelper {
 	protected void logException(int level, List<String> value, Exception e) {
 		StringWriter writer = new StringWriter();
 		PrintWriter out = new PrintWriter(writer);
-		List<String> strings = new ArrayList<String>(value);
-		if (e != null && SQLException.class.isAssignableFrom(e.getClass())) {
-			strings.add("Subclass of SQLException");
-		}
-		strings.addAll(extra.getInformation(e));
-		Iterator<String> iter = strings.iterator();
-		while (iter.hasNext()) {
-			out.println(iter.next());
-		}
-		out.println("     Location where log statement called");
-		StackTraceElement[] stack = Thread.currentThread().getStackTrace();
-		if (stack != null && stack.length > 0) {
-			for (int i = 0; i < stack.length; i++) {
-				out.println("        " + stack[i].toString());
+		try {
+			List<String> strings = new ArrayList<String>(splitLines(value));
+			if (e != null && SQLException.class.isAssignableFrom(e.getClass())) {
+				strings.add("Subclass of SQLException");
 			}
+			if (e != null) {
+				strings.add("Location of exception");
+				StringWriter writer2 = new StringWriter();
+				PrintWriter out2 = new PrintWriter(writer2);
+				e.printStackTrace(out2);
+				strings.addAll(splitLines(writer2.toString()));
+			}
+			strings.addAll(extra.getInformation(e));
+			strings.add("Location where log statement called");
+			StackTraceElement[] stack = Thread.currentThread().getStackTrace();
+			if (stack != null && stack.length > 0) {
+				for (int i = 0; i < stack.length; i++) {
+					strings.addAll(splitLines("     " + stack[i].toString()));
+				}
+			}
+			Iterator<String> iter = strings.iterator();
+			while (iter.hasNext()) {
+				out.println("   " + iter.next());
+			}
+		} catch (IOException eio) {
+			if (apacheLogger != null){
+				apacheLog(ERROR, "IOException while writing to log", eio);
+			}
+			if (slf4jLogger != null) {
+				slf4jLog(ERROR, "IOException while writing to log", eio);
+			}
+			return;
 		}
 		if (apacheLogger != null) {
 			apacheLog(level, writer.toString(), e);
 		} else if (slf4jLogger != null) {
 			slf4jLog(level, writer.toString(), e);
 		}
-
 	}
 
 	public void logException(int level, String string, Exception e) {
@@ -131,109 +437,64 @@ public class ExceptionHelper {
 			while (true) {
 				String line = in.readLine();
 				if (line == null) { break; }
-				list.add(line.trim());
+				list.add(line);
 			}
-		} catch (IOException e2) {
-			list.add("Error generating log entry");
+		} catch (IOException eio) {
+			if (apacheLogger != null){
+				apacheLog(ERROR, "IOException while writing to log", eio);
+			}
+			if (slf4jLogger != null) {
+				slf4jLog(ERROR, "IOException while writing to log", eio);
+			}
+			return;
 		}
-
 		logException(level, list, e);
 	}
 	protected void apacheLog(int level, String message, Exception e) {
 		switch (level) {
 		case FATAL :
-			if (e == null) {
-				apacheLogger.fatal(message);
-			} else {
-				apacheLogger.fatal(message, e);
-			}
+			apacheLogger.fatal(message);
 			break;
 		case ERROR :
-			if (e == null) {
-				apacheLogger.error(message);
-			} else {
-				apacheLogger.error(message, e);
-			}
+			apacheLogger.error(message);
 			break;			
 		case WARN :
-			if (e == null) {
-				apacheLogger.warn(message);
-			} else {
-				apacheLogger.warn(message, e);
-			}
+			apacheLogger.warn(message);
 			break;			
-
 		case INFO :
-			if (e == null) {
-				apacheLogger.info(message);
-			} else {
-				apacheLogger.info(message, e);
-			}
+			apacheLogger.info(message);
 			break;
 		case DEBUG :
-			if (e == null) {
-				apacheLogger.debug(message);
-			} else {
-				apacheLogger.debug(message, e);
-			}
+			apacheLogger.debug(message);
 			break;			
 		case TRACE :
-			if (e == null) {
-				apacheLogger.trace(message);
-			} else {
-				apacheLogger.trace(message, e);
-			}
+			apacheLogger.trace(message);
 			break;	
 		}
 	}
 	protected void slf4jLog(int level, String message, Exception e) {
 		switch (level) {
 		case FATAL :
-			if (e == null) {
-				slf4jLogger.error(message);
-			} else {
-				slf4jLogger.error(message, e);
-			}
+			slf4jLogger.error(message);
 			break;
 		case ERROR :
-			if (e == null) {
-				slf4jLogger.error(message);
-			} else {
-				slf4jLogger.error(message, e);
-			}
+			slf4jLogger.error(message);
 			break;			
 		case WARN :
-			if (e == null) {
-				slf4jLogger.warn(message);
-			} else {
-				slf4jLogger.warn(message, e);
-			}
+			slf4jLogger.warn(message);
 			break;			
-
 		case INFO :
-			if (e == null) {
-				slf4jLogger.info(message);
-			} else {
-				slf4jLogger.info(message, e);
-			}
+			slf4jLogger.info(message);
 			break;
 		case DEBUG :
-			if (e == null) {
-				slf4jLogger.debug(message);
-			} else {
-				slf4jLogger.debug(message, e);
-			}
+			slf4jLogger.debug(message);
 			break;			
 		case TRACE :
-			if (e == null) {
-				slf4jLogger.trace(message);
-			} else {
-				slf4jLogger.trace(message, e);
-			}
+			slf4jLogger.trace(message);
 			break;	
 		}
 	}
-	
+
 	/**
 	 * Helper method for fatal messages.
 	 * @param string messages
@@ -323,7 +584,7 @@ public class ExceptionHelper {
 	 */
 	public void error(String[] strings, Exception e) {
 		List<String> list = new ArrayList<String>();
-	    
+
 		for (int i = 0; i < strings.length; i++) {
 			list.add(strings[i]);
 		}
@@ -532,6 +793,54 @@ public class ExceptionHelper {
 	public void trace (String[] strings) {
 		trace(strings, (Exception) null);
 	}
+	protected List<String> splitLines(List<String> start) throws IOException {
+		return splitLines(start, 3);
+	}
+	public List<String> splitLines(List<String> start, int indent) throws IOException {
+		StringBuffer temp = new StringBuffer();
+		int size = indent;
+		if (size < 0) {
+			size = 3;
+		}
+		for (int i = 0; i < size; i++) {
+			temp.append(" ");
+		}
+		String prefix = temp.toString();
+		List<String> result = new ArrayList<String>();
+		if (start == null) { return result; }
+		Iterator<String> iter = start.iterator();
+		while (iter.hasNext()) {
+			String preSplit = iter.next();
+			LineNumberReader reader = new LineNumberReader(new StringReader(preSplit));
+			while (true) {
+				String line = reader.readLine();
+				if (line == null) { break; }
+				result.add(prefix + line);
+			}
+		}
+		return result;
+	}
+	protected List<String> splitLines(String start) throws IOException {
+		List<String> result = new ArrayList<String>();
+		result.add(start);
+		return splitLines(result);
+	}
+	/**
+	 * Internal debugging aid for printing list of strings.
+	 * @param list list to be printed
+	 * @param out destination for printing
+	 */
+	protected void printList(List<String> list, PrintStream out) {
+		if (list == null ) { return; }
+		if (out == null) { return; }
+		Iterator<String> iter = list.iterator();
+		while (iter.hasNext()) {
+			out.println("line: " + iter.next());
+		}
+	}
+	protected void printList(List<String> list) {
+		printList(list, System.out);
+	}
 	/**
 	 * Demonstrates many of the features of the
 	 * {@link ExceptionHelper} class.
@@ -592,7 +901,24 @@ public class ExceptionHelper {
 		}
 		org.slf4j.Logger logger2 = org.slf4j.LoggerFactory.getLogger(ExceptionHelper.class);
 		org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger("test3");
+
 		ExceptionHelper helper = new ExceptionHelper(logger);
+		/*
+		 * Test of splitting input lines using line feeds and carriage returns.
+		 */
+		try {
+			System.out.println("Testing line splitters");
+			StringBuilder test1 = new StringBuilder("abc\r\n");
+			test1.append("def\n");
+			test1.append("ghi\n");			
+			List<String> test2 = helper.splitLines(test1.toString());
+			helper.printList(test2);
+		} catch (IOException e) {
+			helper.error("IOException Error in splitLines", e);
+		}
+		/*
+		 * Testing with log4j
+		 */
 		Runnable run = helper.new Tester(helper);
 		logger.info("Starting test with log4j");
 		run.run();
