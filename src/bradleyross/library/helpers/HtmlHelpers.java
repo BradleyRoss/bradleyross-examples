@@ -1,7 +1,7 @@
 package bradleyross.library.helpers;
 /**
  * Common procedures for use with HTML document.
- * @author bradleyross
+ * @author Bradley Ross
  *
  */
 public class HtmlHelpers {
@@ -34,9 +34,10 @@ public class HtmlHelpers {
 	protected static void test(String value) {
 		if (value == null) {
 			System.out.println("Argument has null value");
-		}
-		if (value.length() == 0) {
+			return;
+		} else if (value.length() == 0) {
 			System.out.println("Argument has zero length");
+			return;
 		}
 		System.out.println("*****  *****  *****");
 		System.out.println(value);
